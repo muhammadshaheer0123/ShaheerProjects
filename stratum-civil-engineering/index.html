@@ -1,0 +1,486 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Stratum — Civil &amp; Structural Engineers</title>
+  <meta name="description" content="Stratum designs bridges, foundations and public infrastructure across 14 countries — from the first borehole to the final load test.">
+  <meta name="theme-color" content="#0f100f">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 28 28'%3E%3Crect width='28' height='28' fill='%230f100f'/%3E%3Cpath d='M3 11h22M3 16.5h22M3 22h22' stroke='%23ecebe5' stroke-width='1.6'/%3E%3Cpath d='M17 3v22' stroke='%23ff5a1f' stroke-width='2.6'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <script type="importmap">
+    { "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    } }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#studio">Skip to content</a>
+
+  <!-- Loader -->
+  <div class="loader" aria-hidden="true">
+    <div class="loader__row">
+      <svg class="loader__mark" viewBox="0 0 28 28" width="28" height="28"><rect x="1" y="1" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 10.5H27M1 16.5H27M1 22H27" stroke="currentColor" stroke-width="1.5"/><path d="M17 1V27" stroke="#ff5a1f" stroke-width="2.5"/></svg>
+      <span class="mono">Loading structural model</span>
+      <span class="mono loader__count"><span data-count>000</span>%</span>
+    </div>
+    <div class="loader__bar"><span></span></div>
+  </div>
+
+  <!-- Navigation -->
+  <header class="nav" data-theme="dark">
+    <a class="nav__logo" href="#top" aria-label="Stratum, back to top">
+      <svg viewBox="0 0 28 28" width="26" height="26" aria-hidden="true"><rect x="1" y="1" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 10.5H27M1 16.5H27M1 22H27" stroke="currentColor" stroke-width="1.5"/><path d="M17 1V27" stroke="#ff5a1f" stroke-width="2.5"/></svg>
+      <span>Stratum</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#studio">Studio</a>
+      <a href="#disciplines">Disciplines</a>
+      <a href="#work">Work</a>
+      <a href="#method">Method</a>
+    </nav>
+    <a class="btn btn--sm nav__cta" href="#contact">Start a project</a>
+    <button class="nav__burger" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <div class="menu" id="menu" hidden>
+    <nav class="menu__links" aria-label="Mobile">
+      <a href="#studio"><span class="mono">01</span>Studio</a>
+      <a href="#disciplines"><span class="mono">02</span>Disciplines</a>
+      <a href="#work"><span class="mono">03</span>Work</a>
+      <a href="#method"><span class="mono">04</span>Method</a>
+      <a href="#contact"><span class="mono">05</span>Contact</a>
+    </nav>
+    <div class="menu__foot">
+      <a class="mono" href="mailto:hello@stratum.example">hello@stratum.example</a>
+      <span class="mono">London · Oslo · Rotterdam · Singapore</span>
+    </div>
+  </div>
+
+  <main id="main">
+    <!-- ============ STAGE: 3D bridge assembles on scroll ============ -->
+    <section class="stage" id="top" data-nav="dark" aria-label="Introduction">
+      <div class="stage__sticky">
+        <canvas class="stage__canvas" id="bridge" role="img" aria-label="3D model of a cable-stayed bridge that assembles as you scroll: ground investigation, foundations and pylons, steel truss deck modules, then stay cables."></canvas>
+        <div class="stage__shade" aria-hidden="true"></div>
+        <div class="labels" aria-hidden="true"></div>
+
+        <div class="hud hud--top mono" aria-hidden="true">
+          <span>Model 01 — Halden Strait Crossing</span>
+          <span class="hud__coords">59.12° N · 10.21° E</span>
+        </div>
+
+        <div class="hero">
+          <p class="eyebrow mono"><span class="eyebrow__dot"></span>Civil &amp; structural engineers — est. 1987</p>
+          <h1 class="hero__title">
+            <span class="line"><span>Built to carry</span></span>
+            <span class="line"><span><em>the next</em> hundred</span></span>
+            <span class="line"><span>years.</span></span>
+          </h1>
+          <div class="hero__foot">
+            <p class="hero__lede">Stratum designs bridges, foundations and public infrastructure across 14 countries — from the first borehole to the final load test.</p>
+            <div class="hero__actions">
+              <a class="btn" href="#contact">Start a project
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </a>
+              <a class="btn btn--ghost" href="#work">See the work</a>
+            </div>
+          </div>
+        </div>
+
+        <ol class="phases">
+          <li class="phase">
+            <span class="phase__num mono">01 / 04 — Investigate</span>
+            <h2 class="phase__title">Read the <em>ground</em> first.</h2>
+            <p>Every structure starts below grade. Boreholes and cores tell us what the strata will do under load — before a single line is drawn.</p>
+            <span class="phase__spec mono">26 boreholes · 1.2 km of core · 3 strata</span>
+          </li>
+          <li class="phase">
+            <span class="phase__num mono">02 / 04 — Found</span>
+            <h2 class="phase__title">Pylons <em>rise</em> from rock.</h2>
+            <p>Bored piles found each pylon in weathered chalk. The legs climb in 4 m slipform lifts and are tied by cross-beams at deck and crown.</p>
+            <span class="phase__spec mono">18 bored piles · Ø1.8 m · 2 pylons</span>
+          </li>
+          <li class="phase">
+            <span class="phase__num mono">03 / 04 — Span</span>
+            <h2 class="phase__title">Balanced, <em>module</em> by module.</h2>
+            <p>Steel truss deck modules are lifted out from each pylon in pairs, so the structure stays in balance until the two cantilevers meet mid-span.</p>
+            <span class="phase__spec mono">44 steel truss modules · S460 · 6 m each</span>
+          </li>
+          <li class="phase">
+            <span class="phase__num mono">04 / 04 — Tension</span>
+            <h2 class="phase__title">Tuned, then <em>opened</em>.</h2>
+            <p>Forty-eight stays are stressed to within 2% of design load. After the load test, the city drives across.</p>
+            <span class="phase__spec mono">48 stays · ±2% tuning · 100-yr design life</span>
+          </li>
+        </ol>
+
+        <div class="hud hud--bottom">
+          <dl class="readouts mono" aria-hidden="true">
+            <div><dt>Phase</dt><dd data-ro="phase">Site</dd></div>
+            <div><dt>Piles</dt><dd><span data-ro="piles">00</span>/18</dd></div>
+            <div><dt>Deck</dt><dd><span data-ro="deck">0.0</span> m</dd></div>
+            <div><dt>Stays</dt><dd><span data-ro="cables">00</span>/48</dd></div>
+          </dl>
+          <div class="rail" role="group" aria-label="Jump to build phase">
+            <div class="rail__track"><span class="rail__fill"></span></div>
+            <div class="rail__segs">
+              <button type="button" class="rail__seg mono" data-goto="0.22">Investigate</button>
+              <button type="button" class="rail__seg mono" data-goto="0.44">Found</button>
+              <button type="button" class="rail__seg mono" data-goto="0.66">Span</button>
+              <button type="button" class="rail__seg mono" data-goto="0.9">Tension</button>
+            </div>
+          </div>
+          <span class="scrollcue mono" aria-hidden="true">Scroll to build<span class="scrollcue__line"></span></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STUDIO ============ -->
+    <section class="intro paper has-cols" id="studio" data-nav="light">
+      <div class="wrap">
+        <div class="sechead mono"><span>§ 01</span><span>Studio</span><span class="sechead__rule"></span><span>140 engineers · 4 studios</span></div>
+        <p class="intro__statement" data-words>We think the best infrastructure is the kind <em>nobody notices</em> — because it carries its load, quietly, for a hundred years.</p>
+        <div class="intro__grid">
+          <p data-reveal>Founded in Oslo in 1987 by two bridge engineers and a geologist, Stratum now works from four studios on structures that range from footbridges to kilometre-long viaducts.</p>
+          <p data-reveal>We stay small enough that the engineer who signs the calculation is the one who visits site. Every project, whatever its size, gets a ground model, an independent check and a monitoring plan.</p>
+          <a class="link-arrow" href="#method" data-reveal>How we work
+            <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ STATS ============ -->
+    <section class="stats paper has-cols" data-nav="light" aria-label="Stratum in numbers">
+      <div class="wrap stats__grid">
+        <div class="stat" data-reveal>
+          <span class="stat__num"><span data-to="412">412</span></span>
+          <span class="stat__unit mono">Structures delivered</span>
+          <p>Across rail, road, water and urban schemes since 1987.</p>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__num"><span data-to="14">14</span></span>
+          <span class="stat__unit mono">Countries</span>
+          <p>From Arctic fjord crossings to equatorial port works.</p>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__num"><span data-to="1.12" data-dec="2">1.12</span><small>km</small></span>
+          <span class="stat__unit mono">Longest viaduct</span>
+          <p>Orsa Valley, on piers up to 231 m tall.</p>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__num"><span data-to="100">100</span><small>yr</small></span>
+          <span class="stat__unit mono">Design life, as standard</span>
+          <p>Not a target for special projects. The baseline for all of them.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DISCIPLINES ============ -->
+    <section class="disc paper" id="disciplines" data-nav="light">
+      <div class="wrap">
+        <div class="sechead mono"><span>§ 02</span><span>Disciplines</span><span class="sechead__rule"></span><span>05 practices</span></div>
+        <h2 class="title split"><span class="line"><span>One team from</span></span><span class="line"><span><em>bedrock</em> to parapet.</span></span></h2>
+        <ul class="disc__list">
+          <li><a class="disc__row" href="#contact" data-type="Building structure">
+            <span class="disc__num mono">01</span>
+            <span class="disc__title">Structural</span>
+            <span class="disc__desc">Frames and cores in concrete, steel, timber and hybrid systems — from schools to 46-storey towers.<span class="disc__tags mono">Concrete · Steel · CLT</span></span>
+            <span class="disc__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          </a></li>
+          <li><a class="disc__row" href="#contact" data-type="Bridge or highway">
+            <span class="disc__num mono">02</span>
+            <span class="disc__title">Bridges &amp; Highways</span>
+            <span class="disc__desc">Cable-stayed, arch and viaduct design, plus assessment and strengthening of the structures already carrying traffic.<span class="disc__tags mono">New build · Assessment · Retrofit</span></span>
+            <span class="disc__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          </a></li>
+          <li><a class="disc__row" href="#contact" data-type="Foundations or geotechnical">
+            <span class="disc__num mono">03</span>
+            <span class="disc__title">Geotechnical</span>
+            <span class="disc__desc">Site investigation, ground modelling, deep foundations, retaining walls and tunnelling interfaces.<span class="disc__tags mono">Piling · Retention · Ground models</span></span>
+            <span class="disc__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          </a></li>
+          <li><a class="disc__row" href="#contact" data-type="Water or coastal">
+            <span class="disc__num mono">04</span>
+            <span class="disc__title">Water &amp; Coastal</span>
+            <span class="disc__desc">Flood barriers, sea defences, outfalls and drainage designed for the climate of 2125, not 1995.<span class="disc__tags mono">Barriers · Defences · Drainage</span></span>
+            <span class="disc__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          </a></li>
+          <li><a class="disc__row" href="#contact" data-type="Transport infrastructure">
+            <span class="disc__num mono">05</span>
+            <span class="disc__title">Transport</span>
+            <span class="disc__desc">Stations, rail corridors and depots, and the civils that stitch them into a working city.<span class="disc__tags mono">Stations · Rail · Depots</span></span>
+            <span class="disc__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 17L17 7M8 7h9v9" fill="none" stroke="currentColor" stroke-width="1.6"/></svg></span>
+          </a></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ WORK ============ -->
+    <section class="work paper-2" id="work" data-nav="light">
+      <div class="work__head wrap">
+        <div class="sechead mono"><span>§ 03</span><span>Selected work</span><span class="sechead__rule"></span><span class="work__count"><span data-work-idx>01</span> / 05</span></div>
+        <div class="work__intro">
+          <h2 class="title split"><span class="line"><span>Drawn <em>before</em></span></span><span class="line"><span>they were built.</span></span></h2>
+          <p class="work__note">Simplified elevations and sections from our project sheets. Every one began as a pencil line on a site visit.</p>
+        </div>
+      </div>
+      <div class="work__viewport">
+        <div class="work__track">
+          <article class="card">
+            <div class="card__sheet"><div class="card__drawing" data-dwg="bridge"></div><span class="card__tag mono">DWG 23-014 · Elevation A–A</span><span class="card__tag card__tag--r mono">NTS</span></div>
+            <div class="card__body">
+              <span class="card__idx mono">01</span>
+              <h3 class="card__title">Halden Strait Crossing</h3>
+              <dl class="card__meta">
+                <div><dt class="mono">Type</dt><dd>Cable-stayed, steel truss deck</dd></div>
+                <div><dt class="mono">Location</dt><dd>Vestfold, Norway</dd></div>
+                <div><dt class="mono">Completed</dt><dd>2023</dd></div>
+                <div><dt class="mono">Main span</dt><dd>412 m</dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card__sheet"><div class="card__drawing" data-dwg="tower"></div><span class="card__tag mono">DWG 22-031 · North elevation</span><span class="card__tag card__tag--r mono">NTS</span></div>
+            <div class="card__body">
+              <span class="card__idx mono">02</span>
+              <h3 class="card__title">Kestrel Yard Tower</h3>
+              <dl class="card__meta">
+                <div><dt class="mono">Type</dt><dd>Residential tower</dd></div>
+                <div><dt class="mono">Location</dt><dd>Manchester, UK</dd></div>
+                <div><dt class="mono">Completed</dt><dd>2022</dd></div>
+                <div><dt class="mono">Height</dt><dd>184 m · 46 storeys</dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card__sheet"><div class="card__drawing" data-dwg="viaduct"></div><span class="card__tag mono">DWG 19-007 · Long section</span><span class="card__tag card__tag--r mono">NTS</span></div>
+            <div class="card__body">
+              <span class="card__idx mono">03</span>
+              <h3 class="card__title">Orsa Valley Viaduct</h3>
+              <dl class="card__meta">
+                <div><dt class="mono">Type</dt><dd>Multi-span viaduct</dd></div>
+                <div><dt class="mono">Location</dt><dd>Asturias, Spain</dd></div>
+                <div><dt class="mono">Completed</dt><dd>2019</dd></div>
+                <div><dt class="mono">Length</dt><dd>1.12 km</dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card__sheet"><div class="card__drawing" data-dwg="barrier"></div><span class="card__tag mono">DWG 21-022 · Section B–B</span><span class="card__tag card__tag--r mono">NTS</span></div>
+            <div class="card__body">
+              <span class="card__idx mono">04</span>
+              <h3 class="card__title">Linthe Tidal Barrier</h3>
+              <dl class="card__meta">
+                <div><dt class="mono">Type</dt><dd>Vertical-lift flood gate</dd></div>
+                <div><dt class="mono">Location</dt><dd>Zeeland, Netherlands</dd></div>
+                <div><dt class="mono">Completed</dt><dd>2021</dd></div>
+                <div><dt class="mono">Protection</dt><dd>1 in 10,000 yr</dd></div>
+              </dl>
+            </div>
+          </article>
+          <article class="card">
+            <div class="card__sheet"><div class="card__drawing" data-dwg="station"></div><span class="card__tag mono">DWG 24-003 · Cross-section</span><span class="card__tag card__tag--r mono">NTS</span></div>
+            <div class="card__body">
+              <span class="card__idx mono">05</span>
+              <h3 class="card__title">Ferrow Street Station</h3>
+              <dl class="card__meta">
+                <div><dt class="mono">Type</dt><dd>Cut-and-cover station</dd></div>
+                <div><dt class="mono">Location</dt><dd>London, UK</dd></div>
+                <div><dt class="mono">Completed</dt><dd>2024</dd></div>
+                <div><dt class="mono">Box depth</dt><dd>28 m</dd></div>
+              </dl>
+            </div>
+          </article>
+          <aside class="card card--end">
+            <p class="card--end__text">Each of these started with someone standing on an empty site, asking what the ground would allow.</p>
+            <a class="btn" href="#contact">Bring us your site
+              <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            </a>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ METHOD ============ -->
+    <section class="method" id="method" data-nav="dark">
+      <div class="wrap">
+        <div class="sechead mono sechead--dark"><span>§ 04</span><span>Method</span><span class="sechead__rule"></span><span>Five stages, one team</span></div>
+        <div class="method__grid">
+          <div class="method__copy">
+            <h2 class="title split"><span class="line"><span>Ground</span></span><span class="line"><span><em>first.</em></span></span></h2>
+            <p class="method__lede">Most structural problems start below grade. So does every Stratum project.</p>
+            <div class="steps">
+              <span class="steps__rail" aria-hidden="true"><span class="steps__fill"></span></span>
+              <ol class="steps__list">
+              <li class="step is-active">
+                <span class="step__num mono">01</span>
+                <h3>Survey</h3>
+                <p>LiDAR, bathymetry and boreholes build a picture of the site as it actually is, not as the old maps say it was.</p>
+                <span class="step__spec mono">25 m grid · 1,240 points / ha</span>
+              </li>
+              <li class="step">
+                <span class="step__num mono">02</span>
+                <h3>Model</h3>
+                <p>A live ground model, tested against every load case and every season of groundwater we can find records for.</p>
+                <span class="step__spec mono">3 strata · 14 load cases</span>
+              </li>
+              <li class="step">
+                <span class="step__num mono">03</span>
+                <h3>Design</h3>
+                <p>Structure and foundation are designed by one team, together, rather than handed across a fence between firms.</p>
+                <span class="step__spec mono">Raft footprint 68 × 40 m</span>
+              </li>
+              <li class="step">
+                <span class="step__num mono">04</span>
+                <h3>Build</h3>
+                <p>Our engineers stay on site through construction, and sensor data from the excavation is reviewed every morning.</p>
+                <span class="step__spec mono">Formation −10.0 m · daily review</span>
+              </li>
+              <li class="step">
+                <span class="step__num mono">05</span>
+                <h3>Monitor</h3>
+                <p>Strain gauges, piezometers and settlement markers keep reporting for decades after handover. We keep reading them.</p>
+                <span class="step__spec mono">212 sensors · live since 2009</span>
+              </li>
+              </ol>
+            </div>
+          </div>
+          <div class="method__visual">
+            <div class="terrain">
+              <canvas id="terrain" role="img" aria-label="Animated topographic contour map of a site, changing with each stage of the method: survey grid, ground model, foundation footprint, excavation and live sensors."></canvas>
+              <div class="terrain__hud mono" aria-hidden="true">
+                <span class="terrain__step"><span data-terrain-idx>01</span> — <span data-terrain-name>Survey</span></span>
+                <span class="terrain__data" data-terrain-data>25 m grid · 1,240 pts / ha</span>
+              </div>
+              <span class="terrain__corner terrain__corner--tl" aria-hidden="true"></span>
+              <span class="terrain__corner terrain__corner--br" aria-hidden="true"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ CLIENTS + QUOTE ============ -->
+    <section class="voices paper" data-nav="light" aria-label="Clients">
+      <div class="marquee" aria-label="Selected clients">
+        <div class="marquee__track">
+          <ul class="marquee__group">
+            <li>Nordvei Transport Authority</li><li>City of Aldmere</li><li>Port of Brenna</li><li>Velde Water Board</li><li>Kingsreach Development</li><li>Harbour &amp; Canal Trust</li><li>Meridian Rail</li><li>Linthe Delta Council</li>
+          </ul>
+          <ul class="marquee__group" aria-hidden="true">
+            <li>Nordvei Transport Authority</li><li>City of Aldmere</li><li>Port of Brenna</li><li>Velde Water Board</li><li>Kingsreach Development</li><li>Harbour &amp; Canal Trust</li><li>Meridian Rail</li><li>Linthe Delta Council</li>
+          </ul>
+        </div>
+      </div>
+      <div class="wrap">
+        <figure class="quote" data-reveal>
+          <blockquote>“They told us what the ground would do before we’d paid for a single pile. That saved the programme seven months.”</blockquote>
+          <figcaption class="mono"><span>Ingrid Solheim</span> Programme Director, Nordvei Transport Authority</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ============ CONTACT ============ -->
+    <section class="contact" id="contact" data-nav="dark">
+      <div class="wrap">
+        <div class="sechead mono sechead--dark"><span>§ 05</span><span>Contact</span><span class="sechead__rule"></span><span>Reply within 2 working days</span></div>
+        <div class="contact__grid">
+          <div class="contact__lead">
+            <h2 class="title title--xl split"><span class="line"><span>Have a site?</span></span><span class="line"><span><em>Let’s read</em></span></span><span class="line"><span>the ground.</span></span></h2>
+            <a class="contact__mail" href="mailto:hello@stratum.example">hello@stratum.example</a>
+            <ul class="offices">
+              <li><span class="mono">London</span><span class="offices__time mono" data-tz="Europe/London">--:--</span></li>
+              <li><span class="mono">Oslo</span><span class="offices__time mono" data-tz="Europe/Oslo">--:--</span></li>
+              <li><span class="mono">Rotterdam</span><span class="offices__time mono" data-tz="Europe/Amsterdam">--:--</span></li>
+              <li><span class="mono">Singapore</span><span class="offices__time mono" data-tz="Asia/Singapore">--:--</span></li>
+            </ul>
+          </div>
+
+          <form class="form" novalidate>
+            <div class="field">
+              <label for="f-name" class="mono">Name</label>
+              <input id="f-name" name="name" type="text" autocomplete="name" required aria-describedby="e-name">
+              <span class="field__err" id="e-name" role="alert"></span>
+            </div>
+            <div class="field">
+              <label for="f-email" class="mono">Work email</label>
+              <input id="f-email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="e-email">
+              <span class="field__err" id="e-email" role="alert"></span>
+            </div>
+            <div class="field">
+              <label for="f-org" class="mono">Organisation <span class="field__opt">(optional)</span></label>
+              <input id="f-org" name="org" type="text" autocomplete="organization">
+            </div>
+            <div class="field">
+              <label for="f-type" class="mono">Project type</label>
+              <div class="select">
+                <select id="f-type" name="type">
+                  <option>Bridge or highway</option>
+                  <option>Building structure</option>
+                  <option>Foundations or geotechnical</option>
+                  <option>Water or coastal</option>
+                  <option>Transport infrastructure</option>
+                  <option>Something else</option>
+                </select>
+              </div>
+            </div>
+            <div class="field field--full">
+              <label for="f-brief" class="mono">The site, in a few lines</label>
+              <textarea id="f-brief" name="brief" rows="4" required aria-describedby="e-brief h-brief"></textarea>
+              <span class="field__help" id="h-brief">Location, rough scale, and what’s worrying you about it.</span>
+              <span class="field__err" id="e-brief" role="alert"></span>
+            </div>
+            <div class="form__foot field--full">
+              <button class="btn" type="submit">Send brief
+                <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+              </button>
+              <p class="form__status" role="status" aria-live="polite"></p>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ FOOTER: drawing title block ============ -->
+  <footer class="foot">
+    <div class="wrap">
+      <div class="titleblock">
+        <div class="tb tb--brand">
+          <svg viewBox="0 0 28 28" width="34" height="34" aria-hidden="true"><rect x="1" y="1" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M1 10.5H27M1 16.5H27M1 22H27" stroke="currentColor" stroke-width="1.5"/><path d="M17 1V27" stroke="#ff5a1f" stroke-width="2.5"/></svg>
+          <div><strong>Stratum Engineering</strong><span>Civil · Structural · Geotechnical</span></div>
+        </div>
+        <div class="tb"><span class="mono">Project</span><strong>stratum.example</strong></div>
+        <div class="tb"><span class="mono">Sheet</span><strong>01 of 01</strong></div>
+        <div class="tb"><span class="mono">Rev</span><strong>C</strong></div>
+        <div class="tb"><span class="mono">Scale</span><strong>1 : 1</strong></div>
+        <div class="tb"><span class="mono">Date</span><strong data-today>2026</strong></div>
+        <a class="tb tb--top" href="#top"><span class="mono">Back to top</span>
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        </a>
+      </div>
+      <div class="foot__legal mono">
+        <span>© <span data-year>2026</span> Stratum Engineering Ltd.</span>
+        <span>Privacy</span>
+        <span>Accessibility</span>
+        <span>Drawn STR · Checked AJM</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+  <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js" defer></script>
+  <script type="module" src="assets/js/main.js"></script>
+</body>
+</html>
