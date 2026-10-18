@@ -87,8 +87,9 @@ export const expertise = [
 
 // `drawing` picks the line drawing shown for each project:
 // frame | bridge | road | wall | tank | foundation
-// Optional: `images` (first one becomes the card cover) and `abstract`
-// paragraphs. Leave `location` / `year` empty to hide them.
+// Optional: `images` (first one becomes the card cover; `wide: true` spans the
+// full gallery width), `abstract` paragraphs and a `conclusions` list.
+// Leave `location` / `year` empty to hide them.
 export const projects = [
   {
     id: 'etabs-15-storey-residential',
@@ -120,15 +121,95 @@ export const projects = [
     ],
     images: [
       { src: '/projects/etabs-15-storey/plan-and-3d-model.png', caption: 'Story 1 plan and 3D ETABS model' },
-      { src: '/projects/etabs-15-storey/shear-wall-layout.png', caption: 'Shear-wall layout: Story 16 plan and 3D view' },
-      { src: '/projects/etabs-15-storey/deformed-shape.png', caption: 'Deformed shape under lateral load' },
+      { src: '/projects/etabs-15-storey/shear-wall-layout.png', caption: 'Shear-wall layout: Story 16 plan and 3D view', wide: true },
+      { src: '/projects/etabs-15-storey/deformed-shape.png', caption: 'Deformed shape under lateral load', wide: true },
       { src: '/projects/etabs-15-storey/story-displacement.png', caption: 'Maximum storey displacement: 102 mm at Story 16' },
       { src: '/projects/etabs-15-storey/story-drift.png', caption: 'Maximum storey drift: 0.001426 at Story 14' },
     ],
   },
   {
-    id: 'g4-commercial',
+    id: 'sap2000-steel-industrial-building',
     sheet: 'S-101',
+    title: 'Steel Industrial Building (Gable Frame)',
+    category: 'Steel',
+    location: '',
+    year: '',
+    role: 'Steel modelling, analysis & design check (SAP2000)',
+    drawing: 'frame',
+    summary:
+      'Structural modelling and analysis of a steel gable-frame industrial building in SAP2000, with every member checked to AISC 360-16. The highest utilisation was 0.7343 in the corner columns.',
+    abstract: [
+      'The structure consists of steel portal frames with W18×50 columns, S24×106 rafters, W18×50 peripheral beams, cold-formed C-section purlins and 150 mm diameter steel-pipe lateral bracing. Roof dead and live loads, wall dead loads, wind and seismic loads were applied and analysed under the governing combination of 1.2DL + 1.6LL.',
+      'The analysis produced bending-moment and shear-force diagrams and deformed-shape outputs, followed by a steel design check to AISC 360-16. All members showed utilisation ratios well below 1.0.',
+    ],
+    scope: [
+      'SAP2000 model with material properties and frame sections assigned to every member',
+      'Load patterns DR, DW, Lr, Wind, EQX and EQY, with ASCE 7-16 auto lateral loads',
+      'Load combinations to AISC 360-16, governed by 1.2DL + 1.6LL',
+      'Bending-moment, shear-force and deformed-shape review',
+      'Steel member design check and utilisation-ratio evaluation',
+    ],
+    conclusions: [
+      'All members are safe under 1.2DL + 1.6LL; maximum utilisation 0.7343 in the W18×50 corner columns.',
+      'Maximum displacement occurs at the apex of the central rafters and stays within serviceability limits.',
+      'Bending-moment and shear-force diagrams show classic portal-frame behaviour, validating the model.',
+      'Bracing (max ratio 0.280) and rafters (max ratio 0.168) are well within safe limits.',
+      'The structure is safe and adequate for industrial use under all considered loading conditions.',
+    ],
+    figures: [
+      { label: 'Max utilisation', value: '0.734' },
+      { label: 'Governing combo', value: '1.2D + 1.6L' },
+      { label: 'Design code', value: 'AISC 360-16' },
+    ],
+    images: [
+      { src: '/projects/sap2000-steel-shed/3d-frame-model.png', caption: '3D SAP2000 model of the steel gable frames' },
+      { src: '/projects/sap2000-steel-shed/load-patterns.png', caption: 'Load patterns: self weight, DR, DW, Lr, wind, EQX and EQY', wide: true },
+      { src: '/projects/sap2000-steel-shed/deformed-shape.png', caption: 'Deformed shape under roof dead load (Uz contours, mm)', wide: true },
+      { src: '/projects/sap2000-steel-shed/moment-diagram.png', caption: 'Moment 3-3 diagram under roof dead load', wide: true },
+    ],
+  },
+  {
+    id: 'idea-statica-connections',
+    sheet: 'S-102',
+    title: 'Steel Connection Design',
+    category: 'Steel',
+    location: '',
+    year: '',
+    role: 'Connection modelling & verification (IDEA StatiCa)',
+    drawing: 'frame',
+    summary:
+      'Finite-element verification of three steel connections in IDEA StatiCa using the Component-Based Finite Element Method (CBFEM), designed to AISC LRFD 2022 with A36 steel and A325M bolts. All three passed every check.',
+    abstract: [
+      'Three connection types were modelled: a steel anchor base plate joining a W10×22 column to a reinforced-concrete foundation, checked under two loading scenarios; a purlin-to-rafter bolted cleat connecting a cold-formed CFC150×80 channel purlin to a W10×22 rafter; and a moment-resisting beam-to-column joint between two W10×22 sections using a bolted flush end plate with welded stiffeners.',
+      'Plate stresses, welds, bolts, anchors, concrete bearing and friction-based shear transfer were all verified, with every utilisation below 100%.',
+    ],
+    scope: [
+      'Anchor base plate: W10×22 column to RC foundation, two load scenarios',
+      'Purlin-to-rafter bolted cleat: CFC150×80 purlin to W10×22 rafter',
+      'Beam-to-column bolted flush end plate with four web stiffeners',
+      'Checks for plates, welds, bolts, anchors, concrete block and shear transfer',
+    ],
+    conclusions: [
+      'All three connections passed every IDEA StatiCa verification, with no utilisation above 100%.',
+      'The base plate is the most critical: anchor breakout in tension at 94.5% and friction shear at 91.0%, with the plate itself fully elastic.',
+      'The purlin connection works at a modest 15.2% and stays elastic; CBFEM captures the secondary moment from the eccentric purlin that hand calculations miss.',
+      'The moment connection has large reserve (welds 20.5%, bolts 16.8%); the web stiffeners protect the column panel zone.',
+      'CBFEM reproduces real force distributions and local plate yielding that classical hand methods cannot fully quantify.',
+    ],
+    figures: [
+      { label: 'Connections', value: '3' },
+      { label: 'Most critical', value: 'Anchors 94.5%' },
+      { label: 'Design code', value: 'AISC LRFD 2022' },
+    ],
+    images: [
+      { src: '/projects/idea-statica-connections/anchor-base-plate.png', caption: 'Anchor base plate: all checks pass, anchors at 94.5%' },
+      { src: '/projects/idea-statica-connections/purlin-to-rafter.png', caption: 'Purlin-to-rafter bolted cleat: bolts at 15.2%', wide: true },
+      { src: '/projects/idea-statica-connections/beam-column-end-plate.png', caption: 'Beam-to-column bolted flush end plate (W10×22)', wide: true },
+    ],
+  },
+  {
+    id: 'g4-commercial',
+    sheet: 'S-103',
     title: 'G+4 Commercial Plaza',
     category: 'Structural',
     location: 'Lahore',
@@ -150,7 +231,7 @@ export const projects = [
   },
   {
     id: 'residential-supervision',
-    sheet: 'S-102',
+    sheet: 'S-104',
     title: 'Residential Block Supervision',
     category: 'Site',
     location: 'Islamabad',
@@ -172,7 +253,7 @@ export const projects = [
   },
   {
     id: 'box-culvert',
-    sheet: 'S-103',
+    sheet: 'S-105',
     title: 'Twin-Cell Box Culvert',
     category: 'Infrastructure',
     location: 'Punjab',
@@ -194,7 +275,7 @@ export const projects = [
   },
   {
     id: 'road-rehab',
-    sheet: 'S-104',
+    sheet: 'S-106',
     title: 'Rural Road Rehabilitation',
     category: 'Infrastructure',
     location: 'Khyber Pakhtunkhwa',
@@ -216,7 +297,7 @@ export const projects = [
   },
   {
     id: 'retaining-wall',
-    sheet: 'S-105',
+    sheet: 'S-107',
     title: 'Cantilever Retaining Wall',
     category: 'Geotechnical',
     location: 'Murree',
@@ -238,7 +319,7 @@ export const projects = [
   },
   {
     id: 'overhead-tank',
-    sheet: 'S-106',
+    sheet: 'S-108',
     title: 'Overhead Water Tank',
     category: 'Water',
     location: 'Faisalabad',

@@ -340,12 +340,18 @@ function ProjectSheet({ project, onClose }) {
         )}
         <h4 className="mono">Scope of work</h4>
         <ul className="scope">{project.scope.map(s => <li key={s}>{s}</li>)}</ul>
+        {project.conclusions && (
+          <>
+            <h4 className="mono">Conclusions</h4>
+            <ul className="scope">{project.conclusions.map(c => <li key={c}>{c}</li>)}</ul>
+          </>
+        )}
         {images.length > 1 && (
           <>
             <h4 className="mono">Model & results</h4>
             <div className="gallery">
               {images.slice(1).map(img => (
-                <figure key={img.src}>
+                <figure key={img.src} className={img.wide ? 'is-wide' : undefined}>
                   <a href={img.src} target="_blank" rel="noreferrer" aria-label={`Open full size: ${img.caption}`}>
                     <img src={img.src} alt={img.caption} loading="lazy" />
                   </a>
