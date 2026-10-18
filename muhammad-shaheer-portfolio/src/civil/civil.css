@@ -331,6 +331,9 @@ main > * { pointer-events: auto; }
 .activities > li.is-featured { grid-column: 1 / -1; }
 .is-featured .activity__photos { grid-template-columns: repeat(3, 1fr); }
 .is-featured .activity__photos a:first-child:nth-last-child(odd) img { aspect-ratio: 16 / 9; }
+.activity__photos a.is-wide { grid-column: 1 / -1; }
+.activity__photos a.is-wide img { aspect-ratio: 16 / 9; }
+.activity__points { margin-top: 8px; font-size: 14px; line-height: 1.5; }
 
 /* ASCE roles */
 .role--photo { display: grid; grid-template-columns: 1fr 120px; gap: 14px; align-items: start; }

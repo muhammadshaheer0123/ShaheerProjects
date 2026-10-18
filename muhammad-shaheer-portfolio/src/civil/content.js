@@ -510,3 +510,30 @@ export const activities = [
     ],
   },
 ];
+
+// Community and social work, shown under its own heading in the Extracurricular room.
+export const community = [
+  {
+    icon: 'hands',
+    title: 'Rescue 1122: emergency services volunteer',
+    role: 'Volunteer',
+    period: '22 Jul – 14 Aug 2025',
+    featured: true,
+    body: 'Three weeks of community service at Rescue 1122 (Punjab Emergency Service), Branch ERS-15, Dubai Chowk, Lahore, supporting emergency rescue, medical assistance and fire safety under trained professionals.',
+    points: [
+      'Trained in Basic Life Support (BLS) and PLSP, with 10 days of RSC training',
+      'Practised CPR on dummies and in real-life scenarios',
+      'Responded to road accident victims, checked vital signs (heart rate, oxygen levels) and moved patients by ambulance and stretcher',
+      'Helped prioritise emergency calls alongside a senior officer',
+      'Inspected fire-fighting vehicles, assisted fire drills and checked fire safety at public buildings, including a parking plaza in Dubai Chowk',
+      'Secured open nallahs to prevent accidents, and helped with the 14 August Independence Day celebrations at the station',
+      'Awarded a Certificate of Volunteer Service by Rescue 1122 Lahore',
+    ],
+    photos: [
+      { src: '/activities/rescue-1122/team-ers-15.webp', caption: 'With the Rescue 1122 team at Branch ERS-15', wide: true },
+      { src: '/activities/rescue-1122/cpr-practice.webp', caption: 'CPR practice on a training dummy' },
+      { src: '/activities/rescue-1122/road-accident-response.webp', caption: 'Moving a road accident victim onto a stretcher' },
+      { src: '/activities/rescue-1122/volunteer-certificate.png', caption: 'Certificate of Volunteer Service, Rescue 1122 Lahore' },
+    ],
+  },
+];

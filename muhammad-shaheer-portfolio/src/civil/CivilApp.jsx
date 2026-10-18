@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { profile, rooms, corridor, expertise, projects, experience, leadership, activities } from './content';
+import { profile, rooms, corridor, expertise, projects, experience, leadership, activities, community } from './content';
 import ProjectDrawing from './ProjectDrawing';
 
 const CorridorScene = lazy(() => import('./CorridorScene'));
@@ -247,7 +247,7 @@ function ActivitiesRoom({ room }) {
   return (
     <>
       <RoomHead room={room} title="Beyond the drawings." />
-      <p>My years with the ASCE-NUCES student chapter, from member to senior vice president, and the international conference, seminars and site visits I managed and photographed along the way.</p>
+      <p>My years with the ASCE-NUCES student chapter, from member to senior vice president, the international conference, seminars and site visits I managed and photographed, and my volunteer work with Rescue 1122.</p>
       <h3 className="sub mono">ASCE-NUCES: member to senior vice president</h3>
       <ol className="timeline">
         {leadership.map(l => (
@@ -266,24 +266,29 @@ function ActivitiesRoom({ room }) {
         ))}
       </ol>
       <h3 className="sub mono">Events & site visits</h3>
-      <ul className="activities">
-        {activities.map(a => (
-          <li key={a.title} className={a.featured ? 'is-featured' : undefined}>
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="activity__icon"><path d={ACTIVITY_ICONS[a.icon]} /></svg>
-            <div>
-              <p className="mono activity__meta">{metaLine(a.role, a.period)}</p>
-              <h4>{a.title}</h4>
-              <p>{a.body}</p>
-            </div>
-            {a.photos?.length > 0 && (
-              <div className="activity__photos">
-                {a.photos.map(ph => <PhotoLink key={ph.src} photo={ph} />)}
-              </div>
-            )}
-          </li>
-        ))}
-      </ul>
+      <ul className="activities">{activities.map(a => <ActivityCard key={a.title} activity={a} />)}</ul>
+      <h3 className="sub mono">Community service</h3>
+      <ul className="activities">{community.map(a => <ActivityCard key={a.title} activity={a} />)}</ul>
     </>
+  );
+}
+
+function ActivityCard({ activity: a }) {
+  return (
+    <li className={a.featured ? 'is-featured' : undefined}>
+      <svg viewBox="0 0 24 24" aria-hidden="true" className="activity__icon"><path d={ACTIVITY_ICONS[a.icon]} /></svg>
+      <div>
+        <p className="mono activity__meta">{metaLine(a.role, a.period)}</p>
+        <h4>{a.title}</h4>
+        <p>{a.body}</p>
+        {a.points && <ul className="scope activity__points">{a.points.map(pt => <li key={pt}>{pt}</li>)}</ul>}
+      </div>
+      {a.photos?.length > 0 && (
+        <div className="activity__photos">
+          {a.photos.map(ph => <PhotoLink key={ph.src} photo={ph} className={ph.wide ? 'is-wide' : undefined} />)}
+        </div>
+      )}
+    </li>
   );
 }
 
