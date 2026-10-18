@@ -7,6 +7,7 @@ const CorridorScene = lazy(() => import('./CorridorScene'));
 const STEPS = ['Surveying the site', 'Casting the floor slab', 'Erecting steel frames', 'Hanging the drawings', 'Opening the doors'];
 
 const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const coarsePointer = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches;
 const lowPower = typeof navigator !== 'undefined' && (
   /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) ||
   (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4)
@@ -569,7 +570,7 @@ export default function CivilApp() {
         {!panelRoom && !busy && started && (
           <div className="walk-hint mono" aria-hidden="true">
             <span className="walk-hint__mouse"><span /></span>
-            Scroll or drag to walk · click a door to enter
+            {coarsePointer ? 'Swipe up to walk · tap a door to enter' : 'Scroll or drag to walk · click a door to enter'}
           </div>
         )}
 

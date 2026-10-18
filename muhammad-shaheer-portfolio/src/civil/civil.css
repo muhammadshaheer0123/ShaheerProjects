@@ -1,6 +1,6 @@
 :root {
   --paper: #eeede8;
-  --panel: rgba(244, 243, 238, 0.9);
+  --panel: rgba(244, 243, 238, 0.96);
   --panel-solid: #f4f3ee;
   --ink: #1c1f1d;
   --muted: #5d625e;
@@ -19,7 +19,7 @@
 
 :root[data-theme='blueprint'] {
   --paper: #0c2a4d;
-  --panel: rgba(10, 36, 68, 0.86);
+  --panel: rgba(10, 36, 68, 0.95);
   --panel-solid: #0e2f57;
   --ink: #e8f2ff;
   --muted: #a3bfe3;
@@ -109,13 +109,13 @@ p { margin: 0 0 1em; }
 .brand__text { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
 .brand__text strong { font-size: 15px; white-space: nowrap; }
 .brand__text span { font-size: 11px; color: var(--muted); text-transform: uppercase; }
-.site-nav { display: flex; gap: 2px; padding: 4px; background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.site-nav { display: flex; gap: 2px; padding: 4px; background: var(--panel); border: 1px solid var(--line); }
 .site-nav a { text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; transition: background-color 0.2s, color 0.2s; }
 .site-nav a:hover, .site-nav a[aria-current='page'] { background: var(--ink); color: var(--paper); }
 .toggle {
   display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px;
   background: var(--panel); border: 1px solid var(--line); cursor: pointer; font-size: 12px; text-transform: uppercase;
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+
 }
 .toggle__dot { width: 28px; height: 16px; border: 1.5px solid var(--ink); position: relative; transition: background-color 0.25s; }
 .toggle__dot::after { content: ''; position: absolute; top: 2px; left: 2px; width: 9px; height: 9px; background: var(--ink); transition: transform 0.25s var(--ease); }
@@ -164,7 +164,7 @@ main > * { pointer-events: auto; }
 .plan {
   position: fixed; right: clamp(12px, 2.4vw, 32px); bottom: clamp(12px, 2.4vw, 28px); z-index: 15; margin: 0;
   width: 280px; padding: 10px 10px 6px; background: var(--panel); border: 1px solid var(--line);
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+
   animation: hint-in-plain 0.8s 1s var(--ease) both;
 }
 @keyframes hint-in-plain { from { opacity: 0; transform: translateY(10px); } }
@@ -182,7 +182,6 @@ main > * { pointer-events: auto; }
 /* ---------- room panel ---------- */
 .panel {
   background: var(--panel); border: 1px solid var(--line); box-shadow: var(--shadow);
-  backdrop-filter: blur(16px) saturate(1.1); -webkit-backdrop-filter: blur(16px) saturate(1.1);
   position: relative;
 }
 .panel::before { content: ''; position: absolute; left: -1px; top: -1px; width: 56px; height: 6px; background: var(--hazard); }
@@ -360,12 +359,14 @@ main > * { pointer-events: auto; }
   .site-nav a { padding: 8px 10px; font-size: 13px; }
 }
 @media (max-width: 900px) {
-  .site-nav { display: none; }
-  .panel--room { width: auto; right: clamp(16px, 4vw, 64px); bottom: 150px; }
+  /* rooms menu becomes a full-width row under the header */
+  .site-nav { position: fixed; top: var(--header-h); left: clamp(12px, 3vw, 24px); right: clamp(12px, 3vw, 24px); z-index: 20; }
+  .site-nav a { flex: 1; text-align: center; padding: 9px 4px; font-size: 13px; white-space: nowrap; }
+  .panel--room { width: auto; right: clamp(16px, 4vw, 64px); bottom: 150px; top: calc(var(--header-h) + 54px); }
 }
 @media (max-width: 760px) {
   :root { --header-h: 64px; }
-  .scene-shade { background: linear-gradient(0deg, color-mix(in srgb, var(--paper) 70%, transparent) 0%, transparent 55%); }
+  .scene-shade { background: linear-gradient(0deg, color-mix(in srgb, var(--paper) 90%, transparent) 0%, color-mix(in srgb, var(--paper) 72%, transparent) 42%, transparent 70%); }
   .brand__text span { display: none; }
   .toggle .mono { display: none; }
   .toggle { padding: 0 12px; }
@@ -374,7 +375,9 @@ main > * { pointer-events: auto; }
   .intro__lede { font-size: 15px; }
   .plan { width: 200px; right: 10px; bottom: 10px; padding: 6px 6px 2px; }
   .plan figcaption { display: none; }
-  .walk-hint { bottom: auto; top: calc(var(--header-h) + 6px); font-size: 10px; }
+  .walk-hint { bottom: auto; top: calc(var(--header-h) + 52px); font-size: 10px; }
+  .site-nav a { font-size: 12px; padding: 9px 2px; }
+  .site-header { gap: 10px; }
   .panel--room { left: 0; right: 0; bottom: 0; top: 34vh; padding: 16px 16px 28px; border-left: 0; border-right: 0; }
   .in-room .plan { display: none; }
   .about-top { grid-template-columns: 96px 1fr; gap: 14px; }

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/immutability, react-hooks/globals -- R3F mutates three.js objects (camera, textures) imperatively by design */
 import { createContext, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Edges, useTexture } from '@react-three/drei';
+import { Edges, PerformanceMonitor, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { profile, rooms, corridor as CORRIDOR, leadership } from './content';
 import { concreteTexture, labelTexture, structureTexture, STRUCTURES } from './textures';
@@ -561,7 +561,7 @@ function Hazard({ position }) {
 /*  Rooms behind the doors                                             */
 /* ------------------------------------------------------------------ */
 
-function RoomShell({ children, light = '#ffe6c4' }) {
+function RoomShell({ children }) {
   const { m } = useContext(SceneCtx);
   // local frame: door wall at +x, back wall at -x
   const H = HEIGHT;
@@ -575,7 +575,6 @@ function RoomShell({ children, light = '#ffe6c4' }) {
       {/* steel beam across the room */}
       <group position={[0, H - 0.2, 0]} rotation={[Math.PI / 2, 0, 0]}><ISection length={ROOM} depth={0.4} width={0.18} /></group>
       <mesh position={[-0.6, H - 0.03, 0]} material={m.glow}><boxGeometry args={[2.4, 0.03, 0.1]} /></mesh>
-      <pointLight position={[-0.5, H - 0.6, 0]} intensity={14} distance={11} decay={1.4} color={light} />
       {children}
     </group>
   );
@@ -605,7 +604,9 @@ function WallFrame({ position, texture, size = [1, 0.7], rotation = [0, Math.PI 
 // A framed photo sized to its own aspect ratio, fitted inside `max` [w, h]
 function PhotoFrame({ src, position, max = [1.2, 0.8], rotation }) {
   const tex = useTexture(src);
-  useEffect(() => { tex.colorSpace = THREE.SRGBColorSpace; tex.needsUpdate = true; }, [tex]);
+  const gl = useThree(s => s.gl);
+  // upload to the GPU now, during loading, rather than with a hitch on first view
+  useEffect(() => { tex.colorSpace = THREE.SRGBColorSpace; tex.needsUpdate = true; gl.initTexture(tex); }, [tex, gl]);
   const { width = 1, height = 1 } = tex.image || {};
   const k = Math.min(max[0] / width, max[1] / height);
   return <WallFrame position={position} rotation={rotation} texture={tex} size={[width * k, height * k]} />;
@@ -713,11 +714,21 @@ function Room({ room }) {
   const s = room.side === 'left' ? 1 : -1;
   const Props = ROOM_PROPS[room.id];
   const cx = -s * (HALF_W + WALL_T + ROOM / 2);
+  const { blueprint } = useContext(SceneCtx);
+  const inner = useRef(null);
+  // Skip drawing rooms the camera is nowhere near (doors hide them anyway).
+  // The light stays outside the culled group: changing the light count recompiles every shader.
+  useFrame(({ camera }) => {
+    if (inner.current) inner.current.visible = blueprint || Math.abs(camera.position.z - room.z) < 9;
+  });
   return (
     <group position={[cx, 0, room.z]} rotation={[0, s > 0 ? 0 : Math.PI, 0]}>
-      <RoomShell>
-        <Suspense fallback={null}><Props /></Suspense>
-      </RoomShell>
+      <pointLight position={[-0.5, HEIGHT - 0.6, 0]} intensity={14} distance={11} decay={1.4} color="#ffe6c4" />
+      <group ref={inner}>
+        <RoomShell>
+          <Suspense fallback={null}><Props /></Suspense>
+        </RoomShell>
+      </group>
     </group>
   );
 }
@@ -896,10 +907,13 @@ function World({ blueprint, lowPower, onReady, ...rig }) {
 }
 
 export default function CorridorScene({ blueprint, lowPower, reducedMotion, onReady, onFailure, ...rig }) {
+  // Render resolution adapts to the device: it steps down when frames drop and back up when there's headroom
+  const maxDpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.25 : 1.5);
+  const [dpr, setDpr] = useState(maxDpr);
   return (
     <div className="scene">
       <Canvas
-        dpr={lowPower ? [1, 1.25] : [1, 1.75]}
+        dpr={dpr}
         camera={{ position: [0, EYE + 0.4, CORRIDOR.start + 3], fov: 62, near: 0.05, far: 120 }}
         gl={{ antialias: true, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => {
@@ -908,6 +922,12 @@ export default function CorridorScene({ blueprint, lowPower, reducedMotion, onRe
           gl.domElement.addEventListener('webglcontextlost', onFailure, { once: true });
         }}
       >
+        <PerformanceMonitor
+          flipflops={4}
+          onDecline={() => setDpr(d => Math.max(1, d - 0.25))}
+          onIncline={() => setDpr(d => Math.min(maxDpr, d + 0.25))}
+          onFallback={() => setDpr(1)}
+        />
         <Suspense fallback={null}>
           <World blueprint={blueprint} lowPower={lowPower} onReady={onReady} reducedMotion={reducedMotion} {...rig} />
         </Suspense>
