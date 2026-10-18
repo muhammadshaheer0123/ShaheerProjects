@@ -1,4 +1,4 @@
-﻿# ShaheerProjects
+# ShaheerProjects
 
 A collection of projects. Each project lives in its own folder.
 
