@@ -401,9 +401,10 @@ function Avatar({ position }) {
   const body = useRef();
   const bubble = useRef();
   const aspect = tex.image ? tex.image.width / tex.image.height : 0.45;
-  // the cut-out runs from helmet to upper thigh: its lower edge sits below the counter top (1.1 m)
-  const BASE = 0.78;
-  const H = 1.17;
+  // the cut-out runs from helmet to upper thigh; shown large so the figure reads clearly from the corridor,
+  // with the counter top (1.1 m) hiding only the lowest quarter, around the belt
+  const BASE = 0.6;
+  const H = 1.85;
   useFrame(({ camera, clock }) => {
     if (!group.current) return;
     const g = group.current;
