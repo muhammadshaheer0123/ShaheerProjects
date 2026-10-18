@@ -87,7 +87,45 @@ export const expertise = [
 
 // `drawing` picks the line drawing shown for each project:
 // frame | bridge | road | wall | tank | foundation
+// Optional: `images` (first one becomes the card cover) and `abstract`
+// paragraphs. Leave `location` / `year` empty to hide them.
 export const projects = [
+  {
+    id: 'etabs-15-storey-residential',
+    sheet: 'S-100',
+    title: '15-Storey RC Residential Building',
+    category: 'Structural',
+    location: '',
+    year: '',
+    role: 'Structural analysis & design (ETABS)',
+    drawing: 'frame',
+    summary:
+      'Analysis and design of a fifteen-storey reinforced-concrete residential tower with one basement, modelled in ETABS and designed to ACI. A dual system of RC frames and shear walls carries gravity, wind and seismic loads.',
+    abstract: [
+      'The building uses a dual system of reinforced-concrete frames and shear walls to resist gravity, wind and seismic forces. Waffle, ribbed, flat and solid slab systems were used across different levels to suit both functional and structural needs. Initial sizes for slabs, beams, columns and shear walls came from standard span-to-depth ratios and practical design guidelines.',
+      'The ETABS model defined material properties, load conditions, stiffness modifiers and serviceability criteria such as storey drift and deflection limits. Wind and earthquake analyses checked the building under lateral load, and the final design met the required strength, stiffness, safety and cost-effectiveness for every structural element, in full compliance with the relevant design standards.',
+    ],
+    scope: [
+      'ETABS model with material properties, load cases and stiffness modifiers',
+      'Dual system: RC moment frames with shear-wall cores and L-walls',
+      'Waffle, ribbed, flat and solid slabs selected level by level',
+      'Preliminary sizing of slabs, beams, columns and walls from span-to-depth ratios',
+      'Wind and earthquake analysis with storey drift and displacement checks',
+      'Design of all members to ACI 318',
+    ],
+    figures: [
+      { label: 'Storeys', value: '15 + basement' },
+      { label: 'Max roof displacement', value: '102 mm' },
+      { label: 'Max storey drift', value: '0.00143' },
+    ],
+    images: [
+      { src: '/projects/etabs-15-storey/plan-and-3d-model.png', caption: 'Story 1 plan and 3D ETABS model' },
+      { src: '/projects/etabs-15-storey/shear-wall-layout.png', caption: 'Shear-wall layout: Story 16 plan and 3D view' },
+      { src: '/projects/etabs-15-storey/deformed-shape.png', caption: 'Deformed shape under lateral load' },
+      { src: '/projects/etabs-15-storey/story-displacement.png', caption: 'Maximum storey displacement: 102 mm at Story 16' },
+      { src: '/projects/etabs-15-storey/story-drift.png', caption: 'Maximum storey drift: 0.001426 at Story 14' },
+    ],
+  },
   {
     id: 'g4-commercial',
     sheet: 'S-101',

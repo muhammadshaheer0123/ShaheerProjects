@@ -261,6 +261,7 @@ main > * { pointer-events: auto; }
 }
 .project:hover { border-color: var(--ink); transform: translateY(-3px); box-shadow: var(--shadow); }
 .project .drawing { border-bottom: 1px solid var(--line); background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 20px 20px; }
+.project__cover { display: block; width: 100%; aspect-ratio: 320 / 200; object-fit: cover; object-position: center top; border-bottom: 1px solid var(--line); background: #fff; }
 .project__sheet { position: absolute; top: 8px; left: 8px; font-size: 11px; background: var(--accent); color: var(--accent-ink); padding: 2px 6px; font-weight: 600; }
 .project__body { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px 6px; }
 .project__body strong { font-size: 17px; line-height: 1.2; }
@@ -291,6 +292,14 @@ main > * { pointer-events: auto; }
 .icon-btn:hover { background: var(--ink); color: var(--paper); }
 .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
 .sheet__drawing { border: 1px solid var(--line-strong); margin-bottom: 22px; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 24px 24px; }
+.sheet__cover { display: block; width: 100%; height: auto; border: 1px solid var(--line-strong); margin-bottom: 22px; background: #fff; }
+.gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.gallery figure { margin: 0; }
+.gallery figure:nth-child(-n + 2) { grid-column: 1 / -1; }
+.gallery a { display: block; border: 1px solid var(--line-strong); background: #fff; transition: border-color 0.2s var(--ease); }
+.gallery a:hover, .gallery a:focus-visible { border-color: var(--ink); }
+.gallery img { display: block; width: 100%; height: auto; }
+.gallery figcaption { margin-top: 6px; font-size: 11px; line-height: 1.4; color: var(--muted); }
 .sheet h3 { font-size: clamp(28px, 3vw, 36px); font-stretch: 82%; font-weight: 800; margin-bottom: 8px; }
 .sheet__meta { font-size: 12px; text-transform: uppercase; color: var(--muted); }
 .sheet p { color: var(--muted); }

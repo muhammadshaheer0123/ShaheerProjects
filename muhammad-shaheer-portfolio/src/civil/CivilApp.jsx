@@ -190,6 +190,8 @@ function AboutRoom({ room }) {
   );
 }
 
+const metaLine = (...parts) => parts.filter(Boolean).join(' · ');
+
 function ProjectsRoom({ room, onOpen }) {
   const [filter, setFilter] = useState('All');
   const categories = useMemo(() => ['All', ...new Set(projects.map(p => p.category))], []);
@@ -206,11 +208,13 @@ function ProjectsRoom({ room, onOpen }) {
         {shown.map(p => (
           <li key={p.id}>
             <button type="button" className="project" onClick={() => onOpen(p)}>
-              <ProjectDrawing type={p.drawing} title={p.title} />
+              {p.images?.length
+                ? <img className="project__cover" src={p.images[0].src} alt="" loading="lazy" />
+                : <ProjectDrawing type={p.drawing} title={p.title} />}
               <span className="project__sheet mono">{p.sheet}</span>
               <span className="project__body">
                 <strong>{p.title}</strong>
-                <span className="mono">{p.category} · {p.location} · {p.year}</span>
+                <span className="mono">{metaLine(p.category, p.location, p.year)}</span>
                 <span className="project__role">{p.role}</span>
               </span>
               <span className="project__open mono" aria-hidden="true">Open sheet →</span>
@@ -303,6 +307,7 @@ function ContactRoom({ room }) {
 
 function ProjectSheet({ project, onClose }) {
   const closeRef = useRef(null);
+  const images = project.images || [];
   useEffect(() => {
     closeRef.current?.focus();
     const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); onClose(); } };
@@ -318,15 +323,38 @@ function ProjectSheet({ project, onClose }) {
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
           </button>
         </div>
-        <div className="sheet__drawing"><ProjectDrawing type={project.drawing} title={project.title} /></div>
+        {images.length
+          ? <img className="sheet__cover" src={images[0].src} alt={images[0].caption} />
+          : <div className="sheet__drawing"><ProjectDrawing type={project.drawing} title={project.title} /></div>}
         <h3 id="sheet-title">{project.title}</h3>
-        <p className="sheet__meta mono">{project.location} · {project.year} · {project.role}</p>
+        <p className="sheet__meta mono">{metaLine(project.location, project.year, project.role)}</p>
         <p>{project.summary}</p>
         <dl className="figures">
           {project.figures.map(f => <div key={f.label}><dt className="mono">{f.label}</dt><dd>{f.value}</dd></div>)}
         </dl>
+        {project.abstract && (
+          <>
+            <h4 className="mono">Abstract</h4>
+            {project.abstract.map(para => <p key={para.slice(0, 24)}>{para}</p>)}
+          </>
+        )}
         <h4 className="mono">Scope of work</h4>
         <ul className="scope">{project.scope.map(s => <li key={s}>{s}</li>)}</ul>
+        {images.length > 1 && (
+          <>
+            <h4 className="mono">Model & results</h4>
+            <div className="gallery">
+              {images.slice(1).map(img => (
+                <figure key={img.src}>
+                  <a href={img.src} target="_blank" rel="noreferrer" aria-label={`Open full size: ${img.caption}`}>
+                    <img src={img.src} alt={img.caption} loading="lazy" />
+                  </a>
+                  <figcaption className="mono">{img.caption}</figcaption>
+                </figure>
+              ))}
+            </div>
+          </>
+        )}
         <div className="title-block mono" aria-hidden="true">
           <span>Drawn: {profile.initials}</span><span>Checked: {profile.initials}</span><span>Rev: A</span><span>Scale: NTS</span>
         </div>
