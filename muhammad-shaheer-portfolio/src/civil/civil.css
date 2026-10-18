@@ -370,12 +370,13 @@ main > * { pointer-events: auto; }
   .brand__text span { display: none; }
   .toggle .mono { display: none; }
   .toggle { padding: 0 12px; }
-  .intro { right: 16px; bottom: 132px; }
-  .intro h1 { font-size: clamp(46px, 15vw, 76px); }
-  .intro__lede { font-size: 15px; }
-  .plan { width: 200px; right: 10px; bottom: 10px; padding: 6px 6px 2px; }
-  .plan figcaption { display: none; }
-  .walk-hint { bottom: auto; top: calc(var(--header-h) + 52px); font-size: 10px; }
+  .intro { right: 16px; bottom: 24px; }
+  .intro__focus { display: none; }
+  .intro h1 { font-size: clamp(42px, 13.5vw, 72px); }
+  .intro__lede { font-size: 15px; margin-bottom: 22px; }
+  /* the rooms menu replaces the floor plan on phones */
+  .plan { display: none; }
+  .walk-hint { bottom: 20px; font-size: 10px; }
   .site-nav a { font-size: 12px; padding: 9px 2px; }
   .site-header { gap: 10px; }
   .panel--room { left: 0; right: 0; bottom: 0; top: 34vh; padding: 16px 16px 28px; border-left: 0; border-right: 0; }

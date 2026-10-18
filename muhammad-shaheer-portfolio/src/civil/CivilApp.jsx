@@ -422,6 +422,8 @@ export default function CivilApp() {
   const zTarget = useRef(corridor.start);
   const camZ = useRef(corridor.start + 3);
   const introRef = useRef(null);
+  const shadeRef = useRef(null);
+  const hintRef = useRef(null);
   const busy = activeRoom !== null;
 
   useEffect(() => { waitForFonts().then(() => setFontsReady(true)); }, []);
@@ -462,15 +464,19 @@ export default function CivilApp() {
     };
   }, [started, busy, sceneFailed]);
 
-  // Fade the intro as the visitor walks away from the lobby
+  // Fade the intro (and the shade behind it) as the visitor walks away from the lobby.
+  // On phones the walk hint takes the intro's place once it has faded.
   useEffect(() => {
     let raf;
+    const phone = window.matchMedia('(max-width: 760px)');
     const tick = () => {
+      const o = Math.max(0, Math.min(1, (camZ.current - (corridor.start - 5)) / 4));
       if (introRef.current) {
-        const o = Math.max(0, Math.min(1, (camZ.current - (corridor.start - 5)) / 4));
         introRef.current.style.opacity = String(o);
         introRef.current.style.visibility = o < 0.02 ? 'hidden' : 'visible';
       }
+      if (shadeRef.current) shadeRef.current.style.opacity = String(o);
+      if (hintRef.current) hintRef.current.style.opacity = phone.matches ? String(1 - o) : '';
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -550,7 +556,7 @@ export default function CivilApp() {
         </Suspense>
       )}
       {sceneFailed && <div className="scene scene--fallback" aria-hidden="true" />}
-      <div className="scene-shade" aria-hidden="true" />
+      <div ref={shadeRef} className="scene-shade" aria-hidden="true" />
 
       <Preloader ready={sceneReady || sceneFailed} onDone={onLoaded} />
       <Header blueprint={blueprint} onToggleBlueprint={() => setBlueprint(b => !b)} onHome={goHome} onRoom={enterRoom} activeRoom={panelRoom} />
@@ -568,7 +574,7 @@ export default function CivilApp() {
         </section>
 
         {!panelRoom && !busy && started && (
-          <div className="walk-hint mono" aria-hidden="true">
+          <div ref={hintRef} className="walk-hint mono" aria-hidden="true">
             <span className="walk-hint__mouse"><span /></span>
             {coarsePointer ? 'Swipe up to walk · tap a door to enter' : 'Scroll or drag to walk · click a door to enter'}
           </div>

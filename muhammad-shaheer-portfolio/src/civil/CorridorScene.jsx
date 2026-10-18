@@ -56,12 +56,17 @@ const ACTIVITY_SIDE_WALL = [
 
 const SceneCtx = createContext(null);
 
-function useMaterialSet(blueprint) {
+function useMaterialSet(blueprint, lowPower) {
   const set = useMemo(() => {
     const wallMap = concreteTexture({ base: '#b8b7b1', seed: 73 });
     const floorMap = concreteTexture({ base: '#a9a8a2', seed: 19, ties: false });
     const ceilMap = concreteTexture({ base: '#a4a49f', seed: 7, ties: false });
-    const std = (o) => new THREE.MeshStandardMaterial(o);
+    // Phones get the much cheaper Lambert shading (no roughness/metalness) to keep frame rates up
+    const std = (o) => {
+      if (!lowPower) return new THREE.MeshStandardMaterial(o);
+      const { roughness: _r, metalness: _m, ...lambert } = o;
+      return new THREE.MeshLambertMaterial(lambert);
+    };
     const m = {
       wall: std({ map: wallMap, color: '#d2d1cb', roughness: 0.95 }),
       wallDark: std({ map: wallMap, color: '#a9a9a3', roughness: 0.95 }),
@@ -85,7 +90,7 @@ function useMaterialSet(blueprint) {
     const warmGlass = new THREE.MeshBasicMaterial({ color: '#ffd9a0', toneMapped: false });
     Object.values(m).forEach(mat => { mat.userData.original = { color: mat.color.clone(), map: mat.map }; });
     return { m: { ...m, glow, warmGlass }, std: m, textures: [wallMap, floorMap, ceilMap] };
-  }, []);
+  }, [lowPower]);
 
   useEffect(() => {
     Object.entries(set.std).forEach(([key, mat]) => {
@@ -774,6 +779,11 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
 
   useEffect(() => {
     camera.rotation.order = 'YXZ';
+    // Portrait screens: widen the vertical field of view so the corridor isn't a narrow slice.
+    // Aim for ~72° horizontally, capped at 90° vertically to limit fish-eye stretching.
+    const aspect = size.width / size.height;
+    camera.fov = aspect >= 1 ? 62
+      : THREE.MathUtils.clamp(THREE.MathUtils.radToDeg(2 * Math.atan(Math.tan(THREE.MathUtils.degToRad(36)) / aspect)), 62, 90);
     if (narrow) camera.clearViewOffset();
     else camera.setViewOffset(size.width, size.height, -size.width * 0.12, 0, size.width, size.height);
     camera.updateProjectionMatrix();
@@ -839,7 +849,9 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
     }
     const dy = shortestAngle(s.yaw, yaw);
     s.yaw += reducedMotion ? dy : dy * (1 - Math.exp(-turnRate * dt));
-    const pitchTarget = s.phase !== 'corridor' ? 0
+    // phones: the room panel covers the lower two-thirds, so look down a little to bring the wall into the strip above it
+    const pitchTarget = s.phase === 'inside' || s.phase === 'enter' ? (narrow ? -0.3 : 0)
+      : s.phase !== 'corridor' ? 0
       : narrow ? -0.14 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1)
       : reducedMotion ? 0 : pointer.y * 0.04;
     s.pitch += (pitchTarget - s.pitch) * (1 - Math.exp(-4 * dt));
@@ -871,7 +883,7 @@ function Lights({ lowPower }) {
 }
 
 function World({ blueprint, lowPower, onReady, ...rig }) {
-  const m = useMaterialSet(blueprint);
+  const m = useMaterialSet(blueprint, lowPower);
   const ctx = useMemo(() => ({ m, blueprint }), [m, blueprint]);
   const [openId, setOpenId] = useState(null);
   useEffect(() => {
@@ -908,8 +920,9 @@ function World({ blueprint, lowPower, onReady, ...rig }) {
 
 export default function CorridorScene({ blueprint, lowPower, reducedMotion, onReady, onFailure, ...rig }) {
   // Render resolution adapts to the device: it steps down when frames drop and back up when there's headroom
-  const maxDpr = Math.min(window.devicePixelRatio || 1, lowPower ? 1.25 : 1.5);
-  const [dpr, setDpr] = useState(maxDpr);
+  // Phones have far fewer CSS pixels, so they can afford a higher ratio (anything lower looks blurry on their dense screens)
+  const maxDpr = Math.min(window.devicePixelRatio || 1, lowPower ? 2 : 1.5);
+  const [dpr, setDpr] = useState(Math.min(maxDpr, 1.5));
   return (
     <div className="scene">
       <Canvas
