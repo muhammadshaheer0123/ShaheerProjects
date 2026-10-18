@@ -445,13 +445,24 @@ export const leadership = [
 ];
 
 // Events, seminars and site visits. `photos` are optional; captions double as alt text.
+// `featured: true` makes a card span the full width.
 export const activities = [
   {
     icon: 'cert',
     title: '17th International Conference on Geotechnical Engineering & 8th International Symposium on Geohazards',
     role: 'Head of Registration',
-    period: 'Final year',
-    body: 'Managed registration for an international event where specialists from many countries and fields presented their research.',
+    period: '4–5 Dec 2025',
+    featured: true,
+    body: 'Hosted at FAST-NUCES Lahore. I ran registration for authors, pre-registered and onsite delegates at an international event where specialists from many countries and fields presented their research, and was recognised with a shield and certificate.',
+    photos: [
+      { src: '/activities/geotech-conference/registration-desk.webp', caption: 'Registration desk for authors, onsite and pre-registered delegates' },
+      { src: '/activities/geotech-conference/conference-banner.webp', caption: 'Conference banner at FAST-NUCES Lahore, 4–5 December 2025' },
+      { src: '/activities/geotech-conference/conference-backdrop.webp', caption: 'At the 17ICGE & 8ISG sponsor wall' },
+      { src: '/activities/geotech-conference/organising-team.webp', caption: 'With members of the organising team' },
+      { src: '/activities/geotech-conference/international-delegates.webp', caption: 'International delegates between sessions' },
+      { src: '/activities/geotech-conference/evening-group.webp', caption: 'Organising team on the conference evening' },
+      { src: '/activities/geotech-conference/award.webp', caption: 'Receiving a shield and certificate for the conference' },
+    ],
   },
   {
     icon: 'people',

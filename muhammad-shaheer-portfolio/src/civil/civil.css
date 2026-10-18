@@ -328,6 +328,9 @@ main > * { pointer-events: auto; }
 .activity__photos a, .role__photo { display: block; border: 1px solid var(--line-strong); background: var(--line); transition: border-color 0.2s var(--ease); }
 .activity__photos a:hover, .activity__photos a:focus-visible, .role__photo:hover, .role__photo:focus-visible { border-color: var(--ink); }
 .activity__photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.activities > li.is-featured { grid-column: 1 / -1; }
+.is-featured .activity__photos { grid-template-columns: repeat(3, 1fr); }
+.is-featured .activity__photos a:first-child:nth-last-child(odd) img { aspect-ratio: 16 / 9; }
 
 /* ASCE roles */
 .role--photo { display: grid; grid-template-columns: 1fr 120px; gap: 14px; align-items: start; }

@@ -268,7 +268,7 @@ function ActivitiesRoom({ room }) {
       <h3 className="sub mono">Events & site visits</h3>
       <ul className="activities">
         {activities.map(a => (
-          <li key={a.title}>
+          <li key={a.title} className={a.featured ? 'is-featured' : undefined}>
             <svg viewBox="0 0 24 24" aria-hidden="true" className="activity__icon"><path d={ACTIVITY_ICONS[a.icon]} /></svg>
             <div>
               <p className="mono activity__meta">{metaLine(a.role, a.period)}</p>
