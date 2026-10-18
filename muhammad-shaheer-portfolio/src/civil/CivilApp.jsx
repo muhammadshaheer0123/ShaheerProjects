@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { profile, rooms, corridor, expertise, projects, experience, activities } from './content';
+import { profile, rooms, corridor, expertise, projects, experience, leadership, activities } from './content';
 import ProjectDrawing from './ProjectDrawing';
 
 const CorridorScene = lazy(() => import('./CorridorScene'));
@@ -181,7 +181,7 @@ function AboutRoom({ room }) {
               <p className="mono timeline__period">{e.period}</p>
               <h4>{e.role}</h4>
               <p className="timeline__org">{e.org}</p>
-              <ul>{e.points.map(pt => <li key={pt}>{pt}</li>)}</ul>
+              {e.points.length > 0 && <ul>{e.points.map(pt => <li key={pt}>{pt}</li>)}</ul>}
             </div>
           </li>
         ))}
@@ -235,20 +235,51 @@ const ACTIVITY_ICONS = {
   cert: 'M5 3h14v12H5zM9 7h6M9 10h6M10 15l-2 6 4-2 4 2-2-6',
 };
 
+function PhotoLink({ photo, className }) {
+  return (
+    <a href={photo.src} target="_blank" rel="noreferrer" className={className} aria-label={`Open full size: ${photo.caption}`}>
+      <img src={photo.src} alt={photo.caption} loading="lazy" />
+    </a>
+  );
+}
+
 function ActivitiesRoom({ room }) {
   return (
     <>
       <RoomHead room={room} title="Beyond the drawings." />
-      <p>What I do outside design offices and site meetings: competitions, societies and the people side of engineering.</p>
+      <p>My years with the ASCE-NUCES student chapter, from member to senior vice president, and the international conference, seminars and site visits I managed and photographed along the way.</p>
+      <h3 className="sub mono">ASCE-NUCES: member to senior vice president</h3>
+      <ol className="timeline">
+        {leadership.map(l => (
+          <li key={l.role}>
+            <span className="timeline__elev mono"><span className="tri" aria-hidden="true" />{l.elevation}</span>
+            <div className={l.photo ? 'role role--photo' : 'role'}>
+              <div>
+                {l.period && <p className="mono timeline__period">{l.period}</p>}
+                <h4>{l.role}</h4>
+                <p className="timeline__org">{l.org}</p>
+                <ul>{l.points.map(pt => <li key={pt}>{pt}</li>)}</ul>
+              </div>
+              {l.photo && <PhotoLink photo={{ src: l.photo, caption: `${l.role}, ${l.org}` }} className="role__photo" />}
+            </div>
+          </li>
+        ))}
+      </ol>
+      <h3 className="sub mono">Events & site visits</h3>
       <ul className="activities">
         {activities.map(a => (
           <li key={a.title}>
             <svg viewBox="0 0 24 24" aria-hidden="true" className="activity__icon"><path d={ACTIVITY_ICONS[a.icon]} /></svg>
             <div>
-              <p className="mono activity__meta">{a.role} · {a.period}</p>
+              <p className="mono activity__meta">{metaLine(a.role, a.period)}</p>
               <h4>{a.title}</h4>
               <p>{a.body}</p>
             </div>
+            {a.photos?.length > 0 && (
+              <div className="activity__photos">
+                {a.photos.map(ph => <PhotoLink key={ph.src} photo={ph} />)}
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -272,7 +303,7 @@ function ContactRoom({ room }) {
       <p>Have a structure to design, a site that needs supervising, or quantities that need checking? Send the brief and I'll reply within two working days.</p>
       <ul className="contact__list">
         <li><span className="mono">Email</span><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
-        <li><span className="mono">Phone</span><a href={`tel:${profile.phone.replace(/\s/g, '')}`}>{profile.phone}</a></li>
+        {profile.phone && <li><span className="mono">Phone</span><a href={`tel:${profile.phone.replace(/\s/g, '')}`}>{profile.phone}</a></li>}
         <li><span className="mono">Based</span><span>{profile.location}</span></li>
         {profile.links.filter(l => !l.href.startsWith('mailto')).map(l => (
           <li key={l.label}><span className="mono">{l.label}</span><a href={l.href} target="_blank" rel="noopener noreferrer">{l.href.replace(/^https?:\/\/(www\.)?/, '')}</a></li>

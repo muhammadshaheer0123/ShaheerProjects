@@ -1,7 +1,7 @@
 // All portfolio copy lives here. Edit this file to update the site —
 // no component changes are needed.
-// NOTE: projects, experience and figures below are starter content.
-// Replace them with Muhammad Shaheer's real work before publishing.
+// Profile, experience and activities follow Muhammad Shaheer's CV.
+// NOTE: projects S-103 onwards are starter placeholders, not real work.
 
 export const profile = {
   name: 'Muhammad Shaheer',
@@ -9,28 +9,29 @@ export const profile = {
   lastName: 'Shaheer',
   initials: 'MS',
   title: 'Civil Engineer',
-  focus: 'Structural design · Site execution · Quantity surveying',
-  location: 'Pakistan · open to remote & on-site work',
-  email: 'muhammad.shaheer@example.com',
-  phone: '+92 300 0000000',
+  focus: 'Structural analysis & design · Steel & RC structures · Construction supervision',
+  location: 'Lahore, Pakistan',
+  email: 'muhammad.shaheer26@hotmail.com',
+  // Leave empty to hide the phone line on the Contact panel
+  phone: '',
   links: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/' },
-    { label: 'Email', href: 'mailto:muhammad.shaheer@example.com' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/muhammad-shaheer-828336291' },
+    { label: 'Email', href: 'mailto:muhammad.shaheer26@hotmail.com' },
   ],
   intro:
-    'I design reinforced-concrete structures, check them against code, and follow them onto site until the last slab is cured.',
+    'I design steel and reinforced-concrete structures, from oil and gas skids to high-rise frames, and check them against ACI and AISC.',
   greeting: "Hi, I'm Shaheer!",
   greetingSub: 'Scroll to walk the corridor',
   avatar: '/avatar/shaheer-avatar.png',
   portrait: '/avatar/shaheer-portrait.jpg',
   about: [
-    'I am a civil engineer working across structural analysis, construction supervision and cost control. My work starts with load paths and ends with a building people can safely occupy.',
-    'On the design side I model frames in ETABS and SAFE, detail members to ACI 318, and produce drawings that site teams can actually build from. On site I run setting-out, inspect reinforcement before every pour and keep quantities honest against the BOQ.',
+    'I am a civil engineering graduate from FAST-NUCES Lahore (2022–2026), now working as a Trainee Structural Engineer at Deomar Engineering. There I design oil and gas structures such as skids, platforms and sheds in STAAD Pro, design their foundations in STAAD Foundation, and prepare BOQs, material take-offs and bidding documents.',
+    'Before that I saw construction up close: supervising excavation, reinforcement and concrete quality on a five-basement high-rise with Ittefaq Group, and supporting the Tarbela 5th Extension Project with WAPDA. I model in ETABS, SAP2000 and STAAD Pro, design to ACI and AISC, and like checking the numbers against reality. My final-year project measured a steel frame’s vibration with Arduino sensors and validated it against a finite element model.',
   ],
   stats: [
-    { value: '12+', label: 'Structures designed & checked' },
-    { value: '4', label: 'Sites supervised' },
-    { value: '0', label: 'Lost-time incidents on my pours' },
+    { value: '15', label: 'Storey RC tower designed' },
+    { value: '5', label: 'Basement high-rise supervised' },
+    { value: '3', label: 'Industry roles' },
   ],
 };
 
@@ -50,38 +51,38 @@ export const expertise = [
   {
     code: 'C1',
     title: 'Structural analysis & design',
-    body: 'RCC frames, slabs, foundations and retaining walls — modelled, analysed and detailed to ACI 318 / ASCE 7.',
-    tools: ['ETABS', 'SAP2000', 'SAFE', 'CSI Detail'],
+    body: 'Reinforced-concrete and steel buildings modelled, analysed and designed to ACI 318 and AISC 360, including slabs, frames, shear walls and foundations.',
+    tools: ['ETABS', 'SAP2000', 'STAAD Pro', 'SAFE'],
   },
   {
     code: 'C2',
-    title: 'Site execution & supervision',
-    body: 'Setting-out, formwork and reinforcement inspection, pour sequencing and daily progress reporting.',
-    tools: ['Total station', 'Auto level', 'Pour cards'],
+    title: 'Oil & gas structures',
+    body: 'Skids, platforms and sheds for oil and gas facilities, with their foundations, designed to the applicable engineering standards.',
+    tools: ['STAAD Pro', 'STAAD Foundation'],
   },
   {
     code: 'C3',
-    title: 'Quantity surveying & BOQ',
-    body: 'Take-offs from drawings, rate analysis, interim payment certificates and variation tracking.',
-    tools: ['Excel', 'PlanSwift', 'CSMI'],
+    title: 'Steel connection design',
+    body: 'Base plates, bolted cleats and moment end plates verified with component-based finite element analysis to AISC LRFD.',
+    tools: ['IDEA StatiCa'],
   },
   {
     code: 'C4',
-    title: 'Planning & scheduling',
-    body: 'Baseline programmes, critical-path tracking and look-ahead plans that site teams can follow.',
-    tools: ['Primavera P6', 'MS Project'],
+    title: 'Construction supervision',
+    body: 'Excavation, reinforcement fixing and concrete quality control (sampling, curing and cube testing), plus IFC drawing review.',
+    tools: ['Concrete QC', 'Cube testing', 'IFC review'],
   },
   {
     code: 'C5',
-    title: 'Drafting & BIM',
-    body: 'Clean working drawings, structural detailing and coordinated 3D models for clash-free construction.',
-    tools: ['AutoCAD', 'Revit', 'Civil 3D'],
+    title: 'Planning, BOQ & bidding',
+    body: 'Baselined schedules with WBS, activity sequencing and resources; BOQs, material take-offs and bidding documents.',
+    tools: ['Primavera P6', 'MS Excel'],
   },
   {
     code: 'C6',
-    title: 'Materials & quality control',
-    body: 'Cube and cylinder testing, slump checks, field density tests and non-conformance close-out.',
-    tools: ['QA/QC plans', 'ITPs', 'Lab reports'],
+    title: 'Drafting, BIM & programming',
+    body: 'Drawings, BIM models and GIS, plus Python, C++ and Arduino-based sensing for structural monitoring.',
+    tools: ['AutoCAD', 'Revit', 'ArcGIS', 'Python', 'Arduino'],
   },
 ];
 
@@ -97,7 +98,7 @@ export const projects = [
     title: '15-Storey RC Residential Building',
     category: 'Structural',
     location: '',
-    year: '',
+    year: '2026',
     role: 'Structural analysis & design (ETABS)',
     drawing: 'frame',
     summary:
@@ -113,6 +114,7 @@ export const projects = [
       'Preliminary sizing of slabs, beams, columns and walls from span-to-depth ratios',
       'Wind and earthquake analysis with storey drift and displacement checks',
       'Design of all members to ACI 318-19',
+      'Foundation design in SAFE',
     ],
     conclusions: [
       'The frame and shear-wall system performed well under gravity, wind and seismic loads, and every member met ACI 318-19 strength requirements.',
@@ -141,7 +143,7 @@ export const projects = [
     title: 'Steel Industrial Building (Gable Frame)',
     category: 'Steel',
     location: '',
-    year: '',
+    year: '2025',
     role: 'Steel modelling, analysis & design check (SAP2000)',
     drawing: 'frame',
     summary:
@@ -182,7 +184,7 @@ export const projects = [
     title: 'Steel Connection Design',
     category: 'Steel',
     location: '',
-    year: '',
+    year: '2025',
     role: 'Connection modelling & verification (IDEA StatiCa)',
     drawing: 'frame',
     summary:
@@ -351,82 +353,149 @@ export const projects = [
 
 export const experience = [
   {
-    elevation: '+8.00',
-    period: '2024 — Present',
-    role: 'Site / Structural Engineer',
-    org: 'General contractor · commercial & residential',
+    elevation: '+10.00',
+    period: 'Sep 2026 — Present',
+    role: 'Trainee Structural Engineer',
+    org: 'Deomar Engineering · Lahore',
     points: [
-      'Supervise RCC works and sign off reinforcement before pours',
-      'Prepare monthly IPCs and reconcile quantities against the BOQ',
+      'Design oil and gas structures, including skids, platforms and sheds, in STAAD Pro',
+      'Design their foundations in STAAD Foundation',
+      'Prepare BOQs, material take-offs and bidding documents',
+    ],
+  },
+  {
+    elevation: '+8.00',
+    period: 'Jun — Jul 2025',
+    role: 'Engineering Intern',
+    org: 'Ittefaq Group · Lahore',
+    points: [
+      'Supervised a 5-basement high-rise: excavation, reinforcement fixing and concrete QC (sampling, curing, cube tests)',
+      'Baselined the project schedule in Primavera P6 with WBS, sequencing, durations and resources',
+      'Reviewed IFC drawings and bidding documents; coordinated procurement, contract bonds and dewatering safety plans',
     ],
   },
   {
     elevation: '+6.00',
-    period: '2023 — 2024',
-    role: 'Junior Design Engineer',
-    org: 'Structural consultancy',
+    period: 'Jul — Aug 2024',
+    role: 'Engineering Intern',
+    org: 'WAPDA · Central Design Office, Lahore',
     points: [
-      'Modelled and designed RCC buildings in ETABS and SAFE',
-      'Produced structural drawings and bar bending schedules',
+      'Supported contract management and operations for the Tarbela 5th Extension Project',
+      'Assisted with technical planning, feasibility assessments and quality control for hydropower infrastructure',
     ],
   },
   {
     elevation: '+4.00',
-    period: '2022',
-    role: 'Engineering Intern',
-    org: 'Public works department',
-    points: ['Road and culvert site inspections, survey and lab testing'],
+    period: '2022 — 2026',
+    role: 'B.S. Civil Engineering',
+    org: 'FAST-NUCES, Lahore',
+    points: [
+      'Final-year project: Arduino vibration sensing of a steel gable frame, validated against a STAAD Pro FE model',
+      'Senior Vice President, ASCE-NUCES Chapter',
+      'Primavera P6 Fundamentals, Alison (CPD certified), Jul 2025',
+    ],
+  },
+  {
+    elevation: '+2.00',
+    period: '2020 — 2022',
+    role: 'FSc Pre-Engineering',
+    org: 'Govt. College of Science, Wahdat Road, Lahore',
+    points: [],
   },
   {
     elevation: '±0.00',
-    period: '2018 — 2022',
-    role: 'B.Sc. Civil Engineering',
-    org: 'Engineering university',
-    points: ['Final-year project: design of an elevated RCC water tank'],
+    period: '2018 — 2020',
+    role: 'Matriculation',
+    org: 'Lahore Garrison Grammar School, Awan Town, Lahore',
+    points: [],
   },
 ];
 
+// ASCE-NUCES roles, newest first. `photo` is optional.
+export const leadership = [
+  {
+    elevation: '+8.00',
+    period: '2025 — 26 · Final year',
+    role: 'Senior Vice President',
+    org: 'ASCE-NUCES Chapter',
+    photo: '/activities/senior-vice-president.webp',
+    points: [
+      'Planned and hosted technical workshops, events and chapter initiatives',
+      'Led coordination with faculty, partners and volunteers so every event ran smoothly',
+      'Head of Registration for an international geotechnical conference (see below)',
+    ],
+  },
+  {
+    elevation: '+4.00',
+    period: '',
+    role: 'Deputy Head Photography',
+    org: 'ASCE-NUCES Chapter',
+    photo: '/activities/deputy-head-photography.webp',
+    points: [
+      'Managed and photographed chapter events, seminars, technical workshops and site visits',
+    ],
+  },
+  {
+    elevation: '±0.00',
+    period: '',
+    role: 'Member',
+    org: 'ASCE-NUCES Chapter',
+    points: ['Joined the American Society of Civil Engineers student chapter at FAST-NUCES'],
+  },
+];
+
+// Events, seminars and site visits. `photos` are optional; captions double as alt text.
 export const activities = [
   {
-    icon: 'truss',
-    title: 'Bridge-model competition',
-    role: 'Team lead',
-    period: '2021',
-    body: 'Designed and built a balsa Warren-truss bridge, then load-tested it to failure. Placed in the top three on load-to-weight ratio.',
+    icon: 'cert',
+    title: '17th International Conference on Geotechnical Engineering & 8th International Symposium on Geohazards',
+    role: 'Head of Registration',
+    period: 'Final year',
+    body: 'Managed registration for an international event where specialists from many countries and fields presented their research.',
   },
   {
     icon: 'people',
-    title: 'Civil engineering society',
-    role: 'Event coordinator',
-    period: '2020 — 2022',
-    body: 'Organised technical talks, AutoCAD and ETABS workshops and the annual engineering week for 300+ students.',
+    title: 'Exchange Ambassador Outreach Program',
+    role: 'Managed & photographed',
+    period: '',
+    body: 'Outreach session with the U.S. Embassy Pakistan and the Pakistan–U.S. Alumni Network introducing students to international exchange programs.',
+    photos: [
+      { src: '/activities/exchange-ambassador-outreach.png', caption: 'Exchange Ambassador Outreach Program talk' },
+      { src: '/activities/exchange-program-seminar.webp', caption: 'Exchange Program Seminar attendees' },
+      { src: '/activities/exchange-program-audience.webp', caption: 'Audience at the exchange program seminar' },
+    ],
+  },
+  {
+    icon: 'people',
+    title: 'AIT Scholarships Seminar',
+    role: 'Managed & photographed',
+    period: '',
+    body: 'Seminar for civil engineering students on scholarship opportunities at the Asian Institute of Technology.',
+    photos: [
+      { src: '/activities/ait-scholarships-seminar.webp', caption: 'AIT Scholarships Seminar group photo' },
+    ],
   },
   {
     icon: 'helmet',
-    title: 'Site visits & technical tours',
-    role: 'Organiser',
-    period: '2019 — 2022',
-    body: 'Arranged visits to a motorway interchange, a hydropower dam and high-rise sites to see design meet construction.',
+    title: 'Site visit: Hydraulic Research Station, Nandipur',
+    role: 'Managed & photographed',
+    period: '',
+    body: 'Student visit to the hydraulic research station in Nandipur, Gujranwala, including a site layout briefing and physical hydraulic models.',
+    photos: [
+      { src: '/activities/nandipur-site-visit.webp', caption: 'Students at Nandipur, Gujranwala' },
+      { src: '/activities/nandipur-layout-briefing.webp', caption: 'Briefing at the station layout plan' },
+      { src: '/activities/nandipur-hydraulic-model.webp', caption: 'Physical hydraulic model at the station' },
+    ],
   },
   {
-    icon: 'hands',
-    title: 'Community volunteering',
-    role: 'Volunteer',
-    period: '2022',
-    body: 'Helped assess flood-damaged homes and plan safe temporary shelters with a local relief group.',
-  },
-  {
-    icon: 'cricket',
-    title: 'University cricket team',
-    role: 'All-rounder',
-    period: '2018 — 2022',
-    body: 'Four seasons of inter-department cricket. Teamwork and composure under pressure, both useful on site.',
-  },
-  {
-    icon: 'cert',
-    title: 'Workshops & certifications',
-    role: 'Participant',
-    period: 'Ongoing',
-    body: 'ETABS, SAFE and Primavera P6 training, plus first-aid and site-safety induction courses.',
+    icon: 'helmet',
+    title: 'Site visit: Banu Mukhtar Steel',
+    role: 'Managed & photographed',
+    period: '',
+    body: 'Factory visit for students to see industrial steel fabrication up close, from the shop floor to its overhead cranes.',
+    photos: [
+      { src: '/activities/banu-mukhtar-steel-visit.webp', caption: 'Students at Banu Mukhtar Steel' },
+      { src: '/activities/banu-mukhtar-steel-shop.webp', caption: 'Inside the Banu Mukhtar Steel fabrication shop' },
+    ],
   },
 ];

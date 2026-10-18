@@ -323,6 +323,15 @@ main > * { pointer-events: auto; }
 .activity__meta { font-size: 11px; text-transform: uppercase; margin: 0 0 4px; }
 .activities h4 { font-size: 16px; margin-bottom: 6px; }
 .activities p { font-size: 14px; line-height: 1.5; margin: 0; }
+.activity__photos { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.activity__photos a:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+.activity__photos a, .role__photo { display: block; border: 1px solid var(--line-strong); background: var(--line); transition: border-color 0.2s var(--ease); }
+.activity__photos a:hover, .activity__photos a:focus-visible, .role__photo:hover, .role__photo:focus-visible { border-color: var(--ink); }
+.activity__photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+
+/* ASCE roles */
+.role--photo { display: grid; grid-template-columns: 1fr 120px; gap: 14px; align-items: start; }
+.role__photo img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center top; }
 
 /* contact */
 .contact__list { list-style: none; margin: 8px 0 22px; padding: 0; }
@@ -369,6 +378,7 @@ main > * { pointer-events: auto; }
   .figures { grid-template-columns: 1fr; }
   .figures div { border-right: 0; border-bottom: 1px solid var(--line); }
   .stats dt { font-size: 28px; }
+  .role--photo { grid-template-columns: 1fr 88px; gap: 10px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
