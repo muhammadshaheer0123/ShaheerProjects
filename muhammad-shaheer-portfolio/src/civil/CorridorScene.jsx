@@ -401,7 +401,9 @@ function Avatar({ position }) {
   const body = useRef();
   const bubble = useRef();
   const aspect = tex.image ? tex.image.width / tex.image.height : 0.45;
-  const H = 1.5;
+  // the cut-out runs from helmet to upper thigh: its lower edge sits below the counter top (1.1 m)
+  const BASE = 0.78;
+  const H = 1.17;
   useFrame(({ camera, clock }) => {
     if (!group.current) return;
     const g = group.current;
@@ -417,12 +419,12 @@ function Avatar({ position }) {
       const near = camera.position.z - g.position.z;
       const o = THREE.MathUtils.clamp((near - 1.2) / 2.5, 0, 1);
       bubble.current.material.opacity = o;
-      bubble.current.position.y = H + 0.85 + Math.sin(t * 2) * 0.03;
+      bubble.current.position.y = BASE + H + 0.32 + Math.sin(t * 2) * 0.03;
     }
   });
   return (
     <group ref={group} position={position}>
-      <group ref={body} position={[0, 0.55, 0]}>
+      <group ref={body} position={[0, BASE, 0]}>
         {/* soft contact shadow */}
         <mesh position={[0, H / 2, -0.04]}>
           <planeGeometry args={[H * aspect * 1.02, H * 1.01]} />
@@ -433,7 +435,7 @@ function Avatar({ position }) {
           <meshBasicMaterial map={tex} transparent alphaTest={0.05} toneMapped={false} side={THREE.DoubleSide} />
         </mesh>
       </group>
-      <mesh ref={bubble} position={[0.15, H + 0.85, 0.05]}>
+      <mesh ref={bubble} position={[0.15, BASE + H + 0.32, 0.05]}>
         <planeGeometry args={[1.5, 0.62]} />
         <meshBasicMaterial map={bubbleTex} transparent depthWrite={false} toneMapped={false} />
       </mesh>

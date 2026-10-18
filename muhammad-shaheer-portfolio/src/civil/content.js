@@ -22,7 +22,8 @@ export const profile = {
     'I design steel and reinforced-concrete structures, from oil and gas skids to high-rise frames, and check them against ACI and AISC.',
   greeting: "Hi, I'm Shaheer!",
   greetingSub: 'Scroll to walk the corridor',
-  avatar: '/avatar/shaheer-avatar.png',
+  // Hallway figure behind the reception counter: a transparent cut-out from helmet to upper thigh
+  avatar: '/avatar/shaheer-hallway.webp',
   portrait: '/avatar/shaheer-portrait.jpg',
   about: [
     'I am a civil engineering graduate from FAST-NUCES Lahore (2022–2026), now working as a Trainee Structural Engineer at Deomar Engineering. There I design oil and gas structures such as skids, platforms and sheds in STAAD Pro, design their foundations in STAAD Foundation, and prepare BOQs, material take-offs and bidding documents.',
