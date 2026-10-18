@@ -3,7 +3,7 @@ import { createContext, Suspense, useContext, useEffect, useMemo, useRef, useSta
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Edges, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
-import { profile, rooms, corridor as CORRIDOR } from './content';
+import { profile, rooms, corridor as CORRIDOR, leadership } from './content';
 import { concreteTexture, labelTexture, structureTexture, STRUCTURES } from './textures';
 
 /* ------------------------------------------------------------------ */
@@ -25,6 +25,29 @@ const FRAME_Z = [9, 3.5, -2, -12.5, -23.5, -34.5, -45.5, -51.5];
 const PICTURES = [
   ['left', 0.8, 0], ['right', -7, 1], ['left', -10, 2], ['right', -14.8, 3],
   ['left', -18, 4], ['right', -29, 5], ['left', -26, 6], ['right', -37.2, 7],
+];
+
+// Real project images framed on the Projects room back wall: top row, then bottom row
+const PROJECT_WALL = [
+  '/projects/etabs-15-storey/plan-and-3d-model.png',
+  '/projects/sap2000-steel-shed/3d-frame-model.png',
+  '/projects/idea-statica-connections/anchor-base-plate.png',
+  '/projects/etabs-15-storey/deformed-shape.png',
+  '/projects/sap2000-steel-shed/moment-diagram.png',
+  '/projects/idea-statica-connections/beam-column-end-plate.png',
+];
+
+// Event photos above the Extracurricular trophy shelf
+const ACTIVITY_WALL = [
+  '/activities/geotech-conference/registration-desk.webp',
+  '/activities/rescue-1122/team-ers-15.webp',
+  '/activities/banu-mukhtar-steel-visit.webp',
+];
+
+// Larger event photos on the Extracurricular side wall
+const ACTIVITY_SIDE_WALL = [
+  '/activities/nandipur-site-visit.webp',
+  '/activities/exchange-program-seminar.webp',
 ];
 
 /* ------------------------------------------------------------------ */
@@ -579,6 +602,15 @@ function WallFrame({ position, texture, size = [1, 0.7], rotation = [0, Math.PI 
   );
 }
 
+// A framed photo sized to its own aspect ratio, fitted inside `max` [w, h]
+function PhotoFrame({ src, position, max = [1.2, 0.8], rotation }) {
+  const tex = useTexture(src);
+  useEffect(() => { tex.colorSpace = THREE.SRGBColorSpace; tex.needsUpdate = true; }, [tex]);
+  const { width = 1, height = 1 } = tex.image || {};
+  const k = Math.min(max[0] / width, max[1] / height);
+  return <WallFrame position={position} rotation={rotation} texture={tex} size={[width * k, height * k]} />;
+}
+
 function AboutProps() {
   const portrait = useTexture(profile.portrait);
   useEffect(() => { portrait.colorSpace = THREE.SRGBColorSpace; }, [portrait]);
@@ -600,11 +632,10 @@ function AboutProps() {
 }
 
 function ProjectsProps() {
-  const textures = useMemo(() => STRUCTURES.slice(0, 6).map(structureTexture), []);
   return (
     <group>
-      {textures.map((t, i) => (
-        <WallFrame key={i} texture={t} size={[1.05, 0.74]} position={[-3.47, i < 3 ? 2.75 : 1.75, -1.4 + (i % 3) * 1.4]} />
+      {PROJECT_WALL.map((src, i) => (
+        <PhotoFrame key={src} src={src} max={[1.2, 0.8]} position={[-3.47, i < 3 ? 2.85 : 1.75, -1.4 + (i % 3) * 1.4]} />
       ))}
       <Table position={[-0.9, 0, 0.2]} size={[1.8, 0.9, 1.1]} />
       {/* scale model: three-storey RC frame */}
@@ -641,11 +672,18 @@ function ActivitiesProps() {
           <cylinderGeometry args={[0.12, 0.12, 0.02, 24]} />
         </mesh>
       ))}
+      {/* event photos above the shelf, ASCE role posters either side */}
+      {ACTIVITY_WALL.map((src, i) => (
+        <PhotoFrame key={src} src={src} max={[1.0, 0.7]} position={[-3.47, 3.25, -1.15 + i * 1.15]} />
+      ))}
+      {leadership.filter(l => l.photo).slice(0, 2).map((l, i) => (
+        <PhotoFrame key={l.photo} src={l.photo} max={[0.85, 1.05]} position={[-3.47, 1.95, i === 0 ? 2.55 : -2.55]} />
+      ))}
+      {ACTIVITY_SIDE_WALL.map((src, i) => (
+        <PhotoFrame key={src} src={src} max={[1.25, 0.9]} position={[-2.2 + i * 1.5, 2.1, 3.47]} rotation={[0, Math.PI, 0]} />
+      ))}
       <Table position={[-1.4, 0, -1.2]} size={[1.6, 0.85, 0.8]} />
       <group position={[-1.4, 0.87, -1.2]} rotation={[0, Math.PI / 2, 0]}><TrussModel /></group>
-      {/* cricket kit */}
-      <Block position={[-2.9, 0.45, 2.6]} size={[0.11, 0.85, 0.05]} mat="wood" rotation={[0, 0.3, 0.18]} />
-      <mesh material={m.red} position={[-2.5, 0.04, 2.3]}><sphereGeometry args={[0.04, 14, 10]} /></mesh>
       <HardHat position={[-2.2, 0.0, 2.6]} mat="blue" rotation={[0, 2, 0]} />
     </group>
   );
