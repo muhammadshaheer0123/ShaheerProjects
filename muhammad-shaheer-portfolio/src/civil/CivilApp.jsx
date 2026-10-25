@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { profile, rooms, corridor, expertise, projects, experience, leadership, activities, community } from './content';
+import { profile, rooms, corridor, expertise, projects, experience, education, leadership, activities, community } from './content';
 import ProjectDrawing from './ProjectDrawing';
 
 const CorridorScene = lazy(() => import('./CorridorScene'));
@@ -173,21 +173,34 @@ function AboutRoom({ room }) {
           </li>
         ))}
       </ul>
-      <h3 className="sub mono">Experience & education</h3>
-      <ol className="timeline">
-        {experience.map(e => (
-          <li key={e.period + e.role}>
-            <span className="timeline__elev mono"><span className="tri" aria-hidden="true" />{e.elevation}</span>
-            <div>
-              <p className="mono timeline__period">{e.period}</p>
-              <h4>{e.role}</h4>
-              <p className="timeline__org">{e.org}</p>
-              {e.points.length > 0 && <ul>{e.points.map(pt => <li key={pt}>{pt}</li>)}</ul>}
-            </div>
-          </li>
-        ))}
-      </ol>
+      <h3 className="sub mono">Experience</h3>
+      <Timeline entries={experience} />
+      <h3 className="sub mono">Education</h3>
+      <Timeline entries={education} />
     </>
+  );
+}
+
+function Timeline({ entries }) {
+  return (
+    <ol className="timeline">
+      {entries.map(e => (
+        <li key={e.period + e.role}>
+          <span className="timeline__elev mono"><span className="tri" aria-hidden="true" />{e.elevation}</span>
+          <div>
+            <p className="mono timeline__period">{e.period}</p>
+            <h4>{e.role}</h4>
+            <p className="timeline__org">{e.org}</p>
+            {e.points.length > 0 && <ul>{e.points.map(pt => <li key={pt}>{pt}</li>)}</ul>}
+            {e.photos?.length > 0 && (
+              <div className="timeline__photos">
+                {e.photos.map(ph => <PhotoLink key={ph.src} photo={ph} className={ph.fit === 'contain' ? 'is-contain' : undefined} />)}
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
   );
 }
 

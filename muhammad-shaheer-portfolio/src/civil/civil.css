@@ -246,6 +246,16 @@ main > * { pointer-events: auto; }
 .timeline h4 { font-size: 17px; margin-bottom: 4px; }
 .timeline__org { font-size: 14px; margin-bottom: 6px; }
 .timeline ul { margin: 0; padding-left: 16px; font-size: 14px; color: var(--muted); }
+/* internship photo strip: three across; a set of 3n+2 opens with one double-width photo so rows stay full */
+.timeline__photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 12px; }
+.timeline__photos a { display: block; border: 1px solid var(--line-strong); background: var(--panel-solid); transition: border-color 0.2s var(--ease); }
+.timeline__photos a:hover, .timeline__photos a:focus-visible { border-color: var(--ink); }
+.timeline__photos a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.timeline__photos a:first-child:nth-last-child(3n + 2) { grid-column: span 2; }
+.timeline__photos img { display: block; width: 100%; height: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.timeline__photos a.is-contain img { object-fit: contain; padding: 4px; }
+/* the double-width lead photo spans two 4:3 cells, so it is cropped wide to keep the row even */
+.timeline__photos a:first-child:nth-last-child(3n + 2) img { aspect-ratio: 8 / 3; }
 
 /* projects */
 .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }

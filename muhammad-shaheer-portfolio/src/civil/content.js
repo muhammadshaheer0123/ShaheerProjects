@@ -374,17 +374,35 @@ export const experience = [
       'Baselined the project schedule in Primavera P6 with WBS, sequencing, durations and resources',
       'Reviewed IFC drawings and bidding documents; coordinated procurement, contract bonds and dewatering safety plans',
     ],
+    photos: [
+      { src: '/experience/ittefaq/basement-excavation.webp', caption: 'Five-basement excavation braced with steel struts' },
+      { src: '/experience/ittefaq/basement-reinforcement.webp', caption: 'On site at the basement reinforcement' },
+      { src: '/experience/ittefaq/concrete-cylinder-sampling.webp', caption: 'Concrete cylinder sampling for quality control' },
+      { src: '/experience/ittefaq/site-office.webp', caption: 'Site offices on the Ittefaq project' },
+      { src: '/experience/ittefaq/internship-certificate.webp', caption: 'Ittefaq internship experience certificate', fit: 'contain' },
+    ],
   },
   {
     elevation: '+6.00',
-    period: 'Jul — Aug 2024',
+    period: 'Jul — Aug 2024 · 8 weeks',
     role: 'Engineering Intern',
     org: 'WAPDA · Central Design Office, Lahore',
     points: [
       'Supported contract management and operations for the Tarbela 5th Extension Project',
       'Assisted with technical planning, feasibility assessments and quality control for hydropower infrastructure',
     ],
+    photos: [
+      { src: '/experience/wapda/tarbela-power-station.webp', caption: 'Tarbela Power Station (3,478 MW)' },
+      { src: '/experience/wapda/mangla-power-station.webp', caption: 'Mangla Power Station' },
+      { src: '/experience/wapda/dam-spillway-reservoir.webp', caption: 'Dam reservoir and spillway visit' },
+      { src: '/experience/wapda/dam-inspection-gallery.webp', caption: 'Inside a dam inspection gallery' },
+      { src: '/experience/wapda/certificate-ceremony.webp', caption: 'Receiving the internship certificate' },
+      { src: '/experience/wapda/internship-certificate.webp', caption: 'WAPDA internship certificate, 2 Jul – 16 Aug 2024', fit: 'contain' },
+    ],
   },
+];
+
+export const education = [
   {
     elevation: '+4.00',
     period: '2022 — 2026',
