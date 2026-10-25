@@ -201,9 +201,12 @@ main > * { pointer-events: auto; }
 @keyframes panel-in { from { opacity: 0; transform: translateX(-24px); } }
 .panel p { color: var(--muted); }
 .back-btn {
-  position: sticky; top: -18px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 40px;
+  position: sticky; top: calc(-1 * var(--pad-top, 18px)); z-index: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 40px;
   margin: 0 0 18px -6px; padding: 0 12px 0 6px; font-size: 12px; text-transform: uppercase;
   background: var(--panel-solid); border: 1px solid var(--line-strong); cursor: pointer;
+  /* a solid full-width strip behind the pinned button, so scrolled text slides under it instead of showing around it */
+  box-shadow: 0 0 0 100vmax var(--panel-solid);
+  clip-path: inset(-10px -100vmax -10px -100vmax);
 }
 .back-btn:hover { background: var(--ink); color: var(--paper); }
 .back-btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
@@ -390,7 +393,9 @@ main > * { pointer-events: auto; }
   .toggle { padding: 0 12px; }
   .intro { right: 16px; bottom: 24px; }
   .intro__focus { display: none; }
-  .intro h1 { font-size: clamp(42px, 13.5vw, 72px); }
+  /* phones: the hero has to share the screen with the reception desk, so it loses the label and shrinks */
+  .intro .eyebrow { display: none; }
+  .intro h1 { font-size: clamp(36px, 11.5vw, 64px); }
   .intro__lede { font-size: 15px; margin-bottom: 22px; }
   /* the rooms menu replaces the floor plan on phones */
   .plan { display: none; }

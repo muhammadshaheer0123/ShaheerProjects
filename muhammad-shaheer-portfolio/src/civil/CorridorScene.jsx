@@ -896,7 +896,7 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
     const pitchTarget = s.phase === 'inside' || s.phase === 'enter'
       ? (narrow ? -0.3 : 0) + (reducedMotion || s.phase !== 'inside' ? 0 : pointer.y * 0.035)
       : s.phase !== 'corridor' ? 0
-      : narrow ? -0.14 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1)
+      : narrow ? -0.24 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1)
       : reducedMotion ? 0 : pointer.y * 0.04;
     s.pitch += (pitchTarget - s.pitch) * (1 - Math.exp(-4 * dt));
 
