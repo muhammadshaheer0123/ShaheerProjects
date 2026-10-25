@@ -261,31 +261,35 @@ function usePanelMotion(panelRef, progressRef, roomId) {
     panel.addEventListener('pointermove', onMove);
     panel.addEventListener('pointerleave', douse);
 
-    // touch screens have no hover: whichever card is passing through the middle of the panel
-    // pops up and catches the lamp while the visitor scrolls
-    let focusIo = null;
-    if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
-      focusIo = new IntersectionObserver(entries => {
-        entries.forEach(e => {
-          const card = e.target;
-          if (e.isIntersecting) {
-            card.style.setProperty('--mx', `${card.offsetWidth / 2}px`);
-            card.style.setProperty('--my', `${card.offsetHeight / 2}px`);
-            card.dataset.focus = 'true';
-          } else if (card.dataset.focus) {
-            delete card.dataset.focus;
-            card.style.removeProperty('--mx');
-            card.style.removeProperty('--my');
-          }
+    // touch screens have no hover: cards rise continuously as they approach the middle of the
+    // panel and settle as they leave, tracking the scroll itself (no on/off jumps)
+    let popRaf = 0;
+    let onPopScroll = null;
+    if (!prefersReducedMotion && window.matchMedia('(hover: none)').matches) {
+      const cards = [...panel.querySelectorAll(LAMP_SELECTOR)];
+      const update = () => {
+        popRaf = 0;
+        const box = panel.getBoundingClientRect();
+        const mid = box.top + box.height / 2;
+        const reach = box.height * 0.55;
+        // read every position first, then write, so the browser lays out once per frame
+        const rects = cards.map(c => c.getBoundingClientRect());
+        rects.forEach((r, i) => {
+          const d = Math.min(1, Math.abs(r.top + r.height / 2 - mid) / reach);
+          const p = 1 - d * d * (3 - 2 * d); // smoothstep: 1 at the middle, easing to 0 at the edges
+          cards[i].style.setProperty('--pop', p.toFixed(3));
         });
-      }, { root: panel, rootMargin: '-40% 0px -40% 0px', threshold: 0 });
-      panel.querySelectorAll(LAMP_SELECTOR).forEach(el => focusIo.observe(el));
+      };
+      onPopScroll = () => { if (!popRaf) popRaf = requestAnimationFrame(update); };
+      panel.addEventListener('scroll', onPopScroll, { passive: true });
+      update();
     }
 
     return () => {
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(popRaf);
       io?.disconnect();
-      focusIo?.disconnect();
+      if (onPopScroll) panel.removeEventListener('scroll', onPopScroll);
       panel.removeEventListener('scroll', onScroll);
       panel.removeEventListener('pointermove', onMove);
       panel.removeEventListener('pointerleave', douse);

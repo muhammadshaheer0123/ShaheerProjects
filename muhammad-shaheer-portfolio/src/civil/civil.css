@@ -456,9 +456,21 @@ main > * { pointer-events: auto; }
   .timeline > li:hover { background-color: var(--panel-solid); }
 }
 
-/* touch: the card passing through the middle of the panel pops while scrolling (set by script) */
-[data-focus="true"] { z-index: 1; transform: translateY(-4px) scale(1.012); box-shadow: 0 12px 26px rgba(28, 31, 29, 0.14); }
-.timeline > li[data-focus="true"] { background-color: var(--panel-solid); }
+/* touch: no cursor, so no lamp tint. Cards rise with --pop (0 to 1, set each frame from their distance
+   to the middle of the panel), so the lift follows the finger directly with no transition lag */
+@media (hover: none) {
+  .columns > li, .project, .activities > li, .timeline > li, .stats > div, .contact-card { background-image: none; }
+  .columns > li, .project, .activities > li, .timeline > li, .stats > div, .contact-card {
+    transform: translateY(calc(var(--pop, 0) * -5px)) scale(calc(1 + var(--pop, 0) * 0.014));
+    box-shadow: 0 calc(var(--pop, 0) * 12px) calc(var(--pop, 0) * 26px) rgba(28, 31, 29, calc(var(--pop, 0) * 0.14));
+    transition:
+      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+      translate 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+      border-color 0.2s;
+    will-change: transform;
+  }
+  .timeline > li { background-color: color-mix(in srgb, var(--panel-solid) calc(var(--pop, 0) * 100%), transparent); }
+}
 
 /* touch: thumb-sized way into the room the visitor is standing beside */
 .door-pill {
@@ -488,6 +500,6 @@ main > * { pointer-events: auto; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   [data-reveal="wait"] { translate: none; }
-  .project:hover, .columns > li:hover, .activities > li:hover, .timeline > li:hover, .stats > div:hover, .contact-card:hover, [data-focus="true"] { transform: none; }
+  .project:hover, .columns > li:hover, .activities > li:hover, .timeline > li:hover, .stats > div:hover, .contact-card:hover { transform: none; }
   .door-pill:active { transform: translateX(-50%); }
 }
