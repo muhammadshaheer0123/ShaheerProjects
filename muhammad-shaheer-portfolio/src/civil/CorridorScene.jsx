@@ -38,6 +38,20 @@ const PROJECT_WALL = [
 ];
 
 
+// About room: team and leadership group photos. [src, position along the wall]
+const ABOUT_BACK_WALL = [
+  ['/activities/geotech-conference/organising-team.webp', -2.55],
+  ['/activities/ait-scholarships-seminar.webp', -1.25],
+  ['/experience/wapda/tarbela-power-station.webp', 2.45],
+];
+const ABOUT_SIDE_WALL = [
+  // above the bookshelf
+  ['/activities/geotech-conference/evening-group.webp', -2.85, 2.95],
+  ['/experience/wapda/mangla-power-station.webp', -1.6, 2.95],
+  // eye level, past the end of the bookshelf
+  ['/experience/wapda/dam-inspection-gallery.webp', -0.35, 2.05],
+];
+
 // Event photos above the Extracurricular trophy shelf
 const ACTIVITY_WALL = [
   '/activities/geotech-conference/registration-desk.webp',
@@ -624,11 +638,17 @@ function PhotoFrame({ src, position, max = [1.2, 0.8], rotation }) {
 function AboutProps() {
   const portrait = useTexture(profile.portrait);
   useEffect(() => { portrait.colorSpace = THREE.SRGBColorSpace; }, [portrait]);
-  const drawing = useMemo(() => structureTexture(STRUCTURES[7]), []);
   return (
     <group>
+      {/* back wall: portrait among team photos */}
       <WallFrame position={[-3.47, 2.15, 0.9]} texture={portrait} size={[1.1, 1.3]} />
-      <WallFrame position={[-3.47, 2.2, -1.2]} texture={drawing} size={[1.3, 0.91]} />
+      {ABOUT_BACK_WALL.map(([src, z]) => (
+        <PhotoFrame key={src} src={src} max={[1.15, 0.85]} position={[-3.47, 2.2, z]} />
+      ))}
+      {/* side wall (faces the room): group photos above and beside the bookshelf */}
+      {ABOUT_SIDE_WALL.map(([src, x, y]) => (
+        <PhotoFrame key={src} src={src} max={[1.15, 0.85]} position={[x, y, 3.47]} rotation={[0, Math.PI, 0]} />
+      ))}
       <Table position={[-1.9, 0, -1.6]} size={[1.6, 0.9, 0.9]} />
       <Block position={[-1.9, 1.02, -1.6]} size={[1.4, 0.02, 0.75]} mat="white" rotation={[0.25, 0, 0]} />
       <HardHat position={[-1.3, 0.93, -1.9]} rotation={[0, 1.2, 0]} />
