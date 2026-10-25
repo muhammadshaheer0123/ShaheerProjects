@@ -598,14 +598,6 @@ export default function CivilApp() {
   const [nearDoor, setNearDoor] = useState(null);         // room whose door the visitor is standing at
   const busy = activeRoom !== null;
 
-  // iOS only shares gyro data after a tap and a permission prompt; ask once, on the first touch
-  useEffect(() => {
-    if (!started || typeof window.DeviceOrientationEvent?.requestPermission !== 'function') return undefined;
-    const ask = () => { window.DeviceOrientationEvent.requestPermission().catch(() => {}); };
-    window.addEventListener('touchend', ask, { once: true });
-    return () => window.removeEventListener('touchend', ask);
-  }, [started]);
-
   useEffect(() => { waitForFonts().then(() => setFontsReady(true)); }, []);
 
   // Walk the corridor: wheel, touch drag and keyboard move the camera target
