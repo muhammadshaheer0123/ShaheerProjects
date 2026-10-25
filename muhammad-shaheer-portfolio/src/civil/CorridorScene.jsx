@@ -761,8 +761,19 @@ function shortestAngle(a, b) {
   return d;
 }
 
-function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, reducedMotion, started }) {
+function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, reducedMotion, started, panelScroll }) {
   const { camera, size } = useThree();
+  // cursor position across the whole window, so the view still responds while the pointer is over the room panel
+  const ptr = useRef({ x: 0, y: 0 });
+  useEffect(() => {
+    const onMove = e => {
+      if (e.pointerType !== 'mouse') return;
+      ptr.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      ptr.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    };
+    window.addEventListener('pointermove', onMove, { passive: true });
+    return () => window.removeEventListener('pointermove', onMove);
+  }, []);
   const st = useRef({ pos: new THREE.Vector3(0, EYE + 0.4, CORRIDOR.start + 3), yaw: 0, pitch: 0, phase: 'corridor', room: null, wait: 0 });
   const tmp = useRef(new THREE.Vector3());
   const narrow = size.width < 760;
@@ -793,7 +804,8 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
     camera.updateProjectionMatrix();
   }, [camera, size.width, size.height, narrow]);
 
-  useFrame(({ pointer }, dtRaw) => {
+  useFrame((_, dtRaw) => {
+    const pointer = ptr.current;
     const dt = Math.min(dtRaw, 0.05);
     const s = st.current;
     const target = tmp.current;
@@ -821,7 +833,10 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
         if (s.pos.distanceTo(target) < 0.18) { s.phase = 'inside'; onArrive(s.room.id); }
         break;
       case 'inside':
-        target.copy(poses.inside.pos); yaw = poses.inside.yaw + (reducedMotion ? 0 : -pointer.x * 0.06);
+        // reading down the room panel pans the view along the wall; the cursor adds a little look-around
+        target.copy(poses.inside.pos);
+        yaw = poses.inside.yaw - (s.room.side === 'left' ? 1 : -1) * (panelScroll?.current ?? 0) * 0.22
+          + (reducedMotion ? 0 : -pointer.x * 0.09);
         break;
       case 'leave':
         target.copy(poses.front.pos); yaw = poses.front.yaw; speed = 4; maxV = 7;
@@ -854,7 +869,8 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
     const dy = shortestAngle(s.yaw, yaw);
     s.yaw += reducedMotion ? dy : dy * (1 - Math.exp(-turnRate * dt));
     // phones: the room panel covers the lower two-thirds, so look down a little to bring the wall into the strip above it
-    const pitchTarget = s.phase === 'inside' || s.phase === 'enter' ? (narrow ? -0.3 : 0)
+    const pitchTarget = s.phase === 'inside' || s.phase === 'enter'
+      ? (narrow ? -0.3 : 0) + (reducedMotion || s.phase !== 'inside' ? 0 : pointer.y * 0.035)
       : s.phase !== 'corridor' ? 0
       : narrow ? -0.14 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1)
       : reducedMotion ? 0 : pointer.y * 0.04;

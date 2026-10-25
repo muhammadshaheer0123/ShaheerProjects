@@ -166,7 +166,10 @@ function AboutRoom({ room }) {
       <ul className="columns">
         {expertise.map(x => (
           <li key={x.code}>
-            <span className="col-mark mono">{x.code}</span>
+            <div className="col-head">
+              <svg viewBox="0 0 24 24" aria-hidden="true" className="col-icon"><path d={EXPERTISE_ICONS[x.icon]} /></svg>
+              <span className="col-mark mono">{x.code}</span>
+            </div>
             <h4>{x.title}</h4>
             <p>{x.body}</p>
             <ul className="chips">{x.tools.map(t => <li key={t} className="mono">{t}</li>)}</ul>
@@ -179,6 +182,92 @@ function AboutRoom({ room }) {
       <Timeline entries={education} />
     </>
   );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Room panel motion: scroll gauge, reveal-on-scroll, cursor lamp      */
+/* ------------------------------------------------------------------ */
+
+const REVEAL_SELECTOR = '.about-top, .stats > div, .columns, .timeline > li, .register > li, .activities > li, .contact__list > li';
+const LAMP_SELECTOR = '.columns > li, .project, .activities > li';
+
+function usePanelMotion(panelRef, progressRef, roomId) {
+  useEffect(() => {
+    const panel = panelRef.current;
+    if (!panel) return undefined;
+    const setProgress = p => {
+      progressRef.current = p;
+      panel.style.setProperty('--progress', p.toFixed(4));
+    };
+    setProgress(0);
+
+    // scroll gauge + the 3D camera pan both read the panel's scroll progress
+    let raf = 0;
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        const max = panel.scrollHeight - panel.clientHeight;
+        setProgress(max > 0 ? Math.min(1, panel.scrollTop / max) : 0);
+      });
+    };
+    panel.addEventListener('scroll', onScroll, { passive: true });
+
+    // blocks rise in as they enter the panel; siblings stagger by 60 ms, capped at four steps
+    let io = null;
+    if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+      const items = [...panel.querySelectorAll(REVEAL_SELECTOR)];
+      io = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          e.target.dataset.reveal = 'in';
+          io.unobserve(e.target);
+        });
+      }, { root: panel, rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+      items.forEach(el => {
+        const i = [...el.parentElement.children].indexOf(el);
+        el.style.setProperty('--reveal-delay', `${(i % 4) * 60}ms`);
+        el.dataset.reveal = 'wait';
+        io.observe(el);
+      });
+    }
+
+    // site lamp: light follows the mouse across cards; project cards also tilt toward it
+    let lit = null;
+    const douse = () => {
+      if (!lit) return;
+      ['--mx', '--my', '--rx', '--ry'].forEach(v => lit.style.removeProperty(v));
+      lit = null;
+    };
+    const onMove = e => {
+      if (e.pointerType !== 'mouse') return;
+      const card = e.target.closest?.(LAMP_SELECTOR);
+      if (card !== lit) douse();
+      if (!card) return;
+      const r = card.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+      card.style.setProperty('--mx', `${x}px`);
+      card.style.setProperty('--my', `${y}px`);
+      if (!prefersReducedMotion && card.classList.contains('project')) {
+        card.style.setProperty('--rx', `${((0.5 - y / r.height) * 5).toFixed(2)}deg`);
+        card.style.setProperty('--ry', `${((x / r.width - 0.5) * 7).toFixed(2)}deg`);
+      }
+      lit = card;
+    };
+    panel.addEventListener('pointermove', onMove);
+    panel.addEventListener('pointerleave', douse);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      io?.disconnect();
+      panel.removeEventListener('scroll', onScroll);
+      panel.removeEventListener('pointermove', onMove);
+      panel.removeEventListener('pointerleave', douse);
+      douse();
+      progressRef.current = 0;
+    };
+  }, [panelRef, progressRef, roomId]);
 }
 
 function Timeline({ entries }) {
@@ -239,6 +328,22 @@ function ProjectsRoom({ room, onOpen }) {
     </>
   );
 }
+
+// Expertise line icons: same 24px grid and stroke as the activity icons
+const EXPERTISE_ICONS = {
+  // gable portal frame with a tie beam
+  frame: 'M2.5 21h19M5 21V10M19 21V10M3.5 11L12 4.5l8.5 6.5M5 14.5h14',
+  // lattice platform / derrick on a skid
+  platform: 'M3 21h18M6 21l3.5-15h5L18 21M9.5 6L12 2.5 14.5 6M8 13.5h8M7.2 17h9.6M8.4 13.5l7.2 3.5',
+  // bolted end plate with four bolts
+  connection: 'M5 3.5h14v17H5zM9 8a1 1 0 1 0 0 .01M15 8a1 1 0 1 0 0 .01M9 16a1 1 0 1 0 0 .01M15 16a1 1 0 1 0 0 .01M3 12h18',
+  // hard hat
+  helmet: 'M3 17.5h18M5 17.5a7 7 0 0 1 14 0M12 6.5V10M9 7.3l.9 3M15 7.3l-.9 3M4 20h16',
+  // programme bars on a time axis
+  schedule: 'M4 3.5v17h16.5M8 7.5h5M10.5 11.5h6.5M7 15.5h4.5M15 15.5h3',
+  // drafting set square with its cut-out
+  drafting: 'M4 20.5V4l16.5 16.5H4zM8 16.5v-4.3l4.3 4.3H8z',
+};
 
 const ACTIVITY_ICONS = {
   truss: 'M2 18h20M4 18l4-8 4 8 4-8 4 8M8 10h8',
@@ -437,6 +542,8 @@ export default function CivilApp() {
   const introRef = useRef(null);
   const shadeRef = useRef(null);
   const hintRef = useRef(null);
+  const panelRef = useRef(null);
+  const panelScroll = useRef(0);
   const busy = activeRoom !== null;
 
   useEffect(() => { waitForFonts().then(() => setFontsReady(true)); }, []);
@@ -547,6 +654,7 @@ export default function CivilApp() {
 
   const room = rooms.find(r => r.id === panelRoom);
   const RoomView = room ? ROOM_VIEWS[room.id] : null;
+  usePanelMotion(panelRef, panelScroll, room?.id);
 
   return (
     <div className={`app ${started ? 'is-started' : ''} ${panelRoom ? 'in-room' : ''}`}>
@@ -565,6 +673,7 @@ export default function CivilApp() {
             onExited={onExited}
             onReady={onReady}
             onFailure={onFailure}
+            panelScroll={panelScroll}
           />
         </Suspense>
       )}
@@ -594,7 +703,8 @@ export default function CivilApp() {
         )}
 
         {room && (
-          <section key={room.id} className={`panel panel--room room--${room.id}`} aria-labelledby="room-title" id={room.id}>
+          <section ref={panelRef} key={room.id} className={`panel panel--room room--${room.id}`} aria-labelledby="room-title" id={room.id}>
+            <div className="panel-gauge" aria-hidden="true" />
             <button type="button" className="back-btn mono" onClick={leaveRoom}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
               Back to corridor

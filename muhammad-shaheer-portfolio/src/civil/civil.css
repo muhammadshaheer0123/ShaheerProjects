@@ -187,14 +187,15 @@ main > * { pointer-events: auto; }
 .panel::before { content: ''; position: absolute; left: -1px; top: -1px; width: 56px; height: 6px; background: var(--hazard); }
 .panel--room {
   position: fixed; z-index: 10; left: clamp(16px, 4vw, 64px); top: calc(var(--header-h) + 8px); bottom: 24px;
-  width: min(700px, calc(100vw - 360px)); overflow-y: auto; overscroll-behavior: contain;
-  padding: 18px clamp(22px, 3vw, 36px) 36px;
+  width: min(700px, calc(100vw - 360px)); overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain;
+  --pad-x: clamp(22px, 3vw, 36px); --pad-top: 18px;
+  padding: var(--pad-top) var(--pad-x) 36px;
   animation: panel-in 0.6s var(--ease) both;
 }
 @keyframes panel-in { from { opacity: 0; transform: translateX(-24px); } }
 .panel p { color: var(--muted); }
 .back-btn {
-  position: sticky; top: -18px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 40px;
+  position: sticky; top: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 40px;
   margin: 0 0 18px -6px; padding: 0 12px 0 6px; font-size: 12px; text-transform: uppercase;
   background: var(--panel-solid); border: 1px solid var(--line-strong); cursor: pointer;
 }
@@ -231,6 +232,8 @@ main > * { pointer-events: auto; }
 .columns > li { background: var(--panel-solid); padding: 16px 16px 14px; }
 .columns h4 { font-size: 16px; margin: 10px 0 6px; }
 .columns p { font-size: 14px; margin-bottom: 10px; line-height: 1.5; }
+.col-head { display: flex; align-items: center; gap: 8px; }
+.col-icon { width: 36px; height: 36px; padding: 6px; border: 1.5px solid var(--ink); fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; background: color-mix(in srgb, var(--accent) 40%, transparent); }
 .col-mark {
   display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1.5px solid var(--ink); font-size: 11px; font-weight: 600;
   background: linear-gradient(135deg, transparent 46%, var(--line-strong) 47% 53%, transparent 54%);
@@ -268,7 +271,7 @@ main > * { pointer-events: auto; }
   background: var(--panel-solid); border: 1px solid var(--line); position: relative;
   transition: border-color 0.2s, transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
 }
-.project:hover { border-color: var(--ink); transform: translateY(-3px); box-shadow: var(--shadow); }
+.project:hover { border-color: var(--ink); transform: perspective(800px) translateY(-3px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); box-shadow: var(--shadow); }
 .project .drawing { border-bottom: 1px solid var(--line); background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 20px 20px; }
 .project__cover { display: block; width: 100%; aspect-ratio: 320 / 200; object-fit: cover; object-position: center top; border-bottom: 1px solid var(--line); background: #fff; }
 .project__sheet { position: absolute; top: 8px; left: 8px; font-size: 11px; background: var(--accent); color: var(--accent-ink); padding: 2px 6px; font-weight: 600; }
@@ -389,7 +392,7 @@ main > * { pointer-events: auto; }
   .walk-hint { bottom: 20px; font-size: 10px; }
   .site-nav a { font-size: 12px; padding: 9px 2px; }
   .site-header { gap: 10px; }
-  .panel--room { left: 0; right: 0; bottom: 0; top: 34vh; padding: 16px 16px 28px; border-left: 0; border-right: 0; }
+  .panel--room { left: 0; right: 0; bottom: 0; top: 34vh; --pad-x: 16px; --pad-top: 16px; padding: var(--pad-top) var(--pad-x) 28px; border-left: 0; border-right: 0; }
   .in-room .plan { display: none; }
   .about-top { grid-template-columns: 96px 1fr; gap: 14px; }
   .portrait { width: 96px; height: 120px; box-shadow: 4px 4px 0 var(--accent); }
@@ -401,6 +404,25 @@ main > * { pointer-events: auto; }
   .role--photo { grid-template-columns: 1fr 88px; gap: 10px; }
 }
 
+/* ---------- room panel motion ---------- */
+/* scroll gauge: the hazard strip runs across the top of the panel as you read down it */
+.panel--room::before { display: none; }
+.panel-gauge { position: sticky; top: 0; z-index: 4; height: 0; margin: calc(-1 * var(--pad-top)) calc(-1 * var(--pad-x)) var(--pad-top); pointer-events: none; }
+.panel-gauge::before, .panel-gauge::after { content: ''; position: absolute; left: 0; right: 0; top: -1px; }
+.panel-gauge::after { height: 2px; background: var(--line); }
+.panel-gauge::before { z-index: 1; height: 6px; background: var(--hazard); clip-path: inset(0 calc((100% - 56px) * (1 - var(--progress, 0))) 0 0); }
+
+/* blocks rise into place as they scroll into the panel; visible by default if the script never runs */
+[data-reveal] { transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms); }
+[data-reveal="wait"] { opacity: 0; transform: translateY(18px); }
+
+/* site lamp: a soft accent light follows the cursor across cards */
+.columns > li, .project, .activities > li {
+  background-image: radial-gradient(260px circle at var(--mx, -400px) var(--my, -400px), color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+  [data-reveal="wait"] { transform: none; }
+  .project:hover { transform: none; }
 }

@@ -50,37 +50,37 @@ export const rooms = [
 
 export const expertise = [
   {
-    code: 'C1',
+    code: 'C1', icon: 'frame',
     title: 'Structural analysis & design',
     body: 'Reinforced-concrete and steel buildings modelled, analysed and designed to ACI 318 and AISC 360, including slabs, frames, shear walls and foundations.',
     tools: ['ETABS', 'SAP2000', 'STAAD Pro', 'SAFE'],
   },
   {
-    code: 'C2',
+    code: 'C2', icon: 'platform',
     title: 'Oil & gas structures',
     body: 'Skids, platforms and sheds for oil and gas facilities, with their foundations, designed to the applicable engineering standards.',
     tools: ['STAAD Pro', 'STAAD Foundation'],
   },
   {
-    code: 'C3',
+    code: 'C3', icon: 'connection',
     title: 'Steel connection design',
     body: 'Base plates, bolted cleats and moment end plates verified with component-based finite element analysis to AISC LRFD.',
     tools: ['IDEA StatiCa'],
   },
   {
-    code: 'C4',
+    code: 'C4', icon: 'helmet',
     title: 'Construction supervision',
     body: 'Excavation, reinforcement fixing and concrete quality control (sampling, curing and cube testing), plus IFC drawing review.',
     tools: ['Concrete QC', 'Cube testing', 'IFC review'],
   },
   {
-    code: 'C5',
+    code: 'C5', icon: 'schedule',
     title: 'Planning, BOQ & bidding',
     body: 'Baselined schedules with WBS, activity sequencing and resources; BOQs, material take-offs and bidding documents.',
     tools: ['Primavera P6', 'MS Excel'],
   },
   {
-    code: 'C6',
+    code: 'C6', icon: 'drafting',
     title: 'Drafting, BIM & programming',
     body: 'Drawings, BIM models and GIS, plus Python, C++ and Arduino-based sensing for structural monitoring.',
     tools: ['AutoCAD', 'Revit', 'ArcGIS', 'Python', 'Arduino'],
