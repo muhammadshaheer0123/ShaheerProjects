@@ -257,8 +257,9 @@ export const experience = [
     role: 'Engineering Intern',
     org: 'WAPDA · Central Design Office, Lahore',
     points: [
-      'Supported contract management and operations for the Tarbela 5th Extension Project',
-      'Assisted with technical planning, feasibility assessments and quality control for hydropower infrastructure',
+      'Coordinated contract management and operational support for the Tarbela 5th Extension Project under the Central Design Office',
+      'Assisted with technical planning, feasibility assessments, and quality control evaluations for hydropower infrastructure',
+      'Visited Mangla Dam and Mangla Power Station; gained exposure to the operation and maintenance phase of a mega hydropower project including power generation systems and dam safety operations',
     ],
     photos: [
       { src: '/experience/wapda/tarbela-power-station.webp', caption: 'Tarbela Power Station (3,478 MW)' },
