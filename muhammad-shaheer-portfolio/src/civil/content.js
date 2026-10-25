@@ -14,9 +14,11 @@ export const profile = {
   email: 'muhammad.shaheer26@hotmail.com',
   // Leave empty to hide the phone line on the Contact panel
   phone: '',
+  // Shown as clickable cards in the Contact room
   links: [
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/in/muhammad-shaheer-828336291' },
-    { label: 'Email', href: 'mailto:muhammad.shaheer26@hotmail.com' },
+    { label: 'Email', icon: 'mail', handle: 'muhammad.shaheer26@hotmail.com', href: 'mailto:muhammad.shaheer26@hotmail.com' },
+    { label: 'LinkedIn', icon: 'linkedin', handle: 'in/muhammad-shaheer', href: 'https://www.linkedin.com/in/muhammad-shaheer-828336291/' },
+    { label: 'Instagram', icon: 'instagram', handle: '@sheerizkheer', href: 'https://www.instagram.com/sheerizkheer/' },
   ],
   intro:
     'I design steel and reinforced-concrete structures, from oil and gas skids to high-rise frames, and check them against ACI and AISC.',

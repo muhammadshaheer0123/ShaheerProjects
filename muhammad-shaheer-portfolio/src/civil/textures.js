@@ -104,8 +104,18 @@ export function labelTexture(lines, {
     ctx.fillText(number, height / 2, height / 2 + 4);
     ctx.fillStyle = fg;
     ctx.textAlign = 'left';
-    ctx.font = `700 ${height * 0.42}px ${font}`;
-    ctx.fillText(text.toUpperCase(), height + height * 0.28, height / 2 + 4);
+    // shrink long room names (e.g. EXTRACURRICULAR) so the whole word fits on the plate
+    const label = text.toUpperCase();
+    const x = height + height * 0.28;
+    const room = width - x - height * 0.22;
+    let size = height * 0.42;
+    ctx.font = `700 ${size}px ${font}`;
+    const w = ctx.measureText(label).width;
+    if (w > room) {
+      size *= room / w;
+      ctx.font = `700 ${size}px ${font}`;
+    }
+    ctx.fillText(label, x, height / 2 + 4);
   } else if (kind === 'bubble') {
     const [title, sub] = lines;
     const r = 60, pad = 18, tail = 70;

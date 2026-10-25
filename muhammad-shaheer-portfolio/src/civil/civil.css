@@ -195,7 +195,7 @@ main > * { pointer-events: auto; }
 @keyframes panel-in { from { opacity: 0; transform: translateX(-24px); } }
 .panel p { color: var(--muted); }
 .back-btn {
-  position: sticky; top: 12px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 40px;
+  position: sticky; top: -18px; z-index: 2; display: inline-flex; align-items: center; gap: 8px; min-height: 40px;
   margin: 0 0 18px -6px; padding: 0 12px 0 6px; font-size: 12px; text-transform: uppercase;
   background: var(--panel-solid); border: 1px solid var(--line-strong); cursor: pointer;
 }
@@ -234,16 +234,12 @@ main > * { pointer-events: auto; }
 .columns p { font-size: 14px; margin-bottom: 10px; line-height: 1.5; }
 .col-head { display: flex; align-items: center; gap: 8px; }
 .col-icon { width: 36px; height: 36px; padding: 6px; border: 1.5px solid var(--ink); fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; background: color-mix(in srgb, var(--accent) 40%, transparent); }
-.col-mark {
-  display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1.5px solid var(--ink); font-size: 11px; font-weight: 600;
-  background: linear-gradient(135deg, transparent 46%, var(--line-strong) 47% 53%, transparent 54%);
-}
 .chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .chips li { font-size: 11px; padding: 3px 8px; border: 1px solid var(--line-strong); }
 
 /* timeline */
 .timeline { list-style: none; margin: 0; padding: 0; }
-.timeline > li { display: grid; grid-template-columns: 74px 1fr; gap: 14px; padding: 14px 0; border-top: 1px solid var(--line); }
+.timeline > li { display: grid; grid-template-columns: 74px 1fr; gap: 14px; padding: 14px 10px; margin: 0 -10px; border-top: 1px solid var(--line); }
 .timeline__elev { font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 6px; height: fit-content; padding-top: 2px; }
 .timeline__period { font-size: 11px; text-transform: uppercase; color: var(--muted); margin: 0 0 4px; }
 .timeline h4 { font-size: 17px; margin-bottom: 4px; }
@@ -404,25 +400,47 @@ main > * { pointer-events: auto; }
   .role--photo { grid-template-columns: 1fr 88px; gap: 10px; }
 }
 
+/* ---------- contact cards ---------- */
+.contact-cards { list-style: none; margin: 8px 0 18px; padding: 0; display: grid; grid-template-columns: 1fr; gap: 8px; }
+.contact-card {
+  display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; min-height: 64px; padding: 12px;
+  text-decoration: none; color: var(--ink); background-color: var(--panel-solid); border: 1px solid var(--line-strong);
+}
+.contact-card:hover, .contact-card:focus-visible { border-color: var(--ink); }
+.contact-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.contact-card__text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.contact-card__text strong { font-size: 15px; }
+.contact-card__text .mono { font-size: 12px; color: var(--muted); overflow-wrap: anywhere; }
+.contact-card__go { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0.55; transition: transform 0.25s var(--ease), opacity 0.2s; }
+.contact-card:hover .contact-card__go { opacity: 1; transform: translate(2px, -2px); }
+
 /* ---------- room panel motion ---------- */
-/* scroll gauge: the hazard strip runs across the top of the panel as you read down it */
-.panel--room::before { display: none; }
-.panel-gauge { position: sticky; top: 0; z-index: 4; height: 0; margin: calc(-1 * var(--pad-top)) calc(-1 * var(--pad-x)) var(--pad-top); pointer-events: none; }
-.panel-gauge::before, .panel-gauge::after { content: ''; position: absolute; left: 0; right: 0; top: -1px; }
-.panel-gauge::after { height: 2px; background: var(--line); }
-.panel-gauge::before { z-index: 1; height: 6px; background: var(--hazard); clip-path: inset(0 calc((100% - 56px) * (1 - var(--progress, 0))) 0 0); }
+/* blocks rise into place as they scroll into the panel (using `translate`, so hover can keep `transform`);
+   visible by default if the script never runs */
+.columns > li, .activities > li, .timeline > li, .stats > div, .contact-card, [data-reveal] {
+  position: relative;
+  transition:
+    opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    translate 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 0.25s var(--ease), box-shadow 0.25s var(--ease), background-color 0.25s var(--ease), border-color 0.2s;
+}
+[data-reveal="wait"] { opacity: 0; translate: 0 18px; }
 
-/* blocks rise into place as they scroll into the panel; visible by default if the script never runs */
-[data-reveal] { transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms); }
-[data-reveal="wait"] { opacity: 0; transform: translateY(18px); }
-
-/* site lamp: a soft accent light follows the cursor across cards */
-.columns > li, .project, .activities > li {
+/* site lamp: a soft accent light follows the cursor across cards and entries */
+.columns > li, .project, .activities > li, .timeline > li, .stats > div, .contact-card {
   background-image: radial-gradient(260px circle at var(--mx, -400px) var(--my, -400px), color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%);
+}
+
+/* hover pop: entries lift toward the cursor (mouse only) */
+@media (hover: hover) and (pointer: fine) {
+  .columns > li:hover, .activities > li:hover, .timeline > li:hover, .stats > div:hover, .contact-card:hover {
+    z-index: 1; transform: translateY(-3px); box-shadow: 0 10px 24px rgba(28, 31, 29, 0.12);
+  }
+  .timeline > li:hover { background-color: var(--panel-solid); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-  [data-reveal="wait"] { transform: none; }
-  .project:hover { transform: none; }
+  [data-reveal="wait"] { translate: none; }
+  .project:hover, .columns > li:hover, .activities > li:hover, .timeline > li:hover, .stats > div:hover, .contact-card:hover { transform: none; }
 }

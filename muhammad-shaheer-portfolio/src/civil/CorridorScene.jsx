@@ -287,7 +287,7 @@ function Floor() {
 }
 
 function EndWall() {
-  const tex = useMemo(() => labelTexture(['Thanks for walking through', 'muhammad shaheer · civil engineer'], {
+  const tex = useMemo(() => labelTexture(['Thanks for walking through', `${profile.name} · ${profile.title}`.toUpperCase()], {
     kind: 'caption', width: 1600, height: 220, bg: '#1f2224', fg: '#f1efe8',
   }), []);
   return (

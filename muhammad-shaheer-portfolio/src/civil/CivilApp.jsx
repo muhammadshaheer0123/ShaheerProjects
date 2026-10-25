@@ -168,7 +168,6 @@ function AboutRoom({ room }) {
           <li key={x.code}>
             <div className="col-head">
               <svg viewBox="0 0 24 24" aria-hidden="true" className="col-icon"><path d={EXPERTISE_ICONS[x.icon]} /></svg>
-              <span className="col-mark mono">{x.code}</span>
             </div>
             <h4>{x.title}</h4>
             <p>{x.body}</p>
@@ -185,11 +184,11 @@ function AboutRoom({ room }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Room panel motion: scroll gauge, reveal-on-scroll, cursor lamp      */
+/*  Room panel motion: reveal-on-scroll, cursor lamp, hover lift        */
 /* ------------------------------------------------------------------ */
 
 const REVEAL_SELECTOR = '.about-top, .stats > div, .columns, .timeline > li, .register > li, .activities > li, .contact__list > li';
-const LAMP_SELECTOR = '.columns > li, .project, .activities > li';
+const LAMP_SELECTOR = '.columns > li, .project, .activities > li, .timeline > li, .stats > div, .contact-card';
 
 function usePanelMotion(panelRef, progressRef, roomId) {
   useEffect(() => {
@@ -201,7 +200,7 @@ function usePanelMotion(panelRef, progressRef, roomId) {
     };
     setProgress(0);
 
-    // scroll gauge + the 3D camera pan both read the panel's scroll progress
+    // the 3D camera pans along the room wall with the panel's scroll progress
     let raf = 0;
     const onScroll = () => {
       if (raf) return;
@@ -329,6 +328,13 @@ function ProjectsRoom({ room, onOpen }) {
   );
 }
 
+// Contact icons: outline marks on the same 24px grid and stroke as the rest
+const CONTACT_ICONS = {
+  mail: 'M4 5h16a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2zM22 7.5l-10 6.5L2 7.5',
+  linkedin: 'M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2zM4 2a2 2 0 1 1 0 4a2 2 0 1 1 0-4z',
+  instagram: 'M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zM16 11.4A4 4 0 1 1 12.6 8a4 4 0 0 1 3.4 3.4zM17.5 6.5h.01',
+};
+
 // Expertise line icons: same 24px grid and stroke as the activity icons
 const EXPERTISE_ICONS = {
   // gable portal frame with a tie beam
@@ -425,13 +431,31 @@ function ContactRoom({ room }) {
     <>
       <RoomHead room={room} title="Let's build what's next." />
       <p>Have a structure to design, a site that needs supervising, or quantities that need checking? Send the brief and I'll reply within two working days.</p>
+      <ul className="contact-cards">
+        {profile.links.map(l => {
+          const external = !l.href.startsWith('mailto');
+          return (
+            <li key={l.label}>
+              <a
+                className="contact-card"
+                href={l.href}
+                {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                aria-label={`${l.label}: ${l.handle}${external ? ' (opens in a new tab)' : ''}`}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="col-icon"><path d={CONTACT_ICONS[l.icon]} /></svg>
+                <span className="contact-card__text">
+                  <strong>{l.label}</strong>
+                  <span className="mono">{l.handle}</span>
+                </span>
+                <svg viewBox="0 0 24 24" aria-hidden="true" className="contact-card__go"><path d="M7 17L17 7M9 7h8v8" /></svg>
+              </a>
+            </li>
+          );
+        })}
+      </ul>
       <ul className="contact__list">
-        <li><span className="mono">Email</span><a href={`mailto:${profile.email}`}>{profile.email}</a></li>
         {profile.phone && <li><span className="mono">Phone</span><a href={`tel:${profile.phone.replace(/\s/g, '')}`}>{profile.phone}</a></li>}
         <li><span className="mono">Based</span><span>{profile.location}</span></li>
-        {profile.links.filter(l => !l.href.startsWith('mailto')).map(l => (
-          <li key={l.label}><span className="mono">{l.label}</span><a href={l.href} target="_blank" rel="noopener noreferrer">{l.href.replace(/^https?:\/\/(www\.)?/, '')}</a></li>
-        ))}
       </ul>
       <form className="contact-form" onSubmit={onSubmit}>
         <div className="field-row">
@@ -704,7 +728,6 @@ export default function CivilApp() {
 
         {room && (
           <section ref={panelRef} key={room.id} className={`panel panel--room room--${room.id}`} aria-labelledby="room-title" id={room.id}>
-            <div className="panel-gauge" aria-hidden="true" />
             <button type="button" className="back-btn mono" onClick={leaveRoom}>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
               Back to corridor
