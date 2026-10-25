@@ -257,8 +257,7 @@ function PortalFrame({ z }) {
           <group position={[s * colX, colH / 2, 0]}><ISection length={colH} /></group>
           <Block position={[s * colX, 0.015, 0]} size={[0.5, 0.03, 0.5]} mat="steel" />
           <Bolts positions={[[s * colX - 0.18, 0.04, -0.18], [s * colX + 0.18, 0.04, -0.18], [s * colX - 0.18, 0.04, 0.18], [s * colX + 0.18, 0.04, 0.18]]} axis="y" />
-          {/* haunch */}
-          <Block position={[s * (colX - 0.42), HEIGHT - 0.52, 0]} size={[0.7, 0.16, 0.012]} rotation={[0, 0, s * 0.28]} mat="steel" />
+          {/* bolted end-plate connection at the beam-column joint */}
           <Block position={[s * (colX - 0.16), HEIGHT - 0.35, 0.14]} size={[0.3, 0.5, 0.02]} mat="steel" />
           <Bolts positions={[[s * (colX - 0.2), HEIGHT - 0.25, 0.155], [s * (colX - 0.2), HEIGHT - 0.45, 0.155], [s * (colX - 0.08), HEIGHT - 0.25, 0.155], [s * (colX - 0.08), HEIGHT - 0.45, 0.155]]} axis="z" />
         </group>

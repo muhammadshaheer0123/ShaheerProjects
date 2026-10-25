@@ -326,12 +326,12 @@ main > * { pointer-events: auto; }
 
 /* activities */
 .activities { list-style: none; margin: 8px 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.activities > li { display: grid; grid-template-columns: 40px 1fr; gap: 12px; padding: 16px; background: var(--panel-solid); border: 1px solid var(--line); }
+.activities > li { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-content: start; padding: 16px; background: var(--panel-solid); border: 1px solid var(--line); }
 .activity__icon { width: 36px; height: 36px; padding: 6px; border: 1.5px solid var(--ink); fill: none; stroke: var(--ink); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; background: color-mix(in srgb, var(--accent) 40%, transparent); }
 .activity__meta { font-size: 11px; text-transform: uppercase; margin: 0 0 4px; }
 .activities h4 { font-size: 16px; margin-bottom: 6px; }
 .activities p { font-size: 14px; line-height: 1.5; margin: 0; }
-.activity__photos { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; }
+.activity__photos { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; align-items: start; }
 .activity__photos a:first-child:nth-last-child(odd) { grid-column: 1 / -1; }
 .activity__photos a, .role__photo { display: block; border: 1px solid var(--line-strong); background: var(--line); transition: border-color 0.2s var(--ease); }
 .activity__photos a:hover, .activity__photos a:focus-visible, .role__photo:hover, .role__photo:focus-visible { border-color: var(--ink); }
