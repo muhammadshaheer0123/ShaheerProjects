@@ -780,8 +780,29 @@ function shortestAngle(a, b) {
   return d;
 }
 
-function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, reducedMotion, started, panelScroll }) {
+function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, reducedMotion, started, panelScroll, lookYaw }) {
   const { camera, size } = useThree();
+  // Phone gyro: small real-time look offsets from how the phone is tilted. The neutral pose follows
+  // the way the visitor is holding it (slow baseline), so only fresh tilts move the view.
+  const gyro = useRef({ yaw: 0, pitch: 0 });
+  useEffect(() => {
+    if (reducedMotion) return undefined;
+    const base = { lr: null, fb: null };
+    const onTilt = e => {
+      if (e.beta == null || e.gamma == null) return;
+      const angle = ((screen.orientation?.angle ?? window.orientation ?? 0) + 360) % 360;
+      let lr = e.gamma;
+      let fb = e.beta;
+      if (angle === 90) { lr = e.beta; fb = -e.gamma; } else if (angle === 270) { lr = -e.beta; fb = e.gamma; }
+      if (base.lr === null) { base.lr = lr; base.fb = fb; }
+      base.lr += (lr - base.lr) * 0.02;
+      base.fb += (fb - base.fb) * 0.02;
+      gyro.current.yaw = THREE.MathUtils.clamp(-(lr - base.lr) * 0.012, -0.3, 0.3);
+      gyro.current.pitch = THREE.MathUtils.clamp((fb - base.fb) * 0.008, -0.15, 0.15);
+    };
+    window.addEventListener('deviceorientation', onTilt);
+    return () => window.removeEventListener('deviceorientation', onTilt);
+  }, [reducedMotion]);
   // cursor position across the whole window, so the view still responds while the pointer is over the room panel
   const ptr = useRef({ x: 0, y: 0 });
   useEffect(() => {
@@ -855,7 +876,7 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
         // reading down the room panel pans the view along the wall; the cursor adds a little look-around
         target.copy(poses.inside.pos);
         yaw = poses.inside.yaw - (s.room.side === 'left' ? 1 : -1) * (panelScroll?.current ?? 0) * 0.22
-          + (reducedMotion ? 0 : -pointer.x * 0.09);
+          + (reducedMotion ? 0 : -pointer.x * 0.09) + gyro.current.yaw * 0.7;
         break;
       case 'leave':
         target.copy(poses.front.pos); yaw = poses.front.yaw; speed = 4; maxV = 7;
@@ -875,6 +896,12 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
         if (!reducedMotion && !narrow) yaw = -pointer.x * 0.1;
         // phones: turn towards the avatar at the reception counter while in the lobby
         if (narrow) yaw = -0.34 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1);
+        // touch look-around (sideways swipe) plus gyro tilt; the swipe offset eases back while walking
+        if (lookYaw) {
+          if (Math.abs(target.z - s.pos.z) > 0.4) lookYaw.current *= Math.exp(-1.4 * dt);
+          yaw += lookYaw.current;
+        }
+        yaw += gyro.current.yaw;
       }
     }
 
@@ -889,10 +916,10 @@ function CameraRig({ zTarget, camZ, activeRoom, onArrive, onExited, setOpenId, r
     s.yaw += reducedMotion ? dy : dy * (1 - Math.exp(-turnRate * dt));
     // phones: the room panel covers the lower two-thirds, so look down a little to bring the wall into the strip above it
     const pitchTarget = s.phase === 'inside' || s.phase === 'enter'
-      ? (narrow ? -0.3 : 0) + (reducedMotion || s.phase !== 'inside' ? 0 : pointer.y * 0.035)
+      ? (narrow ? -0.3 : 0) + (reducedMotion || s.phase !== 'inside' ? 0 : pointer.y * 0.035 + gyro.current.pitch * 0.7)
       : s.phase !== 'corridor' ? 0
-      : narrow ? -0.14 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1)
-      : reducedMotion ? 0 : pointer.y * 0.04;
+      : narrow ? -0.14 * THREE.MathUtils.clamp((s.pos.z - 4.5) / 3, 0, 1) + gyro.current.pitch
+      : reducedMotion ? 0 : pointer.y * 0.04 + gyro.current.pitch;
     s.pitch += (pitchTarget - s.pitch) * (1 - Math.exp(-4 * dt));
 
     // gentle footstep bob while walking the corridor

@@ -261,9 +261,31 @@ function usePanelMotion(panelRef, progressRef, roomId) {
     panel.addEventListener('pointermove', onMove);
     panel.addEventListener('pointerleave', douse);
 
+    // touch screens have no hover: whichever card is passing through the middle of the panel
+    // pops up and catches the lamp while the visitor scrolls
+    let focusIo = null;
+    if (window.matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+      focusIo = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          const card = e.target;
+          if (e.isIntersecting) {
+            card.style.setProperty('--mx', `${card.offsetWidth / 2}px`);
+            card.style.setProperty('--my', `${card.offsetHeight / 2}px`);
+            card.dataset.focus = 'true';
+          } else if (card.dataset.focus) {
+            delete card.dataset.focus;
+            card.style.removeProperty('--mx');
+            card.style.removeProperty('--my');
+          }
+        });
+      }, { root: panel, rootMargin: '-40% 0px -40% 0px', threshold: 0 });
+      panel.querySelectorAll(LAMP_SELECTOR).forEach(el => focusIo.observe(el));
+    }
+
     return () => {
       cancelAnimationFrame(raf);
       io?.disconnect();
+      focusIo?.disconnect();
       panel.removeEventListener('scroll', onScroll);
       panel.removeEventListener('pointermove', onMove);
       panel.removeEventListener('pointerleave', douse);
@@ -572,7 +594,17 @@ export default function CivilApp() {
   const hintRef = useRef(null);
   const panelRef = useRef(null);
   const panelScroll = useRef(0);
+  const lookYaw = useRef(0);                              // touch look-around in the corridor (radians)
+  const [nearDoor, setNearDoor] = useState(null);         // room whose door the visitor is standing at
   const busy = activeRoom !== null;
+
+  // iOS only shares gyro data after a tap and a permission prompt; ask once, on the first touch
+  useEffect(() => {
+    if (!started || typeof window.DeviceOrientationEvent?.requestPermission !== 'function') return undefined;
+    const ask = () => { window.DeviceOrientationEvent.requestPermission().catch(() => {}); };
+    window.addEventListener('touchend', ask, { once: true });
+    return () => window.removeEventListener('touchend', ask);
+  }, [started]);
 
   useEffect(() => { waitForFonts().then(() => setFontsReady(true)); }, []);
 
@@ -585,13 +617,29 @@ export default function CivilApp() {
       e.preventDefault();
       walk((e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY) * 0.012);
     };
-    let lastY = null;
-    const onTouchStart = e => { lastY = e.touches[0].clientY; };
+    // Touch: the first 10 px of a swipe lock its axis. Up/down walks; left/right looks around
+    // (not from the outer 24 px, where the phone's own back gesture lives).
+    let start = null;
+    let last = null;
+    let axis = null;
+    const onTouchStart = e => {
+      const t = e.touches[0];
+      start = { x: t.clientX, y: t.clientY, edge: t.clientX < 24 || t.clientX > window.innerWidth - 24 };
+      last = { x: t.clientX, y: t.clientY };
+      axis = null;
+    };
     const onTouchMove = e => {
-      if (lastY === null || e.target.closest?.('.panel, .sheet, .site-header')) return;
-      const y = e.touches[0].clientY;
-      walk((lastY - y) * 0.035);
-      lastY = y;
+      if (!start || e.target.closest?.('.panel, .sheet, .site-header, .door-pill')) return;
+      const t = e.touches[0];
+      if (!axis) {
+        const dx = t.clientX - start.x;
+        const dy = t.clientY - start.y;
+        if (Math.hypot(dx, dy) < 10) return;
+        axis = Math.abs(dx) > Math.abs(dy) * 1.2 && !start.edge ? 'x' : 'y';
+      }
+      if (axis === 'y') walk((last.y - t.clientY) * 0.035);
+      else lookYaw.current = Math.max(-1.2, Math.min(1.2, lookYaw.current + (t.clientX - last.x) * 0.0045));
+      last = { x: t.clientX, y: t.clientY };
     };
     const onKey = e => {
       if (e.target.closest?.('input, textarea, select')) return;
@@ -616,8 +664,12 @@ export default function CivilApp() {
   // On phones the walk hint takes the intro's place once it has faded.
   useEffect(() => {
     let raf;
+    let near = null;
     const phone = window.matchMedia('(max-width: 760px)');
     const tick = () => {
+      // which door, if any, the visitor is standing beside (drives the touch "Enter" button)
+      const at = rooms.find(r => Math.abs(camZ.current - r.z) < 3.2)?.id ?? null;
+      if (at !== near) { near = at; setNearDoor(at); }
       const o = Math.max(0, Math.min(1, (camZ.current - (corridor.start - 5)) / 4));
       if (introRef.current) {
         introRef.current.style.opacity = String(o);
@@ -637,6 +689,7 @@ export default function CivilApp() {
 
   const enterRoom = useCallback(id => {
     setOpenProject(null);
+    lookYaw.current = 0;
     if (sceneFailed) { setActiveRoom(id); setPanelRoom(id); return; }
     if (activeRoom === id) return;
     setPanelRoom(null);
@@ -702,6 +755,7 @@ export default function CivilApp() {
             onReady={onReady}
             onFailure={onFailure}
             panelScroll={panelScroll}
+            lookYaw={lookYaw}
           />
         </Suspense>
       )}
@@ -723,11 +777,19 @@ export default function CivilApp() {
           </div>
         </section>
 
-        {!panelRoom && !busy && started && (
+        {!panelRoom && !busy && started && !(coarsePointer && nearDoor) && (
           <div ref={hintRef} className="walk-hint mono" aria-hidden="true">
             <span className="walk-hint__mouse"><span /></span>
-            {coarsePointer ? 'Swipe up to walk · tap a door to enter' : 'Scroll or drag to walk · click a door to enter'}
+            {coarsePointer ? 'Swipe up to walk · swipe sideways to look' : 'Scroll or drag to walk · click a door to enter'}
           </div>
+        )}
+        {/* touch screens: a thumb-sized way in whenever the visitor is standing at a door */}
+        {coarsePointer && started && !busy && nearDoor && (
+          <button type="button" className="door-pill" onClick={() => enterRoom(nearDoor)}>
+            <span className="mono">{rooms.find(r => r.id === nearDoor).number}</span>
+            Enter {rooms.find(r => r.id === nearDoor).label}
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+          </button>
         )}
 
         {room && (

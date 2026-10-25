@@ -375,8 +375,11 @@ main > * { pointer-events: auto; }
 }
 @media (max-width: 900px) {
   /* rooms menu becomes a full-width row under the header */
-  .site-nav { position: fixed; top: var(--header-h); left: clamp(12px, 3vw, 24px); right: clamp(12px, 3vw, 24px); z-index: 20; }
-  .site-nav a { flex: 1; text-align: center; padding: 9px 4px; font-size: 13px; white-space: nowrap; }
+  /* notch-safe header on edge-to-edge phones */
+  .site-header { height: calc(var(--header-h) + env(safe-area-inset-top)); padding-top: env(safe-area-inset-top); }
+  .site-nav { position: fixed; top: calc(var(--header-h) + env(safe-area-inset-top)); left: max(12px, env(safe-area-inset-left)); right: max(12px, env(safe-area-inset-right)); z-index: 20; }
+  /* 44 px tall tap targets */
+  .site-nav a { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 44px; text-align: center; padding: 9px 4px; font-size: 13px; white-space: nowrap; }
   .panel--room { width: auto; right: clamp(16px, 4vw, 64px); bottom: 150px; top: calc(var(--header-h) + 54px); }
 }
 @media (max-width: 760px) {
@@ -448,8 +451,38 @@ main > * { pointer-events: auto; }
   .timeline > li:hover { background-color: var(--panel-solid); }
 }
 
+/* touch: the card passing through the middle of the panel pops while scrolling (set by script) */
+[data-focus="true"] { z-index: 1; transform: translateY(-4px) scale(1.012); box-shadow: 0 12px 26px rgba(28, 31, 29, 0.14); }
+.timeline > li[data-focus="true"] { background-color: var(--panel-solid); }
+
+/* touch: thumb-sized way into the room the visitor is standing beside */
+.door-pill {
+  position: fixed; z-index: 16; left: 50%; bottom: max(20px, calc(env(safe-area-inset-bottom) + 12px)); transform: translateX(-50%);
+  display: inline-flex; align-items: center; gap: 10px; min-height: 52px; padding: 0 18px 0 8px; white-space: nowrap;
+  background: var(--accent); color: var(--accent-ink); border: 1.5px solid var(--ink); font: inherit; font-weight: 700; font-size: 16px;
+  box-shadow: 0 10px 24px rgba(28, 31, 29, 0.22); cursor: pointer; touch-action: manipulation;
+  animation: pill-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.door-pill .mono { display: inline-grid; place-items: center; min-width: 36px; height: 36px; background: var(--ink); color: var(--accent); font-size: 13px; }
+.door-pill svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.door-pill:active { transform: translateX(-50%) scale(0.97); }
+.door-pill:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@keyframes pill-in { from { opacity: 0; transform: translate(-50%, 12px); } }
+
+/* phones held sideways: menu joins the header row, panel takes the right side, intro scales to the short screen */
+@media (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+  .site-nav { position: static; margin-left: auto; }
+  .site-nav a { min-height: 36px; padding: 6px 8px; }
+  .panel--room { top: calc(var(--header-h) + 4px); left: 40vw; right: 0; bottom: 0; width: auto; border-right: 0; }
+  .intro { max-width: 56vw; bottom: 16px; }
+  .intro h1 { font-size: clamp(30px, 11vh, 52px); }
+  .intro__lede { font-size: 13px; margin-bottom: 12px; }
+  .walk-hint { bottom: 10px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
   [data-reveal="wait"] { translate: none; }
-  .project:hover, .columns > li:hover, .activities > li:hover, .timeline > li:hover, .stats > div:hover, .contact-card:hover { transform: none; }
+  .project:hover, .columns > li:hover, .activities > li:hover, .timeline > li:hover, .stats > div:hover, .contact-card:hover, [data-focus="true"] { transform: none; }
+  .door-pill:active { transform: translateX(-50%); }
 }
