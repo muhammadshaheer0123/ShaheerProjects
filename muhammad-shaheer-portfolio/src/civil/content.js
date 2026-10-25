@@ -421,9 +421,8 @@ export const leadership = [
     org: 'ASCE-NUCES Chapter',
     photo: '/activities/senior-vice-president.webp',
     points: [
-      'Planned and hosted technical workshops, events and chapter initiatives',
-      'Led coordination with faculty, partners and volunteers so every event ran smoothly',
-      'Head of Registration for an international geotechnical conference (see below)',
+      'Led and managed a team of 30+ members, planned and executed technical workshops, events, and chapter initiatives at university level',
+      'Led coordination with faculty, industry partners, and volunteers ensuring smooth execution and high-impact engagement',
     ],
   },
   {
