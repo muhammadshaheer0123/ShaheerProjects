@@ -90,6 +90,10 @@ function Header({ blueprint, onToggleBlueprint, onHome, onRoom, activeRoom }) {
           <a key={r.id} href={`#${r.id}`} aria-current={activeRoom === r.id ? 'page' : undefined}
             onClick={e => { e.preventDefault(); onRoom(r.id); }}>{r.label}</a>
         ))}
+        <a className="nav-cv" href={profile.cv} download="Muhammad_Shaheer_CV.pdf" aria-label="Download CV (PDF)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10.5l5 5 5-5M5 19.5h14" /></svg>
+          <span className="nav-cv__long">Download CV</span><span className="nav-cv__short">CV</span>
+        </a>
       </nav>
       <button type="button" className={`toggle ${blueprint ? 'is-on' : ''}`} onClick={onToggleBlueprint} aria-pressed={blueprint}>
         <span className="toggle__dot" aria-hidden="true" />

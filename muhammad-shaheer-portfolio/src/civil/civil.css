@@ -112,6 +112,12 @@ p { margin: 0 0 1em; }
 .site-nav { display: flex; gap: 2px; padding: 4px; background: var(--panel); border: 1px solid var(--line); }
 .site-nav a { text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 14px; transition: background-color 0.2s, color 0.2s; }
 .site-nav a:hover, .site-nav a[aria-current='page'] { background: var(--ink); color: var(--paper); }
+/* CV download: the one action in the bar, set apart in the accent */
+.site-nav a.nav-cv { display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin-left: 4px; background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.site-nav a.nav-cv:hover { background: var(--ink); color: var(--paper); }
+.site-nav a.nav-cv:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.nav-cv svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.nav-cv__short { display: none; }
 .toggle {
   display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px;
   background: var(--panel); border: 1px solid var(--line); cursor: pointer; font-size: 12px; text-transform: uppercase;
@@ -387,6 +393,9 @@ main > * { pointer-events: auto; }
   .plan { display: none; }
   .walk-hint { bottom: 20px; font-size: 10px; }
   .site-nav a { font-size: 12px; padding: 9px 2px; }
+  .site-nav a.nav-cv { flex: 0 0 auto; padding: 9px 8px; gap: 4px; margin-left: 2px; }
+  .nav-cv__long { display: none; }
+  .nav-cv__short { display: inline; }
   .site-header { gap: 10px; }
   .panel--room { left: 0; right: 0; bottom: 0; top: 34vh; --pad-x: 16px; --pad-top: 16px; padding: var(--pad-top) var(--pad-x) 28px; border-left: 0; border-right: 0; }
   .in-room .plan { display: none; }

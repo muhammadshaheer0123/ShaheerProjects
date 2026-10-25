@@ -26,6 +26,8 @@ export const profile = {
   // Hallway figure behind the reception counter: a transparent cut-out from helmet to upper thigh
   avatar: '/avatar/shaheer-hallway.webp',
   portrait: '/avatar/shaheer-portrait.jpg',
+  // CV download in the top bar (served with Content-Disposition: attachment, see vercel.json)
+  cv: '/Muhammad_Shaheer_CV.pdf',
   about: [
     'I am a civil engineering graduate from FAST-NUCES Lahore (2022–2026), now working as a Trainee Structural Engineer at Deomar Engineering. There I design oil and gas structures such as skids, platforms and sheds in STAAD Pro, design their foundations in STAAD Foundation, and prepare BOQs, material take-offs and bidding documents.',
     'Before that I saw construction up close: supervising excavation, reinforcement and concrete quality on a five-basement high-rise with Ittefaq Group, and supporting the Tarbela 5th Extension Project with WAPDA. I model in ETABS, SAP2000 and STAAD Pro, design to ACI and AISC, and like checking the numbers against reality. My final-year project measured a steel frame’s vibration with Arduino sensors and validated it against a finite element model.',
