@@ -962,7 +962,7 @@ function World({ blueprint, lowPower, onReady, ...rig }) {
   );
 }
 
-export default function CorridorScene({ blueprint, lowPower, reducedMotion, onReady, onFailure, ...rig }) {
+export default function CorridorScene({ blueprint, lowPower, reducedMotion, onReady, onFailure, paused, ...rig }) {
   // Render resolution adapts to the device: it steps down when frames drop and back up when there's headroom
   // Phones have far fewer CSS pixels, so they can afford a higher ratio (anything lower looks blurry on their dense screens)
   const maxDpr = Math.min(window.devicePixelRatio || 1, lowPower ? 2 : 1.5);
@@ -970,6 +970,8 @@ export default function CorridorScene({ blueprint, lowPower, reducedMotion, onRe
   return (
     <div className="scene">
       <Canvas
+        // paused: the last frame stays on screen and only redraws on resize, freeing the GPU for panel scrolling
+        frameloop={paused ? 'demand' : 'always'}
         dpr={dpr}
         camera={{ position: [0, EYE + 0.4, CORRIDOR.start + 3], fov: 62, near: 0.05, far: 120 }}
         gl={{ antialias: true, powerPreference: 'high-performance' }}

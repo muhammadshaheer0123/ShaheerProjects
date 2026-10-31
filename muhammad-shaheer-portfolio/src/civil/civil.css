@@ -457,20 +457,41 @@ main > * { pointer-events: auto; }
   .timeline > li:hover { background-color: var(--panel-solid); }
 }
 
-/* touch: no cursor, so no lamp tint. Cards rise with --pop (0 to 1, set each frame from their distance
-   to the middle of the panel), so the lift follows the finger directly with no transition lag */
+/* touch: no cursor, so no lamp tint. As a card passes the middle of the panel an accent bar grows
+   down its left edge, and cards with real gaps between them lift slightly. Both are scroll-driven
+   animations of transform only, so the browser runs them on the compositor in step with the finger.
+   Ruled grids (expertise, timeline) and the stats row never move, so neighbours can't overlap. */
 @media (hover: none) {
   .columns > li, .project, .activities > li, .timeline > li, .stats > div, .contact-card { background-image: none; }
-  .columns > li, .project, .activities > li, .timeline > li, .stats > div, .contact-card {
-    transform: translateY(calc(var(--pop, 0) * -5px)) scale(calc(1 + var(--pop, 0) * 0.014));
-    box-shadow: 0 calc(var(--pop, 0) * 12px) calc(var(--pop, 0) * 26px) rgba(28, 31, 29, calc(var(--pop, 0) * 0.14));
+  .columns > li, .activities > li, .timeline > li, .stats > div, .contact-card, [data-reveal] {
     transition:
-      opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
-      translate 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+      opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--reveal-delay, 0ms) / 2),
+      translate 0.4s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--reveal-delay, 0ms) / 2),
       border-color 0.2s;
-    will-change: transform;
   }
-  .timeline > li { background-color: color-mix(in srgb, var(--panel-solid) calc(var(--pop, 0) * 100%), transparent); }
+  [data-reveal="wait"] { translate: 0 12px; }
+}
+@supports (animation-timeline: view()) {
+  @media (hover: none) and (prefers-reduced-motion: no-preference) {
+    .columns > li::after, .project::after, .activities > li::after, .timeline > li::after, .contact-card::after {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--accent);
+      transform: scaleY(0); transform-origin: 50% 50%; pointer-events: none;
+      animation: card-focus-bar linear both; animation-timeline: view(); animation-range: cover;
+    }
+    .project, .activities > li, .contact-card {
+      animation: card-focus-lift linear both; animation-timeline: view(); animation-range: cover;
+    }
+  }
+}
+@keyframes card-focus-bar {
+  0%, 28% { transform: scaleY(0); }
+  44%, 56% { transform: scaleY(1); }
+  72%, 100% { transform: scaleY(0); }
+}
+@keyframes card-focus-lift {
+  0%, 28% { transform: none; }
+  44%, 56% { transform: translateY(-4px); }
+  72%, 100% { transform: none; }
 }
 
 /* touch: thumb-sized way into the room the visitor is standing beside */
@@ -481,6 +502,7 @@ main > * { pointer-events: auto; }
   box-shadow: 0 10px 24px rgba(28, 31, 29, 0.22); cursor: pointer; touch-action: manipulation;
   animation: pill-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
+.door-pill--left { padding: 0 8px 0 18px; }
 .door-pill .mono { display: inline-grid; place-items: center; min-width: 36px; height: 36px; background: var(--ink); color: var(--accent); font-size: 13px; }
 .door-pill svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .door-pill:active { transform: translateX(-50%) scale(0.97); }

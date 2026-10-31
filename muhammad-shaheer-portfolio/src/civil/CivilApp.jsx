@@ -198,10 +198,7 @@ function usePanelMotion(panelRef, progressRef, roomId) {
   useEffect(() => {
     const panel = panelRef.current;
     if (!panel) return undefined;
-    const setProgress = p => {
-      progressRef.current = p;
-      panel.style.setProperty('--progress', p.toFixed(4));
-    };
+    const setProgress = p => { progressRef.current = p; };
     setProgress(0);
 
     // the 3D camera pans along the room wall with the panel's scroll progress
@@ -220,13 +217,14 @@ function usePanelMotion(panelRef, progressRef, roomId) {
     let io = null;
     if (!prefersReducedMotion && 'IntersectionObserver' in window) {
       const items = [...panel.querySelectorAll(REVEAL_SELECTOR)];
+      // touch flicks are fast: start revealing as soon as a block enters, so nothing scrolls in blank
       io = new IntersectionObserver(entries => {
         entries.forEach(e => {
           if (!e.isIntersecting) return;
           e.target.dataset.reveal = 'in';
           io.unobserve(e.target);
         });
-      }, { root: panel, rootMargin: '0px 0px -6% 0px', threshold: 0.06 });
+      }, { root: panel, rootMargin: coarsePointer ? '0px' : '0px 0px -6% 0px', threshold: coarsePointer ? 0 : 0.06 });
       items.forEach(el => {
         const i = [...el.parentElement.children].indexOf(el);
         el.style.setProperty('--reveal-delay', `${(i % 4) * 60}ms`);
@@ -261,36 +259,12 @@ function usePanelMotion(panelRef, progressRef, roomId) {
     panel.addEventListener('pointermove', onMove);
     panel.addEventListener('pointerleave', douse);
 
-    // touch screens have no hover: cards rise continuously as they approach the middle of the
-    // panel and settle as they leave, tracking the scroll itself (no on/off jumps)
-    let popRaf = 0;
-    let onPopScroll = null;
-    if (!prefersReducedMotion && window.matchMedia('(hover: none)').matches) {
-      const update = () => {
-        popRaf = 0;
-        // re-read each frame: filtering the Projects room swaps its cards
-        const cards = [...panel.querySelectorAll(LAMP_SELECTOR)];
-        const box = panel.getBoundingClientRect();
-        const mid = box.top + box.height / 2;
-        const reach = box.height * 0.55;
-        // read every position first, then write, so the browser lays out once per frame
-        const rects = cards.map(c => c.getBoundingClientRect());
-        rects.forEach((r, i) => {
-          const d = Math.min(1, Math.abs(r.top + r.height / 2 - mid) / reach);
-          const p = 1 - d * d * (3 - 2 * d); // smoothstep: 1 at the middle, easing to 0 at the edges
-          cards[i].style.setProperty('--pop', p.toFixed(3));
-        });
-      };
-      onPopScroll = () => { if (!popRaf) popRaf = requestAnimationFrame(update); };
-      panel.addEventListener('scroll', onPopScroll, { passive: true });
-      update();
-    }
+    // touch screens: the "focus" as cards pass the middle of the panel is a CSS scroll-driven
+    // animation (see civil.css), so it runs off the main thread with no per-frame script
 
     return () => {
       cancelAnimationFrame(raf);
-      cancelAnimationFrame(popRaf);
       io?.disconnect();
-      if (onPopScroll) panel.removeEventListener('scroll', onPopScroll);
       panel.removeEventListener('scroll', onScroll);
       panel.removeEventListener('pointermove', onMove);
       panel.removeEventListener('pointerleave', douse);
@@ -753,6 +727,15 @@ export default function CivilApp() {
   const onArrive = useCallback(id => setPanelRoom(id), []);
   const onExited = useCallback(() => {}, []);
 
+  // Touch screens: once the camera has settled in a room, stop redrawing the 3D scene behind the panel.
+  // The panel covers most of a phone screen, and a live WebGL frame on every scroll step makes reading stutter.
+  const [scenePaused, setScenePaused] = useState(false);
+  useEffect(() => {
+    if (!coarsePointer || !panelRoom) { setScenePaused(false); return undefined; }
+    const id = setTimeout(() => setScenePaused(true), 700);
+    return () => clearTimeout(id);
+  }, [panelRoom]);
+
   const room = rooms.find(r => r.id === panelRoom);
   const RoomView = room ? ROOM_VIEWS[room.id] : null;
   usePanelMotion(panelRef, panelScroll, room?.id);
@@ -776,6 +759,7 @@ export default function CivilApp() {
             onFailure={onFailure}
             panelScroll={panelScroll}
             lookYaw={lookYaw}
+            paused={scenePaused}
           />
         </Suspense>
       )}
@@ -803,13 +787,20 @@ export default function CivilApp() {
           </div>
         )}
         {/* touch screens: a thumb-sized way in whenever the visitor is standing at a door */}
-        {coarsePointer && started && !busy && nearDoor && (
-          <button type="button" className="door-pill" onClick={() => enterRoom(nearDoor)}>
-            <span className="mono">{rooms.find(r => r.id === nearDoor).number}</span>
-            Enter {rooms.find(r => r.id === nearDoor).label}
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
-          </button>
-        )}
+        {/* the arrow points at the wall the door is in; left-wall doors mirror the pill */}
+        {coarsePointer && started && !busy && nearDoor && (() => {
+          const door = rooms.find(r => r.id === nearDoor);
+          const left = door.side === 'left';
+          return (
+            <button type="button" className={`door-pill ${left ? 'door-pill--left' : ''}`} onClick={() => enterRoom(nearDoor)}>
+              {left && <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H6M11 6l-6 6 6 6" /></svg>}
+              {!left && <span className="mono">{door.number}</span>}
+              Enter {door.label}
+              {left && <span className="mono">{door.number}</span>}
+              {!left && <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>}
+            </button>
+          );
+        })()}
 
         {room && (
           <section ref={panelRef} key={room.id} className={`panel panel--room room--${room.id}`} aria-labelledby="room-title" id={room.id}>
