@@ -34,7 +34,7 @@ const PROJECT_WALL = [
   '/projects/idea-statica-connections/anchor-base-plate.png',
   '/projects/etabs-15-storey/deformed-shape.png',
   '/projects/dubai-chowk-vissim/vehicle-routes.webp',
-  '/projects/dubai-chowk-vissim/scenario-2-conflict-areas.webp',
+  '/projects/nullah-lai-hec-ras/reach-geometry.webp',
 ];
 
 

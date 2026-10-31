@@ -95,7 +95,7 @@ export const expertise = [
 export const disciplines = [
   { name: 'Structural', series: 'S-100' },
   { name: 'Highway & Transportation', series: 'T-200' },
-  { name: 'Hydrology', series: 'H-300' },
+  { name: 'Hydraulics & Hydrology', series: 'H-300' },
 ];
 
 // `drawing` picks the line drawing shown for each project:
@@ -277,6 +277,55 @@ export const projects = [
       { src: '/projects/dubai-chowk-vissim/scenario-2-flyover-model.webp', caption: 'Scenario 2: east–west through traffic on a flyover' },
       { src: '/projects/dubai-chowk-vissim/scenario-2-conflict-areas.webp', caption: 'Scenario 2: conflict areas reworked for the new flows' },
       { src: '/projects/dubai-chowk-vissim/scenario-2-signal-program.webp', caption: 'Scenario 2 signal program: two phases, 70 s cycle', wide: true },
+    ],
+  },
+  {
+    id: 'nullah-lai-hec-ras',
+    sheet: 'H-300',
+    title: 'Nullah Lai Steady-Flow Model',
+    category: 'Hydraulics & Hydrology',
+    location: 'I-10, Islamabad / Rawalpindi',
+    year: '2026',
+    role: '1D steady-flow river modelling (HEC-RAS 6.7, RAS Mapper)',
+    drawing: 'bridge',
+    summary:
+      'One-dimensional steady-flow HEC-RAS model of a 3.3 km reach of Nullah Lai, the urban drainage channel behind Rawalpindi’s worst floods. Built on SRTM terrain with two bridges and a culvert, it shows every structure passing the 100 m³/s design flood without overtopping.',
+    abstract: [
+      'Nullah Lai floods regularly during the monsoon because of its steep upper catchment and a constrained urban channel. Our three-member team modelled the reach from Karnal Sher Khan Shaheed Road (RS 3331) to Hazara Colony (RS 323) in HEC-RAS 6.7, using SRTM 1 arc-second (30 m) terrain from USGS Earth Explorer processed in RAS Mapper on WGS84 UTM Zone 43N.',
+      'The centerline was digitised over satellite imagery, ten cross-sections were cut from the terrain with Manning’s n of 0.035 in the channel and 0.08 on the overbanks, and two bridges and an elliptical culvert were placed at real road crossings. Low flow (15 m³/s), moderate flood (45 m³/s) and design flood (100 m³/s) were run under a mixed flow regime.',
+    ],
+    scope: [
+      'SRTM DEM download, projection and terrain processing in RAS Mapper',
+      'River centerline digitised over satellite imagery; ten cross-sections extracted from terrain',
+      'Manning’s n assigned per cross-section: 0.035 channel, 0.08 overbanks',
+      'Bridge 1 (RS 2470) and Bridge 2 (RS 1285): deck, pier and energy / pressure-weir methods',
+      'Elliptical culvert (RS 2160): 25 m span, 3 m rise, FHWA concrete-pipe chart',
+      'Three steady-flow profiles, critical-depth upstream and normal-depth downstream boundaries',
+      'Water surface profiles, cross-section plots and bridge and culvert output tables',
+    ],
+    conclusions: [
+      'Both bridges pass all three flows with no overtopping (weir flow zero); they switch from free-surface to pressure flow at the 100 m³/s design flood.',
+      'At the design flood the water surface upstream of Bridge 1 is 500.37 m, below its 501.50 m minimum overtopping level.',
+      'The culvert runs under outlet control in every profile with no roadway overtopping; its 1.72 m/s outlet velocity at the design flood calls for scour protection.',
+      'Backwater builds upstream of each structure at higher flows; flow is mainly subcritical, with Froude ≈ 1.01 at RS 1484 and RS 637 under the design flood.',
+      'The 30 m SRTM terrain suits a reach-scale study; LiDAR or survey data would be needed for detailed design.',
+      'The model is a baseline for unsteady-flow, flood-frequency and flood-mitigation studies on Nullah Lai.',
+    ],
+    figures: [
+      { label: 'Reach / sections', value: '3.3 km / 10' },
+      { label: 'Design flood', value: '100 m³/s' },
+      { label: 'Overtopping', value: 'None' },
+    ],
+    images: [
+      { src: '/projects/nullah-lai-hec-ras/reach-geometry.webp', caption: 'Nullah Lai reach in RAS Mapper: centerline, cross-sections RS 323–3331, bridges and culvert' },
+      { src: '/projects/nullah-lai-hec-ras/srtm-terrain.webp', caption: 'SRTM 30 m terrain of Rawalpindi / Islamabad in RAS Mapper' },
+      { src: '/projects/nullah-lai-hec-ras/cross-section-editor.webp', caption: 'Cross-section from terrain with Manning’s n values' },
+      { src: '/projects/nullah-lai-hec-ras/bridges-and-culvert.webp', caption: 'Bridge 1 (RS 2470), elliptical culvert (RS 2160) and Bridge 2 (RS 1285), upstream and downstream faces', wide: true },
+      { src: '/projects/nullah-lai-hec-ras/water-surface-profiles.webp', caption: 'Water surface profiles for 15, 45 and 100 m³/s along the reach' },
+      { src: '/projects/nullah-lai-hec-ras/bridge-1-cross-section.webp', caption: 'Bridge 1 upstream face at low flow: water below the low chord' },
+      { src: '/projects/nullah-lai-hec-ras/profile-output-table.webp', caption: 'Profile output table, design flood (100 m³/s)', wide: true },
+      { src: '/projects/nullah-lai-hec-ras/bridge-1-output-pf3.webp', caption: 'Bridge 1 output at the design flood: pressure flow, no weir flow', wide: true },
+      { src: '/projects/nullah-lai-hec-ras/culvert-output-pf3.webp', caption: 'Culvert output at the design flood: outlet control, 1.72 m/s', wide: true },
     ],
   },
 ];
