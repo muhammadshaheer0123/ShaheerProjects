@@ -20,7 +20,7 @@ export const profile = {
     { label: 'Instagram', icon: 'instagram', handle: '@sheerizkheer', href: 'https://www.instagram.com/sheerizkheer/' },
   ],
   intro:
-    'I design steel and reinforced-concrete structures, from oil and gas skids to high-rise frames, and check them against ACI and AISC.',
+    'A motivated, AI-driven civil engineer who uses modelling, data and smart sensors to design safer structures, waterways and roads.',
   greeting: "Hi, I'm Shaheer!",
   greetingSub: 'Scroll to walk the corridor',
   // Hallway figure behind the reception counter: a transparent cut-out from helmet to upper thigh
@@ -55,20 +55,20 @@ export const expertise = [
   {
     code: 'C1', icon: 'frame',
     title: 'Structural analysis & design',
-    body: 'Reinforced-concrete and steel buildings modelled, analysed and designed to ACI 318 and AISC 360, including slabs, frames, shear walls and foundations.',
-    tools: ['ETABS', 'SAP2000', 'STAAD Pro', 'SAFE'],
+    body: 'Reinforced-concrete and steel structures modelled, analysed and designed to ACI 318 and AISC 360, from slabs, frames and shear walls to foundations, with steel connections verified by finite element analysis.',
+    tools: ['ETABS', 'SAP2000', 'STAAD Pro', 'SAFE', 'IDEA StatiCa'],
   },
   {
-    code: 'C2', icon: 'platform',
-    title: 'Oil & gas structures',
-    body: 'Skids, platforms and sheds for oil and gas facilities, with their foundations, designed to the applicable engineering standards.',
-    tools: ['STAAD Pro', 'STAAD Foundation'],
+    code: 'C2', icon: 'channel',
+    title: 'Hydraulic modelling',
+    body: 'Steady-flow river models with bridges and culverts, and rainfall–runoff models built from terrain data, to estimate flood levels and peak flows.',
+    tools: ['HEC-RAS', 'RAS Mapper', 'HEC-HMS'],
   },
   {
-    code: 'C3', icon: 'connection',
-    title: 'Steel connection design',
-    body: 'Base plates, bolted cleats and moment end plates verified with component-based finite element analysis to AISC LRFD.',
-    tools: ['IDEA StatiCa'],
+    code: 'C3', icon: 'signal',
+    title: 'Traffic modelling',
+    body: 'Micro-simulation of signalised junctions from field counts: calibrated models, signal timing and grade-separation options compared by delay, queues and level of service.',
+    tools: ['PTV VISSIM'],
   },
   {
     code: 'C4', icon: 'helmet',

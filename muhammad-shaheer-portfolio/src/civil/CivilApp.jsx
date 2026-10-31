@@ -384,10 +384,10 @@ const CONTACT_ICONS = {
 const EXPERTISE_ICONS = {
   // gable portal frame with a tie beam
   frame: 'M2.5 21h19M5 21V10M19 21V10M3.5 11L12 4.5l8.5 6.5M5 14.5h14',
-  // lattice platform / derrick on a skid
-  platform: 'M3 21h18M6 21l3.5-15h5L18 21M9.5 6L12 2.5 14.5 6M8 13.5h8M7.2 17h9.6M8.4 13.5l7.2 3.5',
-  // bolted end plate with four bolts
-  connection: 'M5 3.5h14v17H5zM9 8a1 1 0 1 0 0 .01M15 8a1 1 0 1 0 0 .01M9 16a1 1 0 1 0 0 .01M15 16a1 1 0 1 0 0 .01M3 12h18',
+  // trapezoidal channel section with a water surface
+  channel: 'M2.5 5.5L6.5 18h11l4-12.5M5 11c1.2-1 2.4-1 3.5 0s2.3 1 3.5 0 2.3-1 3.5 0 2.3 1 3.5 0M3 21h18',
+  // three-aspect traffic signal on a post
+  signal: 'M8.5 2.5h7v15h-7zM13.4 6a1.4 1.4 0 1 0 0 .01M13.4 10a1.4 1.4 0 1 0 0 .01M13.4 14a1.4 1.4 0 1 0 0 .01M12 17.5v4M9 21.5h6',
   // hard hat
   helmet: 'M3 17.5h18M5 17.5a7 7 0 0 1 14 0M12 6.5V10M9 7.3l.9 3M15 7.3l-.9 3M4 20h16',
   // programme bars on a time axis
