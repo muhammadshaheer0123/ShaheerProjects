@@ -378,6 +378,52 @@ export const projects = [
       { src: '/projects/nullah-lai-hec-ras/culvert-output-pf3.webp', caption: 'Culvert output at the design flood: outlet control, 1.72 m/s', wide: true },
     ],
   },
+  {
+    id: 'kalam-hec-hms',
+    sheet: 'H-301',
+    title: 'Kalam Watershed Rainfall–Runoff Model',
+    category: 'Hydraulics & Hydrology',
+    location: 'Kalam, Swat',
+    year: '2024',
+    role: 'Single-event hydrologic modelling (HEC-HMS 4.11)',
+    drawing: 'bridge',
+    summary:
+      'Single-event rainfall–runoff model of the Kalam watershed in Swat, built in HEC-HMS from a USGS elevation model. Terrain processing delineated 15 sub-basins draining 1,065 km²; a 13-hour storm on 21 February 2024 produced a peak of 149.5 m³/s at the outlet.',
+    abstract: [
+      'This hydrology lab assignment applied the HEC-HMS basin-scale modelling workflow to the Kalam area. USGS elevation data was processed with the software’s built-in GIS tools: sinks were filled, flow direction and accumulation grids computed, streams identified at a 25 km² threshold, and the watershed and its sub-basins delineated from an outlet break point.',
+      'Each sub-basin used SCS curve-number losses (CN 97) and an SCS unit hydrograph, with lag time taken as 0.6 Tc from flow length, basin slope and CN. Reaches were routed by the Muskingum method (K = 0.5, X = 0.25). An hourly rainfall hyetograph drove the meteorologic model and the run used a 10-minute time step. Team assignment with Muhammad Ramis Irfan and Muhammad Shoaib, under Sir Kashif Hameed.',
+    ],
+    scope: [
+      'Basin model with SCS curve-number loss, SCS unit hydrograph and Muskingum routing',
+      'Terrain pre-processing: fill sinks, flow direction and flow accumulation grids',
+      'Stream network at a 25 km² threshold, outlet break point, watershed and 15 sub-basins',
+      'Curve number of 97 for every sub-basin',
+      'Lag times computed in Excel from flow length, basin slope and CN (lag = 0.6 Tc)',
+      'Muskingum K = 0.5 and X = 0.25 for all reaches',
+      'Rain gauge hyetograph, meteorologic model, 10-minute control specifications and simulation run',
+    ],
+    conclusions: [
+      'The 1,064.9 km² watershed peaked at 149.5 m³/s at the outlet at 16:30 on 21 February 2024, two and a half hours after the rain stopped.',
+      'Flows build downstream as reaches collect the sub-basins: 32 m³/s at Reach-7, 111 m³/s at Reach-4 and 147 m³/s at Reach-3.',
+      'Sub-basin peaks range from 12:20 to 18:00 depending on size, slope and position in the network, showing the routing delay.',
+      'Runoff depth was 5.17 mm for every element, as expected with a single curve number across the catchment.',
+      'The workflow can be repeated for any watershed with a DEM, making it a practical basis for flood estimation and watershed planning.',
+    ],
+    figures: [
+      { label: 'Catchment', value: '1,065 km²' },
+      { label: 'Sub-basins', value: '15' },
+      { label: 'Outlet peak', value: '149.5 m³/s' },
+    ],
+    images: [
+      { src: '/projects/kalam-hec-hms/watershed-delineation.webp', caption: 'Kalam watershed delineated into 15 sub-basins and their reaches' },
+      { src: '/projects/kalam-hec-hms/outlet-break-point.webp', caption: 'Outlet break point placed on the delineated stream network', wide: true },
+      { src: '/projects/kalam-hec-hms/curve-numbers.webp', caption: 'Curve number 97 assigned to all 15 sub-basins' },
+      { src: '/projects/kalam-hec-hms/lag-times.webp', caption: 'SCS unit-hydrograph lag times per sub-basin (minutes)' },
+      { src: '/projects/kalam-hec-hms/rainfall-hyetograph.webp', caption: 'Hourly rainfall hyetograph, 21 February 2024' },
+      { src: '/projects/kalam-hec-hms/subbasin-hydrograph.webp', caption: 'Sub-basin 11: rainfall, losses and outflow hydrograph' },
+      { src: '/projects/kalam-hec-hms/global-summary.webp', caption: 'Global summary: peak discharge, timing and volume for every element', wide: true },
+    ],
+  },
 ];
 
 export const experience = [
