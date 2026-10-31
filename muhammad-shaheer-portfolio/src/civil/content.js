@@ -107,7 +107,7 @@ export const projects = [
   {
     id: 'shm-vibration-sensor',
     sheet: 'S-100',
-    title: 'Steel Frame Evaluation by Acceleration-Based Field Monitoring',
+    title: 'Structural Model Evaluation of a Steel Frame Using Acceleration-Based Field Monitoring',
     category: 'Structural',
     location: 'Izhar Construction warehouse, Lahore',
     year: '2026',
