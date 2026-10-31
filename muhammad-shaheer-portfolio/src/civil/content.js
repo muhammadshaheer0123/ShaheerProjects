@@ -143,7 +143,7 @@ export const projects = [
       { label: 'System cost', value: '< Rs 10,000' },
     ],
     images: [
-      { src: '/projects/shm-vibration-sensor/sensor-pcb.webp', caption: 'Developed sensor: ESP32, ADXL345, RTC and SD logging on a custom PCB' },
+      { src: '/projects/shm-vibration-sensor/sensor-hardware.webp', caption: 'Developed hardware: ESP32, ADXL345, RTC, micro SD, BMS and battery on a custom PCB' },
       { src: '/projects/shm-vibration-sensor/breadboard-prototype.webp', caption: 'Breadboard prototype checked against the iDynamics phone app', wide: true },
       { src: '/projects/shm-vibration-sensor/sensor-comparison.webp', caption: 'Vibrating-table validation: two sensors record matching peaks', wide: true },
       { src: '/projects/shm-vibration-sensor/site-visit.webp', caption: 'Site visit at the Izhar Construction warehouse, Lahore' },

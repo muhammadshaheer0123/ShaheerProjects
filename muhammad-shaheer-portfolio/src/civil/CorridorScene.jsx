@@ -32,7 +32,7 @@ const PROJECT_WALL = [
   '/projects/etabs-15-storey/plan-and-3d-model.png',
   '/projects/sap2000-steel-shed/3d-frame-model.png',
   '/projects/idea-statica-connections/anchor-base-plate.png',
-  '/projects/shm-vibration-sensor/sensor-pcb.webp',
+  '/projects/shm-vibration-sensor/sensor-hardware.webp',
   '/projects/dubai-chowk-vissim/vehicle-routes.webp',
   '/projects/nullah-lai-hec-ras/reach-geometry.webp',
 ];
