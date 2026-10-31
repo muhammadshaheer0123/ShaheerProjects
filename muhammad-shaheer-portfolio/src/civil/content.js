@@ -90,6 +90,14 @@ export const expertise = [
   },
 ];
 
+// Sections of the Projects room, in order. Each project's `category` must match
+// one `name`; a section with no projects yet shows as a reserved sheet.
+export const disciplines = [
+  { name: 'Structural', series: 'S-100' },
+  { name: 'Highway & Transportation', series: 'T-200' },
+  { name: 'Hydrology', series: 'H-300' },
+];
+
 // `drawing` picks the line drawing shown for each project:
 // frame | bridge | road | wall | tank | foundation
 // Optional: `images` (first one becomes the card cover; `wide: true` spans the
@@ -145,7 +153,7 @@ export const projects = [
     id: 'sap2000-steel-industrial-building',
     sheet: 'S-101',
     title: 'Steel Industrial Building (Gable Frame)',
-    category: 'Steel',
+    category: 'Structural',
     location: '',
     year: '2025',
     role: 'Steel modelling, analysis & design check (SAP2000)',
@@ -186,7 +194,7 @@ export const projects = [
     id: 'idea-statica-connections',
     sheet: 'S-102',
     title: 'Steel Connection Design',
-    category: 'Steel',
+    category: 'Structural',
     location: '',
     year: '2025',
     role: 'Connection modelling & verification (IDEA StatiCa)',
@@ -219,6 +227,56 @@ export const projects = [
       { src: '/projects/idea-statica-connections/anchor-base-plate.png', caption: 'Anchor base plate: all checks pass, anchors at 94.5%' },
       { src: '/projects/idea-statica-connections/purlin-to-rafter.png', caption: 'Purlin-to-rafter bolted cleat: bolts at 15.2%', wide: true },
       { src: '/projects/idea-statica-connections/beam-column-end-plate.png', caption: 'Beam-to-column bolted flush end plate (W10×22)', wide: true },
+    ],
+  },
+  {
+    id: 'dubai-chowk-traffic-vissim',
+    sheet: 'T-200',
+    title: 'Dubai Chowk Congestion Mitigation',
+    category: 'Highway & Transportation',
+    location: 'Allama Iqbal Town, Lahore',
+    year: '2025',
+    role: 'Traffic micro-simulation & intersection design (PTV VISSIM)',
+    drawing: 'road',
+    summary:
+      'Micro-simulation study of Dubai Chowk, a congested four-leg signalised junction in Lahore. The calibrated PTV VISSIM model showed the junction failing at LOS E; an east–west flyover with a two-phase signal brought it to LOS C and cut average delay from about 70 s to 26 s.',
+    abstract: [
+      'Dubai Chowk links Multan Road, Wahdat Road, Samanabad and Kareem Market, and runs at LOS E in the morning peak with long queues. Our four-member team recorded every approach at 8:00 AM, extracted turning-movement counts from the video, and documented lane geometry and the existing four-phase, 126-second signal plan.',
+      'A base model was built and calibrated in PTV VISSIM with local vehicle types (motorbikes and rickshaws) and observed speed distributions. Two improvements were then simulated over ten runs each: widening the north–south approaches with retimed signals, and a grade-separated flyover for east–west through traffic with a simplified two-phase signal.',
+    ],
+    scope: [
+      'Site survey and peak-hour video counts on all four legs',
+      'Turning-movement counts, lane geometry and signal timings extracted from the footage',
+      'PTV VISSIM base model: links, connectors, routes and fixed-time signal control',
+      'Custom fleet with motorbikes and rickshaws, with speeds calibrated to the site',
+      'Scenario 1: north–south approaches widened to two 3.5 m lanes, green times retimed',
+      'Scenario 2: east–west flyover, 2-phase 70 s cycle and reworked conflict areas',
+      'Node evaluation of delay, queue length and LOS over ten runs per scenario',
+    ],
+    conclusions: [
+      'Existing junction: LOS E, average delay 65–70 s per vehicle, average maximum queue about 170 m.',
+      'Scenario 1 (extra lane and signal retiming) left the junction at LOS E with almost no change in delay or queues; demand far exceeds what ground-level fixes can add.',
+      'Scenario 2 (flyover) reached LOS C, cut average delay to 26 s (over 60% lower) and reduced the average maximum queue from 170 m to 77 m.',
+      'Taking the heavy east–west through traffic off the junction allowed a 70 s two-phase cycle instead of 126 s and four phases.',
+      'An east–west flyover is recommended as the only viable long-term solution for Dubai Chowk.',
+    ],
+    figures: [
+      { label: 'Level of service', value: 'E → C' },
+      { label: 'Average delay', value: '≈70 → 26 s' },
+      { label: 'Max queue', value: '170 → 77 m' },
+    ],
+    images: [
+      { src: '/projects/dubai-chowk-vissim/vehicle-routes.webp', caption: 'Vehicle routes of the base model in PTV VISSIM' },
+      { src: '/projects/dubai-chowk-vissim/site-satellite.webp', caption: 'Dubai Chowk: four-leg signalised junction, Allama Iqbal Town', wide: true },
+      { src: '/projects/dubai-chowk-vissim/site-visit.webp', caption: 'Site visit: recording peak-hour traffic at 8:00 AM' },
+      { src: '/projects/dubai-chowk-vissim/phase-plan.webp', caption: 'Existing four-phase plan (126 s cycle)' },
+      { src: '/projects/dubai-chowk-vissim/base-signal-program.webp', caption: 'Base model signal program: four phases, 126 s', wide: true },
+      { src: '/projects/dubai-chowk-vissim/motorbikes-rickshaws.webp', caption: 'Motorbikes and rickshaws added to the VISSIM fleet', wide: true },
+      { src: '/projects/dubai-chowk-vissim/baseline-evaluation.webp', caption: 'Baseline node evaluation: LOS E' },
+      { src: '/projects/dubai-chowk-vissim/scenario-1-model.webp', caption: 'Scenario 1: widened north–south approaches' },
+      { src: '/projects/dubai-chowk-vissim/scenario-2-flyover-model.webp', caption: 'Scenario 2: east–west through traffic on a flyover' },
+      { src: '/projects/dubai-chowk-vissim/scenario-2-conflict-areas.webp', caption: 'Scenario 2: conflict areas reworked for the new flows' },
+      { src: '/projects/dubai-chowk-vissim/scenario-2-signal-program.webp', caption: 'Scenario 2 signal program: two phases, 70 s cycle', wide: true },
     ],
   },
 ];

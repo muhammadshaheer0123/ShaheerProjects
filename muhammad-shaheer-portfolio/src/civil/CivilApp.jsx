@@ -1,5 +1,5 @@
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { profile, rooms, corridor, expertise, projects, experience, education, leadership, activities, community } from './content';
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { profile, rooms, corridor, expertise, disciplines, projects, experience, education, leadership, activities, community } from './content';
 import ProjectDrawing from './ProjectDrawing';
 
 const CorridorScene = lazy(() => import('./CorridorScene'));
@@ -266,9 +266,10 @@ function usePanelMotion(panelRef, progressRef, roomId) {
     let popRaf = 0;
     let onPopScroll = null;
     if (!prefersReducedMotion && window.matchMedia('(hover: none)').matches) {
-      const cards = [...panel.querySelectorAll(LAMP_SELECTOR)];
       const update = () => {
         popRaf = 0;
+        // re-read each frame: filtering the Projects room swaps its cards
+        const cards = [...panel.querySelectorAll(LAMP_SELECTOR)];
         const box = panel.getBoundingClientRect();
         const mid = box.top + box.height / 2;
         const reach = box.height * 0.55;
@@ -326,34 +327,48 @@ const metaLine = (...parts) => parts.filter(Boolean).join(' · ');
 
 function ProjectsRoom({ room, onOpen }) {
   const [filter, setFilter] = useState('All');
-  const categories = useMemo(() => ['All', ...new Set(projects.map(p => p.category))], []);
-  const shown = filter === 'All' ? projects : projects.filter(p => p.category === filter);
+  const sections = filter === 'All' ? disciplines : disciplines.filter(d => d.name === filter);
   return (
     <>
       <RoomHead room={room} title="Drawing register: selected work." />
-      <div className="filters" role="group" aria-label="Filter projects">
-        {categories.map(c => (
+      <div className="filters" role="group" aria-label="Filter projects by discipline">
+        {['All', ...disciplines.map(d => d.name)].map(c => (
           <button key={c} type="button" className={`chip-btn mono ${filter === c ? 'is-on' : ''}`} aria-pressed={filter === c} onClick={() => setFilter(c)}>{c}</button>
         ))}
       </div>
-      <ul className="register">
-        {shown.map(p => (
-          <li key={p.id}>
-            <button type="button" className="project" onClick={() => onOpen(p)}>
-              {p.images?.length
-                ? <img className="project__cover" src={p.images[0].src} alt="" loading="lazy" />
-                : <ProjectDrawing type={p.drawing} title={p.title} />}
-              <span className="project__sheet mono">{p.sheet}</span>
-              <span className="project__body">
-                <strong>{p.title}</strong>
-                <span className="mono">{metaLine(p.category, p.location, p.year)}</span>
-                <span className="project__role">{p.role}</span>
-              </span>
-              <span className="project__open mono" aria-hidden="true">Open sheet →</span>
-            </button>
-          </li>
-        ))}
-      </ul>
+      {sections.map(d => {
+        const list = projects.filter(p => p.category === d.name);
+        return (
+          <section key={d.name} className="discipline" aria-label={d.name}>
+            <h3 className="sub mono">
+              {d.name}
+              <span className="discipline__count">{list.length ? `${list.length} ${list.length === 1 ? 'sheet' : 'sheets'}` : 'Reserved'}</span>
+            </h3>
+            {list.length ? (
+              <ul className="register">
+                {list.map(p => (
+                  <li key={p.id}>
+                    <button type="button" className="project" onClick={() => onOpen(p)}>
+                      {p.images?.length
+                        ? <img className="project__cover" src={p.images[0].src} alt="" loading="lazy" />
+                        : <ProjectDrawing type={p.drawing} title={p.title} />}
+                      <span className="project__sheet mono">{p.sheet}</span>
+                      <span className="project__body">
+                        <strong>{p.title}</strong>
+                        <span className="mono">{metaLine(p.location, p.year)}</span>
+                        <span className="project__role">{p.role}</span>
+                      </span>
+                      <span className="project__open mono" aria-hidden="true">Open sheet →</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="register-empty mono">Sheet {d.series} reserved for upcoming {d.name.toLowerCase()} work.</p>
+            )}
+          </section>
+        );
+      })}
     </>
   );
 }

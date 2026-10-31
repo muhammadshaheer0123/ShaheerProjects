@@ -33,8 +33,8 @@ const PROJECT_WALL = [
   '/projects/sap2000-steel-shed/3d-frame-model.png',
   '/projects/idea-statica-connections/anchor-base-plate.png',
   '/projects/etabs-15-storey/deformed-shape.png',
-  '/projects/sap2000-steel-shed/moment-diagram.png',
-  '/projects/idea-statica-connections/beam-column-end-plate.png',
+  '/projects/dubai-chowk-vissim/vehicle-routes.webp',
+  '/projects/dubai-chowk-vissim/scenario-2-conflict-areas.webp',
 ];
 
 
