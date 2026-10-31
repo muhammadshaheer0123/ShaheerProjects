@@ -85,7 +85,7 @@ export function concreteTexture({ base = '#b6b6b0', seed = 73, ties = true, join
 
 export function labelTexture(lines, {
   width = 1024, height = 256, bg = '#1f2224', fg = '#f1efe8', accent = '#f2c12e',
-  font = '"Archivo", sans-serif', mono = '"IBM Plex Mono", monospace', kind = 'sign',
+  font = '"Archivo", sans-serif', mono = '"IBM Plex Mono", monospace', kind = 'sign', align = 'left',
 } = {}) {
   const canvas = document.createElement('canvas');
   canvas.width = width;
@@ -152,12 +152,14 @@ export function labelTexture(lines, {
     ctx.fillRect(0, 0, width, height);
     ctx.fillStyle = fg;
     ctx.textBaseline = 'middle';
+    ctx.textAlign = align;
+    const x = align === 'center' ? width / 2 : height * 0.3;
     ctx.font = `600 ${height * 0.36}px ${mono}`;
-    ctx.fillText(lines[0].toUpperCase(), height * 0.3, height * 0.36);
+    ctx.fillText(lines[0].toUpperCase(), x, height * 0.36);
     if (lines[1]) {
       ctx.globalAlpha = 0.7;
       ctx.font = `400 ${height * 0.24}px ${mono}`;
-      ctx.fillText(lines[1], height * 0.3, height * 0.72);
+      ctx.fillText(lines[1], x, height * 0.72);
       ctx.globalAlpha = 1;
     }
   }

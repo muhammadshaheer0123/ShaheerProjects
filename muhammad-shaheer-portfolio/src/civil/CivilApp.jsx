@@ -790,7 +790,6 @@ export default function CivilApp() {
           <p className="eyebrow mono"><span className="tri" aria-hidden="true" />Portfolio · {profile.title}</p>
           <h1 id="intro-title"><span>{profile.firstName}</span><span>{profile.lastName}</span></h1>
           <p className="intro__lede">{profile.intro}</p>
-          <p className="intro__focus mono">{profile.focus}</p>
           <div className="intro__actions">
             <button type="button" className="btn btn--accent" onClick={() => { zTarget.current = clampZ(-3); }}>Start walking</button>
             <button type="button" className="btn btn--ghost" onClick={() => enterRoom('projects')}>View projects</button>

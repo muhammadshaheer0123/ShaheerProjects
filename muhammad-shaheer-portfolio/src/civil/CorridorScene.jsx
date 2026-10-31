@@ -474,7 +474,7 @@ function HardHat({ position, mat = 'safety', rotation }) {
 }
 
 function Lobby() {
-  const plate = useMemo(() => labelTexture([profile.name, profile.title + ' · ' + profile.focus.split(' · ')[0]], { kind: 'caption', width: 1024, height: 140, bg: '#1f2224' }), []);
+  const plate = useMemo(() => labelTexture([`Engr ${profile.name}`, profile.title], { kind: 'caption', width: 1024, height: 140, bg: '#1f2224', align: 'center' }), []);
   const { m } = useContext(SceneCtx);
   return (
     <group>

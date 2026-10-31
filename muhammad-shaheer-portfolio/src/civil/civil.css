@@ -141,8 +141,7 @@ main > * { pointer-events: auto; }
   line-height: 0.86; letter-spacing: -0.02em; text-transform: uppercase; margin-bottom: 24px;
 }
 .intro h1 span:last-child { -webkit-text-stroke: 2px var(--ink); color: transparent; }
-.intro__lede { font-size: clamp(16px, 1.4vw, 19px); max-width: 30em; }
-.intro__focus { font-size: 12px; text-transform: uppercase; color: var(--muted); margin-bottom: 26px; }
+.intro__lede { font-size: clamp(16px, 1.4vw, 19px); max-width: 30em; margin-bottom: 26px; }
 .intro__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .intro > * { opacity: 0; transform: translateY(18px); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
 .is-started .intro > * { opacity: 1; transform: none; }
@@ -395,7 +394,6 @@ main > * { pointer-events: auto; }
   .toggle .mono { display: none; }
   .toggle { padding: 0 12px; }
   .intro { right: 16px; bottom: 24px; }
-  .intro__focus { display: none; }
   /* phones: the hero has to share the screen with the reception desk, so it loses the label and shrinks */
   .intro .eyebrow { display: none; }
   .intro h1 { font-size: clamp(36px, 11.5vw, 64px); }
