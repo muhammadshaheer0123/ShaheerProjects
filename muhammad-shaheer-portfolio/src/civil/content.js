@@ -105,8 +105,58 @@ export const disciplines = [
 // Leave `location` / `year` empty to hide them.
 export const projects = [
   {
-    id: 'etabs-15-storey-residential',
+    id: 'shm-vibration-sensor',
     sheet: 'S-100',
+    title: 'Steel Frame Evaluation by Acceleration-Based Field Monitoring',
+    category: 'Structural',
+    location: 'Izhar Construction warehouse, Lahore',
+    year: '2026',
+    role: 'Final-year project: IoT vibration sensor, field testing & operational modal analysis',
+    drawing: 'frame',
+    summary:
+      'A low-cost IoT vibration monitoring system built from an ESP32 and an ADXL345 accelerometer, then field-tested on a working steel gable-frame warehouse. Operational modal analysis identified its natural frequencies, 4.604 Hz across the width and 5.716 Hz along the length, as a baseline for detecting future stiffness loss.',
+    abstract: [
+      'Steel structures in Pakistan are usually assessed by visual inspection and repaired only after problems appear. As a structure deteriorates it loses stiffness, and its natural frequencies drop. With a measured baseline, engineers can spot that change long before damage becomes visible.',
+      'We designed and built a sensor around a NodeMCU ESP32 and an ADXL345 tri-axial MEMS accelerometer, moved it from a breadboard prototype onto a custom PCB, and made four units. Each streams live readings to a Firebase cloud dashboard with threshold alerts and runs for over 48 hours on battery, for under Rs 10,000.',
+      'After validation on a vibrating table, the sensors recorded 103 minutes of ambient and crane-induced vibration at the Izhar Construction warehouse in Lahore. FFT analysis of the free-decay response in OriginPro gave the structure’s dynamic fingerprint. Team project with Muhammad Ramis Irfan and Syed Muhammad Shoaib, supervised by Dr. Tauqir Ahmad.',
+    ],
+    scope: [
+      'Sensor design: ESP32, ADXL345 accelerometer, DS3231 real-time clock and micro SD logging',
+      'Custom PCB with LiPo battery and battery management, under Rs 10,000',
+      'Firmware: 3-axis gravity calibration at start-up, high-pass filtering, 200 Hz sampling',
+      'Firebase real-time database and web dashboard with live X, Y, Z plots and vibration alerts',
+      'Validation of two sensors side by side on a vibrating table',
+      'Field deployment at the column–rafter connection under the ridge, crane used as excitation',
+      'FFT of the free-decay response in OriginPro to identify natural frequencies',
+    ],
+    conclusions: [
+      'Two sensors on the same vibrating table recorded peaks in phase and with similar amplitudes, confirming consistent, accurate measurement.',
+      'The warehouse’s fundamental natural frequencies are 4.604 Hz across the width (X) and 5.716 Hz along the length (Y).',
+      'The length direction is stiffer because several connected portal-frame bays act together, which gives the higher frequency.',
+      'Both values fall in the 2–8 Hz range reported for pre-engineered steel gable frames, an independent check on the sensor and the analysis.',
+      'The measured frequencies are now a reference for long-term monitoring: a future drop would signal stiffness loss.',
+      'Professional-grade structural health monitoring is achievable at a fraction of the cost of commercial systems.',
+    ],
+    figures: [
+      { label: 'Natural freq. X / Y', value: '4.60 / 5.72 Hz' },
+      { label: 'Battery life', value: '48+ hours' },
+      { label: 'System cost', value: '< Rs 10,000' },
+    ],
+    images: [
+      { src: '/projects/shm-vibration-sensor/sensor-pcb.webp', caption: 'Developed sensor: ESP32, ADXL345, RTC and SD logging on a custom PCB' },
+      { src: '/projects/shm-vibration-sensor/breadboard-prototype.webp', caption: 'Breadboard prototype checked against the iDynamics phone app', wide: true },
+      { src: '/projects/shm-vibration-sensor/sensor-comparison.webp', caption: 'Vibrating-table validation: two sensors record matching peaks', wide: true },
+      { src: '/projects/shm-vibration-sensor/site-visit.webp', caption: 'Site visit at the Izhar Construction warehouse, Lahore' },
+      { src: '/projects/shm-vibration-sensor/crane-excitation.webp', caption: 'Overhead crane used to excite the structure' },
+      { src: '/projects/shm-vibration-sensor/sensor-mounted.webp', caption: 'Sensor 3 mounted at the column–rafter connection, axes marked', wide: true },
+      { src: '/projects/shm-vibration-sensor/sensor-1-time-history.webp', caption: 'Sensor 1 acceleration over the 103-minute record, with crane events', wide: true },
+      { src: '/projects/shm-vibration-sensor/fft-originpro.webp', caption: 'Free-decay window selected in OriginPro for FFT analysis', wide: true },
+      { src: '/projects/shm-vibration-sensor/poster-and-team.webp', caption: 'Project showcase: live dashboard, three sensor units and poster, with the team', wide: true },
+    ],
+  },
+  {
+    id: 'etabs-15-storey-residential',
+    sheet: 'S-101',
     title: '15-Storey RC Residential Building',
     category: 'Structural',
     location: '',
@@ -151,7 +201,7 @@ export const projects = [
   },
   {
     id: 'sap2000-steel-industrial-building',
-    sheet: 'S-101',
+    sheet: 'S-102',
     title: 'Steel Industrial Building (Gable Frame)',
     category: 'Structural',
     location: '',
@@ -192,7 +242,7 @@ export const projects = [
   },
   {
     id: 'idea-statica-connections',
-    sheet: 'S-102',
+    sheet: 'S-103',
     title: 'Steel Connection Design',
     category: 'Structural',
     location: '',
