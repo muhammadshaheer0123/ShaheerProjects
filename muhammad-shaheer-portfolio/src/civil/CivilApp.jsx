@@ -726,17 +726,26 @@ export default function CivilApp() {
     return () => window.removeEventListener('keydown', onKey);
   }, [panelRoom, leaveRoom]);
 
-  // Deep links (#about etc.) and hash sync
+  // Deep links (#about, #projects/<project id>) and hash sync
+  const linkedProject = useRef(null);
   useEffect(() => {
     if (!started) return;
-    const id = window.location.hash.slice(1);
+    const [id, projectId] = window.location.hash.slice(1).split('/');
+    if (id === 'projects') linkedProject.current = projects.find(p => p.id === projectId) ?? null;
     if (rooms.some(r => r.id === id)) enterRoom(id);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [started]);
+  // a linked project sheet opens once the camera has arrived in the Projects room
+  useEffect(() => {
+    if (panelRoom !== 'projects' || !linkedProject.current) return;
+    setOpenProject(linkedProject.current);
+    linkedProject.current = null;
+  }, [panelRoom]);
   useEffect(() => {
     if (!started) return;
-    history.replaceState(null, '', panelRoom ? `#${panelRoom}` : window.location.pathname);
-  }, [panelRoom, started]);
+    const hash = openProject && panelRoom === 'projects' ? `#projects/${openProject.id}` : panelRoom ? `#${panelRoom}` : '';
+    history.replaceState(null, '', hash || window.location.pathname);
+  }, [panelRoom, openProject, started]);
 
   const onReady = useCallback(() => setSceneReady(true), []);
   const onFailure = useCallback(() => setSceneFailed(true), []);
