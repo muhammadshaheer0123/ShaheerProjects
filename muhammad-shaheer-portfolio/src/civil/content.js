@@ -20,7 +20,7 @@ export const profile = {
     { label: 'Instagram', icon: 'instagram', handle: '@sheerizkheer', href: 'https://www.instagram.com/sheerizkheer/' },
   ],
   intro:
-    'A motivated, AI-driven civil engineer who uses modelling, data and smart sensors to design safer structures, waterways and roads.',
+    'Driven by data and AI, I design sustainable infrastructure that is safe, resilient and built to last.',
   greeting: "Hi, I'm Shaheer!",
   greetingSub: 'Scroll to walk the corridor',
   // Hallway figure behind the reception counter: a transparent cut-out from helmet to upper thigh
