@@ -391,11 +391,6 @@ main > * { pointer-events: auto; }
 .activity__photos a:hover, .activity__photos a:focus-visible, .role__photo:hover, .role__photo:focus-visible { border-color: var(--ink); }
 .activity__photos img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
 .activities > li.is-featured { grid-column: 1 / -1; }
-/* header image: bleeds to the card edges above the icon and title */
-.activity__cover { grid-column: 1 / -1; display: block; margin: -16px -16px 2px; border-bottom: 1px solid var(--line-strong); overflow: hidden; }
-.activity__cover img { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; transition: transform 0.5s var(--ease); }
-.activity__cover:hover img { transform: scale(1.02); }
-.activity__cover:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .is-featured .activity__photos { grid-template-columns: repeat(3, 1fr); }
 .is-featured .activity__photos a:first-child:nth-last-child(odd) img { aspect-ratio: 16 / 9; }
 .activity__photos a.is-wide { grid-column: 1 / -1; }

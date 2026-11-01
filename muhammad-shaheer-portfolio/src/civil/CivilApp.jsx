@@ -462,11 +462,6 @@ function ActivitiesRoom({ room }) {
 function ActivityCard({ activity: a }) {
   return (
     <li className={a.featured ? 'is-featured' : undefined}>
-      {a.cover && (
-        <a className="activity__cover" href={a.cover.full} target="_blank" rel="noreferrer" aria-label={`Open full size: ${a.cover.caption}`}>
-          <img src={a.cover.src} alt={a.cover.caption} loading="lazy" />
-        </a>
-      )}
       <svg viewBox="0 0 24 24" aria-hidden="true" className="activity__icon"><path d={ACTIVITY_ICONS[a.icon]} /></svg>
       <div>
         <p className="mono activity__meta">{metaLine(a.role, a.period)}</p>
