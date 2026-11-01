@@ -443,7 +443,7 @@ export const projects = [
     scope: [
       'Work breakdown structure from pre-construction and approvals to structure, finishes and MEP',
       '300+ activities with logic relationships on a 6-day working calendar',
-      'Resource-loaded and cost-loaded baseline: resources assigned to every activity, BAC PKR 2,330.8 million from researched Lahore unit rates',
+      'Resource-loaded and cost-loaded baseline: resources assigned to activities, BAC PKR 2,330.8 million from researched Lahore unit rates',
       'Four-section sequential pours with cross-floor formwork transfer over 26 floors',
       'Monthly progress updates with documented delay events',
       'Earned value monitoring (Schedule % vs Performance %, cost curves) verified in Excel',
