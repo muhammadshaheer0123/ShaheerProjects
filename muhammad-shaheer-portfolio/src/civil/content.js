@@ -472,7 +472,7 @@ export const projects = [
       caption: 'Primavera P6 Gantt chart: 300+ activities over 12 A3 sheets, actual progress against the baseline.',
     },
     images: [
-      { src: '/projects/ajwa-tower-p6/gantt-cover.webp', caption: 'Gantt chart excerpt: pre-construction, raft and basement activities' },
+      { src: '/projects/ajwa-tower-p6/p6-workspace.webp', caption: 'Primavera P6 workspace: WBS, activities, Gantt chart and cost histogram' },
       { src: '/projects/ajwa-tower-p6/s-curve-planned-vs-actual.webp', caption: 'S-curve: cumulative planned % vs actual % completion', wide: true },
       { src: '/projects/ajwa-tower-p6/cumulative-cost.webp', caption: 'Cumulative baseline project cost', wide: true },
       { src: '/projects/ajwa-tower-p6/monthly-cost.webp', caption: 'Monthly planned vs actual cost', wide: true },
