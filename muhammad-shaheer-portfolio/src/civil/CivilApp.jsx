@@ -36,6 +36,71 @@ const clampZ = z => Math.min(corridor.start, Math.max(corridor.end, z));
 
 /* ------------------------------------------------------------------ */
 
+// Loading mark: a steel-frame building goes up in step with the loading stages
+// (setting-out, slab, frame storey by storey, cladding, then the MS sign on the roof)
+// while a tower crane keeps working, so the screen stays alive even when loading pauses.
+const seg = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+const STOREYS = 4;
+const STOREY_H = 22;
+const COL_X = [40, 76, 112, 148];
+
+function BuildMark({ p }) {
+  const frame = i => {
+    const a = 0.3 + i * 0.1125;
+    return { cols: seg(p, a, a + 0.07), beam: seg(p, a + 0.06, a + 0.1125) };
+  };
+  return (
+    <svg className="build" viewBox="0 0 220 160" aria-hidden="true">
+      {/* ground and setting-out */}
+      <line className="build__ground" x1="8" y1="140" x2="212" y2="140" />
+      <line className="build__survey" x1="30" y1="146" x2="158" y2="146" style={{ transform: `scaleX(${seg(p, 0, 0.12)})` }} />
+      {[30, 158].map(x => (
+        <path key={x} className="build__peg" d={`M${x} 146l-3 7h6z`} style={{ opacity: seg(p, 0.02, 0.08) }} />
+      ))}
+      {/* slab */}
+      <rect className="build__slab" x="30" y="134" width="128" height="6" style={{ transform: `scaleX(${seg(p, 0.14, 0.3)})` }} />
+      {/* frame, cladding: storey by storey */}
+      {Array.from({ length: STOREYS }, (_, i) => {
+        const { cols, beam } = frame(i);
+        const y = 134 - (i + 1) * STOREY_H;
+        const clad = seg(p, 0.75 + i * 0.04, 0.79 + i * 0.04);
+        return (
+          <g key={i}>
+            {COL_X.slice(0, 3).map(x => (
+              <rect key={x} className="build__clad" x={x + 3} y={y + 3} width="33" height={STOREY_H - 3} style={{ opacity: clad * 0.8 }} />
+            ))}
+            {COL_X.map(x => (
+              <rect key={x} className="build__col" x={x - 1.5} y={y} width="3" height={STOREY_H} style={{ transform: `scaleY(${cols})` }} />
+            ))}
+            <rect className="build__beam" x={COL_X[0] - 2} y={y} width={COL_X[3] - COL_X[0] + 4} height="3.5" style={{ transform: `scaleX(${beam})` }} />
+          </g>
+        );
+      })}
+      {/* the sign lands on the roof last */}
+      <g className="build__sign" style={{ opacity: seg(p, 0.9, 0.96), transform: `translateY(${(1 - seg(p, 0.9, 1)) * -14}px)` }}>
+        <line x1="86" y1="46" x2="86" y2="42" />
+        <line x1="102" y1="46" x2="102" y2="42" />
+        <rect x="74" y="31" width="40" height="11" />
+        <text x="94" y="39.6">MS</text>
+      </g>
+      {/* tower crane: lattice mast, jib, counter-jib, working trolley with a hanging beam */}
+      <g className="build__crane">
+        <path d="M184 140V22M192 140V22M184 140l8-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8-12" />
+        <path d="M66 22h146M66 28h118M188 22l-10-14h20l-10 14M178 8L66 22M198 8l14 14" />
+        <rect className="build__counter" x="200" y="22" width="10" height="9" />
+        <g className="build__trolley">
+          <rect x="128" y="20" width="10" height="5" />
+          <g className="build__load">
+            <line x1="133" y1="25" x2="133" y2="33" />
+            <path d="M126 39l7-6 7 6" />
+            <rect className="build__beam" x="118" y="39" width="30" height="3.5" />
+          </g>
+        </g>
+      </g>
+    </svg>
+  );
+}
+
 function Preloader({ ready, onDone }) {
   const [pct, setPct] = useState(0);
   const [hidden, setHidden] = useState(false);
@@ -63,10 +128,7 @@ function Preloader({ ready, onDone }) {
   return (
     <div className={`preloader ${pct >= 1 ? 'is-done' : ''} ${hidden ? 'is-hidden' : ''}`} role="status" aria-live="polite">
       <div className="preloader__inner">
-        <div className="preloader__mark" aria-hidden="true">
-          <span style={{ transform: `scaleY(${pct})` }} />
-          {profile.initials}
-        </div>
+        <BuildMark p={pct} />
         <p className="mono preloader__step">{step}…</p>
         <div className="preloader__bar"><span style={{ transform: `scaleX(${pct})` }} /></div>
         <p className="mono preloader__pct">{String(Math.round(pct * 100)).padStart(3, '0')}%</p>
