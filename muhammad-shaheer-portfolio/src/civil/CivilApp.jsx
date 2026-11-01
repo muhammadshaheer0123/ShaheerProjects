@@ -36,103 +36,87 @@ const clampZ = z => Math.min(corridor.start, Math.max(corridor.end, z));
 
 /* ------------------------------------------------------------------ */
 
-// Loading mark: a steel-frame building goes up in step with the loading stages
-// (setting-out, slab, frame storey by storey, cladding, then the MS sign on the roof)
-// while a tower crane keeps working, so the screen stays alive even when loading pauses.
-const seg = (p, a, b) => Math.min(1, Math.max(0, (p - a) / (b - a)));
+// Loading mark: a steel-frame building goes up through the loading stages (setting-out, slab,
+// frame storey by storey, cladding, then the MS sign on the roof) while a tower crane keeps working.
+// Every moving piece is an HTML box driven by a CSS keyframe animation of transform/opacity on a
+// fixed timeline, so the browser runs it on the compositor: it keeps playing smoothly while the
+// main thread is busy parsing three.js and building the 3D scene. Script only updates the text.
+const LOAD_MS = 1800;                  // timeline of the build; matches the progress readout
 const STOREYS = 4;
 const STOREY_H = 22;
 const COL_X = [40, 76, 112, 148];
+// geometry is authored in a 220 × 160 drawing and placed as percentages of the mark
+const box = (x, y, w, h) => ({ left: `${x / 2.2}%`, top: `${y / 1.6}%`, width: `${w / 2.2}%`, height: `${h / 1.6}%` });
+const at = (a, b) => ({ animationDelay: `${Math.round(a * LOAD_MS)}ms`, animationDuration: `${Math.round((b - a) * LOAD_MS)}ms` });
 
-function BuildMark({ p }) {
-  const frame = i => {
-    const a = 0.3 + i * 0.1125;
-    return { cols: seg(p, a, a + 0.07), beam: seg(p, a + 0.06, a + 0.1125) };
-  };
+function BuildMark() {
   return (
-    <svg className="build" viewBox="0 0 220 160" aria-hidden="true">
-      {/* ground and setting-out */}
-      <line className="build__ground" x1="8" y1="140" x2="212" y2="140" />
-      <line className="build__survey" x1="30" y1="146" x2="158" y2="146" style={{ transform: `scaleX(${seg(p, 0, 0.12)})` }} />
-      {[30, 158].map(x => (
-        <path key={x} className="build__peg" d={`M${x} 146l-3 7h6z`} style={{ opacity: seg(p, 0.02, 0.08) }} />
-      ))}
-      {/* slab */}
-      <rect className="build__slab" x="30" y="134" width="128" height="6" style={{ transform: `scaleX(${seg(p, 0.14, 0.3)})` }} />
-      {/* frame, cladding: storey by storey */}
-      {Array.from({ length: STOREYS }, (_, i) => {
-        const { cols, beam } = frame(i);
-        const y = 134 - (i + 1) * STOREY_H;
-        const clad = seg(p, 0.75 + i * 0.04, 0.79 + i * 0.04);
-        return (
-          <g key={i}>
-            {COL_X.slice(0, 3).map(x => (
-              <rect key={x} className="build__clad" x={x + 3} y={y + 3} width="33" height={STOREY_H - 3} style={{ opacity: clad * 0.8 }} />
-            ))}
-            {COL_X.map(x => (
-              <rect key={x} className="build__col" x={x - 1.5} y={y} width="3" height={STOREY_H} style={{ transform: `scaleY(${cols})` }} />
-            ))}
-            <rect className="build__beam" x={COL_X[0] - 2} y={y} width={COL_X[3] - COL_X[0] + 4} height="3.5" style={{ transform: `scaleX(${beam})` }} />
-          </g>
-        );
-      })}
-      {/* the sign lands on the roof last */}
-      <g className="build__sign" style={{ opacity: seg(p, 0.9, 0.96), transform: `translateY(${(1 - seg(p, 0.9, 1)) * -14}px)` }}>
-        <line x1="86" y1="46" x2="86" y2="42" />
-        <line x1="102" y1="46" x2="102" y2="42" />
-        <rect x="74" y="31" width="40" height="11" />
-        <text x="94" y="39.6">MS</text>
-      </g>
-      {/* tower crane: lattice mast, jib, counter-jib, working trolley with a hanging beam */}
-      <g className="build__crane">
-        <path d="M184 140V22M192 140V22M184 140l8-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8-12" />
-        <path d="M66 22h146M66 28h118M188 22l-10-14h20l-10 14M178 8L66 22M198 8l14 14" />
+    <div className="build" aria-hidden="true">
+      {/* static: ground line and the crane's mast, jib and counterweight */}
+      <svg className="build__static" viewBox="0 0 220 160">
+        <line className="build__ground" x1="8" y1="140" x2="212" y2="140" />
+        <path className="build__crane" d="M184 140V22M192 140V22M184 140l8-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8-12M66 22h146M66 28h118M188 22l-10-14h20l-10 14M178 8L66 22M198 8l14 14" />
         <rect className="build__counter" x="200" y="22" width="10" height="9" />
-        <g className="build__trolley">
-          <rect x="128" y="20" width="10" height="5" />
-          <g className="build__load">
-            <line x1="133" y1="25" x2="133" y2="33" />
-            <path d="M126 39l7-6 7 6" />
-            <rect className="build__beam" x="118" y="39" width="30" height="3.5" />
-          </g>
-        </g>
-      </g>
-    </svg>
+      </svg>
+      <span className="build__survey b-grow-x" style={{ ...box(30, 145.5, 128, 1), ...at(0, 0.12) }} />
+      {[30, 158].map(x => <span key={x} className="build__peg b-fade" style={{ ...box(x - 3, 146, 6, 7), ...at(0.02, 0.08) }} />)}
+      <span className="build__slab b-grow-x" style={{ ...box(30, 134, 128, 6), ...at(0.14, 0.3) }} />
+      {Array.from({ length: STOREYS }, (_, i) => {
+        const y = 134 - (i + 1) * STOREY_H;
+        const a = 0.3 + i * 0.1125;
+        return [
+          ...COL_X.slice(0, 3).map(x => <span key={`c${i}${x}`} className="build__clad b-clad" style={{ ...box(x + 3, y + 3, 33, STOREY_H - 3), ...at(0.75 + i * 0.04, 0.79 + i * 0.04) }} />),
+          ...COL_X.map(x => <span key={`k${i}${x}`} className="build__col b-grow-y" style={{ ...box(x - 1.5, y, 3, STOREY_H), ...at(a, a + 0.07) }} />),
+          <span key={`b${i}`} className="build__beam b-grow-x" style={{ ...box(COL_X[0] - 2, y, COL_X[3] - COL_X[0] + 4, 3.5), ...at(a + 0.06, a + 0.1125) }} />,
+        ];
+      })}
+      {/* the sign lands on the roof once the site is ready */}
+      <span className="build__sign" style={box(74, 31, 40, 15)}><span className="mono">MS</span></span>
+      {/* working trolley with a swinging beam on the hook */}
+      <span className="build__trolley" style={box(118, 20, 30, 23)}>
+        <span className="build__load">
+          <svg viewBox="118 20 30 23">
+            <rect className="build__trolley-car" x="128" y="20" width="10" height="5" />
+            <path className="build__hook" d="M133 25v8M126 39l7-6 7 6" />
+            <rect className="build__lift" x="118" y="39" width="30" height="3.5" />
+          </svg>
+        </span>
+      </span>
+    </div>
   );
 }
 
 function Preloader({ ready, onDone }) {
-  const [pct, setPct] = useState(0);
+  const [elapsed, setElapsed] = useState(0);
   const [hidden, setHidden] = useState(false);
   const startRef = useRef(0);
+  // coarse clock for the text readout only (the drawing animates itself in CSS); stops once hidden
   useEffect(() => {
-    let raf;
+    if (hidden) return undefined;
     if (!startRef.current) startRef.current = performance.now();
-    const start = startRef.current;
-    const tick = now => {
-      const timed = Math.min(1, (now - start) / 1800);
-      const next = Math.min(timed, ready ? 1 : 0.9);
-      setPct(next);
-      if (next < 1) raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [ready]);
+    const id = setInterval(() => setElapsed(performance.now() - startRef.current), 100);
+    return () => clearInterval(id);
+  }, [hidden]);
+  const timed = Math.min(1, elapsed / LOAD_MS);
+  const pct = Math.min(timed, ready ? 1 : 0.9);
+  const finishing = ready && timed >= 0.9;
   useEffect(() => {
-    if (pct < 1) return;
+    if (pct < 1) return undefined;
     const t = setTimeout(() => { setHidden(true); onDone(); }, 350);
     return () => clearTimeout(t);
   }, [pct, onDone]);
 
   const step = STEPS[Math.min(STEPS.length - 1, Math.floor(pct * STEPS.length))];
   return (
-    <div className={`preloader ${pct >= 1 ? 'is-done' : ''} ${hidden ? 'is-hidden' : ''}`} role="status" aria-live="polite">
-      <div className="preloader__inner">
-        <BuildMark p={pct} />
-        <p className="mono preloader__step">{step}…</p>
-        <div className="preloader__bar"><span style={{ transform: `scaleX(${pct})` }} /></div>
-        <p className="mono preloader__pct">{String(Math.round(pct * 100)).padStart(3, '0')}%</p>
-      </div>
+    <div className={`preloader ${finishing ? 'is-finishing' : ''} ${pct >= 1 ? 'is-done' : ''} ${hidden ? 'is-hidden' : ''}`} role="status" aria-live="polite">
+      {!hidden && (
+        <div className="preloader__inner">
+          <BuildMark />
+          <p className="mono preloader__step">{step}…</p>
+          <div className="preloader__bar"><span /></div>
+          <p className="mono preloader__pct">{String(Math.round(pct * 100)).padStart(3, '0')}%</p>
+        </div>
+      )}
     </div>
   );
 }
@@ -559,7 +543,6 @@ function ContactRoom({ room }) {
       </form>
       <footer className="footer mono">
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span>3D experience adapted from <a href="https://github.com/ITomPoland/portfolio-itom" target="_blank" rel="noopener noreferrer">ITom's open-source portfolio</a> (MIT)</span>
       </footer>
     </>
   );
