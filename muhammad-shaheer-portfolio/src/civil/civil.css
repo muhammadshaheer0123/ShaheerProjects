@@ -17,19 +17,6 @@
   color-scheme: light;
 }
 
-:root[data-theme='blueprint'] {
-  --paper: #0c2a4d;
-  --panel: rgba(10, 36, 68, 0.95);
-  --panel-solid: #0e2f57;
-  --ink: #e8f2ff;
-  --muted: #a3bfe3;
-  --line: rgba(207, 230, 255, 0.2);
-  --line-strong: rgba(207, 230, 255, 0.5);
-  --accent: #ffd24a;
-  --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
-  color-scheme: dark;
-}
-
 *, *::before, *::after { box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
 body {
@@ -157,15 +144,6 @@ p { margin: 0 0 1em; }
 .site-nav a.nav-cv:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .nav-cv svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .nav-cv__short { display: none; }
-.toggle {
-  display: inline-flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px;
-  background: var(--panel); border: 1px solid var(--line); cursor: pointer; font-size: 12px; text-transform: uppercase;
-
-}
-.toggle__dot { width: 28px; height: 16px; border: 1.5px solid var(--ink); position: relative; transition: background-color 0.25s; }
-.toggle__dot::after { content: ''; position: absolute; top: 2px; left: 2px; width: 9px; height: 9px; background: var(--ink); transition: transform 0.25s var(--ease); }
-.toggle.is-on .toggle__dot { background: var(--accent); border-color: var(--accent); }
-.toggle.is-on .toggle__dot::after { transform: translateX(12px); background: #0c2a4d; }
 
 /* ---------- intro ---------- */
 main { position: relative; z-index: 5; pointer-events: none; }
@@ -456,8 +434,6 @@ main > * { pointer-events: auto; }
   :root { --header-h: 64px; }
   .scene-shade { background: linear-gradient(0deg, color-mix(in srgb, var(--paper) 90%, transparent) 0%, color-mix(in srgb, var(--paper) 72%, transparent) 42%, transparent 70%); }
   .brand__text span { display: none; }
-  .toggle .mono { display: none; }
-  .toggle { padding: 0 12px; }
   .intro { right: 16px; bottom: 24px; }
   /* phones: the hero has to share the screen with the reception desk, so it loses the label and shrinks */
   .intro .eyebrow { display: none; }

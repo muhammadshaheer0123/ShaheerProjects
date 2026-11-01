@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/immutability, react-hooks/globals -- R3F mutates three.js objects (camera, textures) imperatively by design */
 import { createContext, Suspense, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Edges, PerformanceMonitor, useTexture } from '@react-three/drei';
+import { PerformanceMonitor, useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 import { profile, rooms, corridor as CORRIDOR, leadership } from './content';
 import { concreteTexture, labelTexture, structureTexture, STRUCTURES } from './textures';
@@ -71,7 +71,7 @@ const ACTIVITY_SIDE_WALL = [
 
 const SceneCtx = createContext(null);
 
-function useMaterialSet(blueprint, lowPower) {
+function useMaterialSet(lowPower) {
   const set = useMemo(() => {
     const wallMap = concreteTexture({ base: '#b8b7b1', seed: 73 });
     const floorMap = concreteTexture({ base: '#a9a8a2', seed: 19, ties: false });
@@ -103,30 +103,8 @@ function useMaterialSet(blueprint, lowPower) {
     };
     const glow = new THREE.MeshBasicMaterial({ color: '#fff4dc', toneMapped: false });
     const warmGlass = new THREE.MeshBasicMaterial({ color: '#ffd9a0', toneMapped: false });
-    Object.values(m).forEach(mat => { mat.userData.original = { color: mat.color.clone(), map: mat.map }; });
-    return { m: { ...m, glow, warmGlass }, std: m, textures: [wallMap, floorMap, ceilMap] };
+    return { m: { ...m, glow, warmGlass }, textures: [wallMap, floorMap, ceilMap] };
   }, [lowPower]);
-
-  useEffect(() => {
-    Object.entries(set.std).forEach(([key, mat]) => {
-      const o = mat.userData.original;
-      if (blueprint) {
-        const floorish = key === 'floor' || key === 'ceiling';
-        mat.map = null;
-        mat.color.set(key === 'safety' ? '#ffd24a' : floorish ? '#0e2f57' : '#1f5591');
-        mat.transparent = !floorish;
-        mat.opacity = floorish ? 1 : 0.22;
-        mat.depthWrite = floorish;
-      } else {
-        mat.map = o.map;
-        mat.color.copy(o.color);
-        mat.transparent = false;
-        mat.opacity = 1;
-        mat.depthWrite = true;
-      }
-      mat.needsUpdate = true;
-    });
-  }, [blueprint, set]);
 
   useEffect(() => () => {
     Object.values(set.m).forEach(mat => mat.dispose());
@@ -157,13 +135,9 @@ function scaledBox(w, h, d, tile = 3) {
   return g;
 }
 
-function Block({ position, size, mat = 'wall', rotation, tile, edges = true, ...rest }) {
-  const { m, blueprint } = useContext(SceneCtx);
-  return (
-    <mesh position={position} rotation={rotation} geometry={scaledBox(...size, tile)} material={m[mat]} {...rest}>
-      {blueprint && edges && <Edges threshold={20} color={mat === 'safety' ? '#ffd24a' : '#cfe6ff'} />}
-    </mesh>
-  );
+function Block({ position, size, mat = 'wall', rotation, tile, ...rest }) {
+  const { m } = useContext(SceneCtx);
+  return <mesh position={position} rotation={rotation} geometry={scaledBox(...size, tile)} material={m[mat]} {...rest} />;
 }
 
 const UP = new THREE.Vector3(0, 1, 0);
@@ -201,7 +175,7 @@ function ISection({ length, depth = 0.32, width = 0.26, tf = 0.025, tw = 0.014, 
     <group>
       <Block position={[off, 0, 0]} size={[tf, length, width]} mat={mat} />
       <Block position={[-off, 0, 0]} size={[tf, length, width]} mat={mat} />
-      <Block position={[0, 0, 0]} size={[depth - tf * 2, length, tw]} mat={mat} edges={false} />
+      <Block position={[0, 0, 0]} size={[depth - tf * 2, length, tw]} mat={mat} />
     </group>
   );
 }
@@ -242,7 +216,7 @@ function Wall({ side }) {
         ? <Block key={i} position={[x, (DOOR_H + HEIGHT) / 2, s.z]} size={[WALL_T, HEIGHT - DOOR_H, DOOR_W]} />
         : <Block key={i} position={[x, HEIGHT / 2, (s[0] + s[1]) / 2]} size={[WALL_T, HEIGHT, s[0] - s[1]]} />)}
       {/* skirting shadow line */}
-      <Block position={[x * 0.995, 0.06, (Z_FRONT + Z_BACK) / 2]} size={[0.02, 0.12, Z_FRONT - Z_BACK]} mat="wallDark" edges={false} />
+      <Block position={[x * 0.995, 0.06, (Z_FRONT + Z_BACK) / 2]} size={[0.02, 0.12, Z_FRONT - Z_BACK]} mat="wallDark" />
     </group>
   );
 }
@@ -279,8 +253,8 @@ function Ceiling() {
       <mesh position={[0, HEIGHT - 0.48, mid]} material={useContext(SceneCtx).m.glow}>
         <boxGeometry args={[0.07, 0.03, len - 2]} />
       </mesh>
-      <Block position={[0, HEIGHT - 0.44, mid]} size={[0.16, 0.05, len - 2]} mat="steel" edges={false} />
-      {[-1.9, 1.9].map(x => <Block key={x} position={[x, HEIGHT - 0.12, mid]} size={[0.4, 0.08, len - 1]} mat="steelLight" edges={false} />)}
+      <Block position={[0, HEIGHT - 0.44, mid]} size={[0.16, 0.05, len - 2]} mat="steel" />
+      {[-1.9, 1.9].map(x => <Block key={x} position={[x, HEIGHT - 0.12, mid]} size={[0.4, 0.08, len - 1]} mat="steelLight" />)}
     </group>
   );
 }
@@ -325,11 +299,11 @@ function Picture({ side, z, index }) {
   const s = side === 'left' ? 1 : -1;
   return (
     <group position={[-s * HALF_W, 0, z]} rotation={[0, s * Math.PI / 2, 0]}>
-      <Block position={[0, 1.95, 0.03]} size={[1.62, 1.18, 0.05]} mat="black" edges={false} />
+      <Block position={[0, 1.95, 0.03]} size={[1.62, 1.18, 0.05]} mat="black" />
       <TexPlane texture={tex} size={[1.5, 1.055]} position={[0, 1.95, 0.058]} />
       <TexPlane texture={cap} size={[1.2, 0.15]} position={[0, 1.2, 0.012]} />
       {/* picture light */}
-      <Block position={[0, 2.7, 0.14]} size={[0.9, 0.04, 0.06]} mat="steel" edges={false} />
+      <Block position={[0, 2.7, 0.14]} size={[0.9, 0.04, 0.06]} mat="steel" />
       <mesh position={[0, 2.68, 0.15]} material={useContext(SceneCtx).m.glow}><boxGeometry args={[0.8, 0.012, 0.03]} /></mesh>
     </group>
   );
@@ -361,7 +335,7 @@ function TrussModel() {
   for (let i = 0; i <= n; i++) bars.push(<Bar key={`c${i}`} from={[-span / 2 + i * d, 0.08, -0.12]} to={[-span / 2 + i * d, 0.08, 0.12]} r={0.006} mat="steel" />);
   return (
     <group rotation={[0, Math.PI / 2, 0]}>
-      <Block position={[0, 0.07, 0]} size={[span, 0.012, 0.26]} mat="wallDark" edges={false} />
+      <Block position={[0, 0.07, 0]} size={[span, 0.012, 0.26]} mat="wallDark" />
       {[-span / 2, span / 2].map(x => <Block key={x} position={[x, 0.035, 0]} size={[0.08, 0.07, 0.3]} mat="wallDark" />)}
       {bars}
     </group>
@@ -482,7 +456,7 @@ function Lobby() {
       <Block position={[1.75, 0.53, 4.35]} size={[2.3, 1.06, 0.55]} />
       <Block position={[1.75, 1.08, 4.32]} size={[2.45, 0.04, 0.68]} mat="steel" />
       <TexPlane texture={plate} size={[1.9, 0.26]} position={[1.75, 0.62, 4.63]} />
-      <Block position={[1.75, 0.08, 4.64]} size={[2.3, 0.04, 0.02]} mat="safety" edges={false} />
+      <Block position={[1.75, 0.08, 4.64]} size={[2.3, 0.04, 0.02]} mat="safety" />
       <HardHat position={[1.0, 1.1, 4.3]} rotation={[0, 0.6, 0]} />
       <mesh position={[2.45, 1.14, 4.35]} rotation={[0, 0.3, Math.PI / 2]} material={m.white}>
         <cylinderGeometry args={[0.04, 0.04, 0.7, 12]} />
@@ -534,14 +508,14 @@ function Door({ room, open, onSelect, interactive }) {
       {[-1, 1].map(k => <Block key={k} position={[face, DOOR_H / 2, k * (DOOR_W / 2 + 0.04)]} size={[0.06, DOOR_H + 0.08, 0.1]} mat="steel" />)}
       <Block position={[face, DOOR_H + 0.04, 0]} size={[0.06, 0.1, DOOR_W + 0.18]} mat="steel" />
       {/* reveal linings */}
-      {[-1, 1].map(k => <Block key={`r${k}`} position={[0, DOOR_H / 2, k * (DOOR_W / 2 - 0.01)]} size={[WALL_T, DOOR_H, 0.02]} mat="wallDark" edges={false} />)}
+      {[-1, 1].map(k => <Block key={`r${k}`} position={[0, DOOR_H / 2, k * (DOOR_W / 2 - 0.01)]} size={[WALL_T, DOOR_H, 0.02]} mat="wallDark" />)}
       {/* leaf, hinged on the +z jamb, swings into the room */}
       <group ref={leaf} position={[-0.02, 0, DOOR_W / 2 - 0.04]}>
         <group position={[0, 0, -(DOOR_W - 0.08) / 2]} {...events}>
           <Block position={[0, DOOR_H / 2 - 0.02, 0]} size={[0.05, DOOR_H - 0.06, DOOR_W - 0.08]} mat="door" />
           <mesh position={[0.03, 1.75, 0.2]} material={m.warmGlass}><boxGeometry args={[0.012, 0.7, 0.16]} /></mesh>
-          <Block position={[0.05, 1.05, -0.55]} size={[0.04, 0.04, 0.22]} mat="steelLight" edges={false} />
-          <Block position={[0.03, 0.22, 0]} size={[0.012, 0.3, DOOR_W - 0.2]} mat="steelLight" edges={false} />
+          <Block position={[0.05, 1.05, -0.55]} size={[0.04, 0.04, 0.22]} mat="steelLight" />
+          <Block position={[0.03, 0.22, 0]} size={[0.012, 0.3, DOOR_W - 0.2]} mat="steelLight" />
           <mesh position={[0.032, 1.35, 0]} rotation={[0, Math.PI / 2, 0]}>
             <planeGeometry args={[0.36, 0.36]} />
             <meshBasicMaterial color="#f2c12e" toneMapped={false} />
@@ -608,7 +582,7 @@ function Table({ position, size = [1.6, 0.76, 0.8], rotation, mat = 'wood' }) {
     <group position={position} rotation={rotation}>
       <Block position={[0, h, 0]} size={[w, 0.04, d]} mat={mat} />
       {[[-1, -1], [1, -1], [1, 1], [-1, 1]].map(([a, b]) => (
-        <Block key={`${a}${b}`} position={[a * (w / 2 - 0.05), h / 2, b * (d / 2 - 0.05)]} size={[0.04, h, 0.04]} mat="steel" edges={false} />
+        <Block key={`${a}${b}`} position={[a * (w / 2 - 0.05), h / 2, b * (d / 2 - 0.05)]} size={[0.04, h, 0.04]} mat="steel" />
       ))}
     </group>
   );
@@ -617,7 +591,7 @@ function Table({ position, size = [1.6, 0.76, 0.8], rotation, mat = 'wood' }) {
 function WallFrame({ position, texture, size = [1, 0.7], rotation = [0, Math.PI / 2, 0] }) {
   return (
     <group position={position} rotation={rotation}>
-      <Block position={[0, 0, -0.02]} size={[size[0] + 0.08, size[1] + 0.08, 0.04]} mat="black" edges={false} />
+      <Block position={[0, 0, -0.02]} size={[size[0] + 0.08, size[1] + 0.08, 0.04]} mat="black" />
       <TexPlane texture={texture} size={size} position={[0, 0, 0.002]} />
     </group>
   );
@@ -654,7 +628,7 @@ function AboutProps() {
       {/* bookshelf with binders */}
       <Block position={[-2.3, 1.1, 3.3]} size={[2.2, 2.2, 0.4]} mat="darkWood" />
       {[0.5, 1.2, 1.9].map(y => [0, 1, 2, 3, 4, 5, 6, 7].map(i => (
-        <Block key={`${y}${i}`} position={[-3.1 + i * 0.22, y + 0.2, 3.12]} size={[0.07 + (i % 3) * 0.02, 0.36, 0.3]} mat={['blue', 'black', 'safety', 'white'][(i + y * 10) % 4 | 0]} edges={false} />
+        <Block key={`${y}${i}`} position={[-3.1 + i * 0.22, y + 0.2, 3.12]} size={[0.07 + (i % 3) * 0.02, 0.36, 0.3]} mat={['blue', 'black', 'safety', 'white'][(i + y * 10) % 4 | 0]} />
       )))}
     </group>
   );
@@ -742,12 +716,11 @@ function Room({ room }) {
   const s = room.side === 'left' ? 1 : -1;
   const Props = ROOM_PROPS[room.id];
   const cx = -s * (HALF_W + WALL_T + ROOM / 2);
-  const { blueprint } = useContext(SceneCtx);
   const inner = useRef(null);
   // Skip drawing rooms the camera is nowhere near (doors hide them anyway).
   // The light stays outside the culled group: changing the light count recompiles every shader.
   useFrame(({ camera }) => {
-    if (inner.current) inner.current.visible = blueprint || Math.abs(camera.position.z - room.z) < 9;
+    if (inner.current) inner.current.visible = Math.abs(camera.position.z - room.z) < 9;
   });
   return (
     <group position={[cx, 0, room.z]} rotation={[0, s > 0 ? 0 : Math.PI, 0]}>
@@ -926,19 +899,19 @@ function Lights({ lowPower }) {
   );
 }
 
-function World({ blueprint, lowPower, onReady, ...rig }) {
-  const m = useMaterialSet(blueprint, lowPower);
-  const ctx = useMemo(() => ({ m, blueprint }), [m, blueprint]);
+function World({ lowPower, onReady, ...rig }) {
+  const m = useMaterialSet(lowPower);
+  const ctx = useMemo(() => ({ m }), [m]);
   const [openId, setOpenId] = useState(null);
   useEffect(() => {
     const id = requestAnimationFrame(() => requestAnimationFrame(onReady));
     return () => cancelAnimationFrame(id);
   }, [onReady]);
-  const bg = blueprint ? '#0c2a4d' : '#c9c7c0';
+  const bg = '#c9c7c0';
   return (
     <SceneCtx.Provider value={ctx}>
       <color attach="background" args={[bg]} />
-      <fog attach="fog" args={[bg, blueprint ? 14 : 20, blueprint ? 55 : 70]} />
+      <fog attach="fog" args={[bg, 20, 70]} />
       <Lights lowPower={lowPower} />
       <Floor />
       <Ceiling />
@@ -962,7 +935,7 @@ function World({ blueprint, lowPower, onReady, ...rig }) {
   );
 }
 
-export default function CorridorScene({ blueprint, lowPower, reducedMotion, onReady, onFailure, paused, ...rig }) {
+export default function CorridorScene({ lowPower, reducedMotion, onReady, onFailure, paused, ...rig }) {
   // Render resolution adapts to the device: it steps down when frames drop and back up when there's headroom.
   // Phones have far fewer CSS pixels but 2.5-3x screens, so they start at 2x and never go below 1.5x
   // (anything lower is visibly soft next to the crisp HTML text).
@@ -994,7 +967,7 @@ export default function CorridorScene({ blueprint, lowPower, reducedMotion, onRe
           />
         )}
         <Suspense fallback={null}>
-          <World blueprint={blueprint} lowPower={lowPower} onReady={onReady} reducedMotion={reducedMotion} {...rig} />
+          <World lowPower={lowPower} onReady={onReady} reducedMotion={reducedMotion} {...rig} />
         </Suspense>
       </Canvas>
     </div>

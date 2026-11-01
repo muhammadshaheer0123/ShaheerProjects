@@ -121,7 +121,7 @@ function Preloader({ ready, onDone }) {
   );
 }
 
-function Header({ blueprint, onToggleBlueprint, onHome, onRoom, activeRoom }) {
+function Header({ onHome, onRoom, activeRoom }) {
   return (
     <header className="site-header">
       <a className="brand" href="/" onClick={e => { e.preventDefault(); onHome(); }}>
@@ -141,10 +141,6 @@ function Header({ blueprint, onToggleBlueprint, onHome, onRoom, activeRoom }) {
           <span className="nav-cv__long">Download CV</span><span className="nav-cv__short">CV</span>
         </a>
       </nav>
-      <button type="button" className={`toggle ${blueprint ? 'is-on' : ''}`} onClick={onToggleBlueprint} aria-pressed={blueprint}>
-        <span className="toggle__dot" aria-hidden="true" />
-        <span className="mono">Blueprint</span>
-      </button>
     </header>
   );
 }
@@ -675,7 +671,6 @@ export default function CivilApp() {
   const [sceneReady, setSceneReady] = useState(false);
   const [fontsReady, setFontsReady] = useState(false);
   const [started, setStarted] = useState(false);
-  const [blueprint, setBlueprint] = useState(false);
   const [activeRoom, setActiveRoom] = useState(null);   // room the camera is heading into / inside
   const [panelRoom, setPanelRoom] = useState(null);     // room whose panel is shown
   const [openProject, setOpenProject] = useState(null);
@@ -768,10 +763,6 @@ export default function CivilApp() {
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  useEffect(() => {
-    document.documentElement.dataset.theme = blueprint ? 'blueprint' : 'site';
-  }, [blueprint]);
-
   const enterRoom = useCallback(id => {
     setOpenProject(null);
     lookYaw.current = 0;
@@ -845,7 +836,6 @@ export default function CivilApp() {
       {!sceneFailed && fontsReady && (
         <Suspense fallback={null}>
           <CorridorScene
-            blueprint={blueprint}
             lowPower={lowPower}
             reducedMotion={prefersReducedMotion}
             started={started}
@@ -867,7 +857,7 @@ export default function CivilApp() {
       <div ref={shadeRef} className="scene-shade" aria-hidden="true" />
 
       <Preloader ready={sceneReady || sceneFailed} onDone={onLoaded} />
-      <Header blueprint={blueprint} onToggleBlueprint={() => setBlueprint(b => !b)} onHome={goHome} onRoom={enterRoom} activeRoom={panelRoom} />
+      <Header onHome={goHome} onRoom={enterRoom} activeRoom={panelRoom} />
 
       <main>
         <section ref={introRef} className="intro" aria-labelledby="intro-title">
