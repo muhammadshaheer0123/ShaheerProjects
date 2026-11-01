@@ -963,10 +963,12 @@ function World({ blueprint, lowPower, onReady, ...rig }) {
 }
 
 export default function CorridorScene({ blueprint, lowPower, reducedMotion, onReady, onFailure, paused, ...rig }) {
-  // Render resolution adapts to the device: it steps down when frames drop and back up when there's headroom
-  // Phones have far fewer CSS pixels, so they can afford a higher ratio (anything lower looks blurry on their dense screens)
+  // Render resolution adapts to the device: it steps down when frames drop and back up when there's headroom.
+  // Phones have far fewer CSS pixels but 2.5-3x screens, so they start at 2x and never go below 1.5x
+  // (anything lower is visibly soft next to the crisp HTML text).
   const maxDpr = Math.min(window.devicePixelRatio || 1, lowPower ? 2 : 1.5);
-  const [dpr, setDpr] = useState(Math.min(maxDpr, 1.5));
+  const minDpr = Math.min(maxDpr, lowPower ? 1.5 : 1);
+  const [dpr, setDpr] = useState(maxDpr);
   return (
     <div className="scene">
       <Canvas
@@ -981,12 +983,16 @@ export default function CorridorScene({ blueprint, lowPower, reducedMotion, onRe
           gl.domElement.addEventListener('webglcontextlost', onFailure, { once: true });
         }}
       >
-        <PerformanceMonitor
-          flipflops={4}
-          onDecline={() => setDpr(d => Math.max(1, d - 0.25))}
-          onIncline={() => setDpr(d => Math.min(maxDpr, d + 0.25))}
-          onFallback={() => setDpr(1)}
-        />
+        {/* judge frame rate only once loading is over: the start-up stutter (parsing, texture uploads,
+            shader compiles) would otherwise drop the resolution before the visitor sees anything */}
+        {rig.started && (
+          <PerformanceMonitor
+            flipflops={4}
+            onDecline={() => setDpr(d => Math.max(minDpr, d - 0.25))}
+            onIncline={() => setDpr(d => Math.min(maxDpr, d + 0.25))}
+            onFallback={() => setDpr(minDpr)}
+          />
+        )}
         <Suspense fallback={null}>
           <World blueprint={blueprint} lowPower={lowPower} onReady={onReady} reducedMotion={reducedMotion} {...rig} />
         </Suspense>
