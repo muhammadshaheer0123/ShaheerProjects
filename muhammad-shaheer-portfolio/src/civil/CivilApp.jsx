@@ -346,7 +346,7 @@ function ProjectsRoom({ room, onOpen }) {
   const sections = filter === 'All' ? disciplines : disciplines.filter(d => d.name === filter);
   return (
     <>
-      <RoomHead room={room} title="Drawing register: selected work." />
+      <RoomHead room={room} title="Projects that put the numbers to work." />
       <div className="filters" role="group" aria-label="Filter projects by discipline">
         {['All', ...disciplines.map(d => d.name)].map(c => (
           <button key={c} type="button" className={`chip-btn mono ${filter === c ? 'is-on' : ''}`} aria-pressed={filter === c} onClick={() => setFilter(c)}>{c}</button>
