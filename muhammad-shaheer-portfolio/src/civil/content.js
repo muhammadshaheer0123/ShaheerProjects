@@ -479,6 +479,58 @@ export const projects = [
       { src: '/projects/ajwa-tower-p6/p6-cost-profile.webp', caption: 'Primavera P6 cost profile: budgeted vs actual, monthly and cumulative', wide: true },
     ],
   },
+  {
+    id: 'keanes-bar-p6',
+    sheet: 'P-401',
+    title: 'Keane’s Bar & Restaurant Fit-Out Schedule',
+    category: 'Project Planning',
+    location: 'Westchester County, New York',
+    year: '2026',
+    role: 'Planning, scheduling & critical path analysis (Primavera P6)',
+    drawing: 'frame',
+    summary:
+      'Primavera P6 schedule for the interior fit-out of Keane’s Bar & Restaurant in New York, from demolition through MEP, finishes and kitchen equipment to county inspections and the certificate of occupancy. 130 activities in 15 WBS sections run from 20 April to 26 October 2026, with the critical path traced through 34 of them.',
+    abstract: [
+      'The schedule takes an existing space through a full bar-and-restaurant fit-out: selective demolition and concrete trenching for new kitchen and bar drains, structural headers and a mezzanine, metal-stud and ceiling framing, MEP rough-in, drywall to a Level 5 finish in the visible areas, flooring, architectural millwork and the main bar, finishes, kitchen equipment and close-out, organised in a 15-element WBS.',
+      'Long-lead items start at mobilisation so they never hold up the site: main bar shop drawings and fabrication begin on day one, and booth seating is fabricated off-site while drywall goes up. Inspections are built into the logic, with rough plumbing and MEP sign-offs by Westchester County, then fire, building and health department finals, leading to the certificate of occupancy, substantial completion on 16 October and project completion on 26 October 2026.',
+    ],
+    scope: [
+      '15-element WBS from general conditions to inspections, close-out and commissioning',
+      '130 activities with logic links, durations and milestones in Primavera P6',
+      'Demolition, concrete trenching and underground plumbing sequenced ahead of framing',
+      'MEP rough-in by trade and area, with county inspection hold points',
+      'Long-lead procurement: main bar fabrication and off-site booth seating run in parallel',
+      'Critical path analysis (34 activities) with a critical-only layout',
+      'WBS chart, classic Gantt layout and critical path chart',
+    ],
+    conclusions: [
+      'The fit-out runs from 20 April to 26 October 2026, with the certificate of occupancy on 2 October and substantial completion on 16 October.',
+      'The critical path runs through demolition, kitchen and bar trenching, underground drains, back-of-house framing, kitchen exhaust, the MEP rough-in inspection, drywall, kitchen ceilings and tile, the walk-in cooler and kitchen equipment, then close-out.',
+      'Drywall and taping is the longest critical stretch, at 26 working days, so it is where extra crews would buy back the most time.',
+      'Front-of-house millwork, finish MEP and painting carry float and can absorb delays without moving the finish date.',
+      'Starting the 24-day main bar fabrication at mobilisation keeps the biggest long-lead item off the critical path.',
+      'Modelling every inspection as an activity turns approvals into visible hold points instead of late surprises.',
+    ],
+    figures: [
+      { label: 'Activities', value: '130' },
+      { label: 'Critical activities', value: '34' },
+      { label: 'Programme', value: 'Apr – Oct 2026' },
+    ],
+    schedule: {
+      title: 'Keane’s Bar & Restaurant Gantt chart · 2 sheets',
+      preview: '/projects/keanes-bar-p6/gantt-preview.webp',
+      pages: ['/projects/keanes-bar-p6/gantt-01.webp', '/projects/keanes-bar-p6/gantt-02.webp'],
+      width: 2382,
+      height: 1684,
+      pdf: '/projects/keanes-bar-p6/keanes-bar-gantt.pdf',
+      caption: 'Primavera P6 classic schedule layout: 130 activities across 2 A3 sheets.',
+    },
+    images: [
+      { src: '/projects/keanes-bar-p6/p6-workspace.webp', caption: 'Primavera P6 workspace: WBS, activities and Gantt chart' },
+      { src: '/projects/keanes-bar-p6/critical-path.webp', caption: 'Critical path chart: the 34 activities that set the finish date', wide: true },
+      { src: '/projects/keanes-bar-p6/wbs-chart.webp', caption: 'Work breakdown structure: 15 elements under the project', wide: true },
+    ],
+  },
 ];
 
 export const experience = [
