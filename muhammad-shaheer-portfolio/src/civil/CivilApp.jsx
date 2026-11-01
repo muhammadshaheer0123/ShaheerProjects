@@ -503,16 +503,57 @@ function ContactRoom({ room }) {
   );
 }
 
+// Full-screen viewer for a long programme (e.g. a Primavera Gantt chart): opens fitted to the screen,
+// "Actual size" switches to the full-resolution sheet to pan around, and the source PDF stays one tap away
+function ScheduleViewer({ schedule, onClose }) {
+  const [actual, setActual] = useState(false);
+  const closeRef = useRef(null);
+  useEffect(() => { closeRef.current?.focus(); }, []);
+  return (
+    <div className="viewer" role="dialog" aria-modal="true" aria-label={schedule.title}>
+      <div className="viewer__bar">
+        <p className="mono">{schedule.title}</p>
+        <div className="viewer__actions">
+          <button type="button" className="chip-btn mono" aria-pressed={actual} onClick={() => setActual(a => !a)}>
+            {actual ? 'Fit to screen' : 'Actual size'}
+          </button>
+          {schedule.pdf && <a className="chip-btn mono viewer__pdf" href={schedule.pdf} target="_blank" rel="noreferrer">Open PDF</a>}
+          <button ref={closeRef} type="button" className="icon-btn" onClick={onClose} aria-label="Close Gantt chart">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </div>
+      </div>
+      <div className={`viewer__stage ${actual ? 'is-actual' : ''}`} style={{ '--page-w': `${schedule.width}px` }}>
+        {schedule.pages.map((src, i) => (
+          <img key={src} src={src} alt={`${schedule.title}, sheet ${i + 1} of ${schedule.pages.length}`}
+            width={schedule.width} height={schedule.height} loading={i < 2 ? 'eager' : 'lazy'} decoding="async" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function ProjectSheet({ project, onClose }) {
   const closeRef = useRef(null);
   const images = project.images || [];
+  const [scheduleOpen, setScheduleOpen] = useState(false);
+  const scheduleOpenRef = useRef(false);
+  useEffect(() => { scheduleOpenRef.current = scheduleOpen; }, [scheduleOpen]);
   useEffect(() => {
     closeRef.current?.focus();
-    const onKey = e => { if (e.key === 'Escape') { e.stopPropagation(); onClose(); } };
+    // Esc closes the Gantt viewer first, then the sheet
+    const onKey = e => {
+      if (e.key !== 'Escape') return;
+      e.stopPropagation();
+      if (scheduleOpenRef.current) setScheduleOpen(false);
+      else onClose();
+    };
     window.addEventListener('keydown', onKey, true);
     return () => window.removeEventListener('keydown', onKey, true);
   }, [onClose]);
   return (
+    <>
+    {scheduleOpen && <ScheduleViewer schedule={project.schedule} onClose={() => setScheduleOpen(false)} />}
     <div className="sheet-backdrop" onClick={onClose}>
       <article className="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title" onClick={e => e.stopPropagation()}>
         <div className="sheet__top">
@@ -544,6 +585,19 @@ function ProjectSheet({ project, onClose }) {
             <ul className="scope">{project.conclusions.map(c => <li key={c}>{c}</li>)}</ul>
           </>
         )}
+        {project.schedule && (
+          <>
+            <h4 className="mono">Project schedule</h4>
+            <button type="button" className="schedule-preview" onClick={() => setScheduleOpen(true)}>
+              <img src={project.schedule.preview} alt="" loading="lazy" />
+              <span className="schedule-preview__cta mono">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" /></svg>
+                Expand full Gantt chart
+              </span>
+            </button>
+            <p className="schedule-preview__note mono">{project.schedule.caption}</p>
+          </>
+        )}
         {images.length > 1 && (
           <>
             <h4 className="mono">Model & results</h4>
@@ -564,6 +618,7 @@ function ProjectSheet({ project, onClose }) {
         </div>
       </article>
     </div>
+    </>
   );
 }
 

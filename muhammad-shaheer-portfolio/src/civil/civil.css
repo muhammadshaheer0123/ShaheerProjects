@@ -307,6 +307,32 @@ main > * { pointer-events: auto; }
 @keyframes slide { from { transform: translateX(40px); opacity: 0; } }
 .sheet__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
 .sheet__top p { margin: 0; font-size: 12px; text-transform: uppercase; color: var(--muted); }
+/* programme preview in a project sheet, opening the full-screen Gantt viewer */
+.schedule-preview {
+  display: block; position: relative; width: 100%; padding: 0; border: 1px solid var(--line-strong); background: #fff;
+  cursor: zoom-in; overflow: hidden; transition: border-color 0.2s var(--ease);
+}
+.schedule-preview img { display: block; width: 100%; height: auto; }
+.schedule-preview__cta {
+  position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 8px; min-height: 40px; padding: 0 14px;
+  background: var(--accent); color: var(--accent-ink); border: 1.5px solid var(--ink); font-size: 12px; font-weight: 600; text-transform: uppercase;
+}
+.schedule-preview__cta svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.schedule-preview:hover, .schedule-preview:focus-visible { border-color: var(--ink); }
+.schedule-preview:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.schedule-preview__note { margin: 6px 0 0; font-size: 11px; line-height: 1.4; color: var(--muted); }
+
+.viewer { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; background: var(--panel-solid); animation: fade 0.25s var(--ease); }
+.viewer__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: max(10px, env(safe-area-inset-top)) clamp(12px, 3vw, 28px) 10px; border-bottom: 1px solid var(--line-strong);
+}
+.viewer__bar p { margin: 0; font-size: 12px; text-transform: uppercase; color: var(--muted); }
+.viewer__actions { display: flex; align-items: center; gap: 8px; }
+.viewer__pdf { display: inline-flex; align-items: center; text-decoration: none; color: var(--ink); }
+.viewer__stage { flex: 1; overflow: auto; overscroll-behavior: contain; background: #e6e4dd; padding: clamp(8px, 2vw, 24px); }
+.viewer__stage img { display: block; width: 100%; height: auto; margin: 0 auto 14px; background: #fff; box-shadow: var(--shadow); }
+.viewer__stage.is-actual img { width: var(--page-w, auto); max-width: none; }
 .icon-btn { width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid var(--line-strong); background: none; cursor: pointer; }
 .icon-btn:hover { background: var(--ink); color: var(--paper); }
 .icon-btn svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }

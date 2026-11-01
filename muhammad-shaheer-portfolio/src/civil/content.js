@@ -96,6 +96,7 @@ export const disciplines = [
   { name: 'Structural', series: 'S-100' },
   { name: 'Highway & Transportation', series: 'T-200' },
   { name: 'Hydraulics & Hydrology', series: 'H-300' },
+  { name: 'Project Planning', series: 'P-400' },
 ];
 
 // `drawing` picks the line drawing shown for each project:
@@ -422,6 +423,60 @@ export const projects = [
       { src: '/projects/kalam-hec-hms/rainfall-hyetograph.webp', caption: 'Hourly rainfall hyetograph, 21 February 2024' },
       { src: '/projects/kalam-hec-hms/subbasin-hydrograph.webp', caption: 'Sub-basin 11: rainfall, losses and outflow hydrograph' },
       { src: '/projects/kalam-hec-hms/global-summary.webp', caption: 'Global summary: peak discharge, timing and volume for every element', wide: true },
+    ],
+  },
+  {
+    id: 'ajwa-tower-p6',
+    sheet: 'P-400',
+    title: 'Ajwa Tower Construction Schedule',
+    category: 'Project Planning',
+    location: 'Gulberg, Lahore',
+    year: '2026',
+    role: 'Cost-loaded scheduling & earned value monitoring (Primavera P6)',
+    drawing: 'frame',
+    summary:
+      'Cost-loaded Primavera P6 schedule of 300+ activities for Ajwa Tower, a 4-basement, ground + 21-storey mixed-use tower in Gulberg, Lahore. Progress was tracked against the baseline with earned value over 50 reporting months, and a recovery schedule was built after real delays pushed completion 12 months late.',
+    abstract: [
+      'Built for the Construction Engineering & Management Lab (LG-3007) at FAST-NUCES, the schedule runs from design and approvals through structure, finishes and MEP commissioning. It uses a 6-day working week, a baseline from 18 August 2022 to 7 October 2025, and a budget at completion of PKR 2,330.8 million priced from researched Lahore market rates. A four-section sequential pour with cross-floor formwork transfer drives the structural cycle.',
+      'Real-world delays of about 12 months, from excavation waterlogging, monsoons, smog-emergency orders, the 9 May 2023 unrest, PSL disruptions and material procurement, moved forecast completion to 12 October 2026. Earned value data exported from P6 activity usage spreadsheets was verified in an Excel monitoring workbook across all 50 reporting months. Team project with Muhammad Ramis Irfan and Syed Muhammad Shoaib.',
+    ],
+    scope: [
+      'Work breakdown structure from pre-construction and approvals to structure, finishes and MEP',
+      '300+ activities with logic relationships on a 6-day working calendar',
+      'Baseline and cost-loaded schedule: BAC PKR 2,330.8 million from researched Lahore unit rates',
+      'Four-section sequential pours with cross-floor formwork transfer over 26 floors',
+      'Monthly progress updates with documented delay events',
+      'Earned value monitoring (Schedule % vs Performance %, cost curves) verified in Excel',
+      'Delay root-cause analysis and a recovery schedule',
+    ],
+    conclusions: [
+      'The planned 38-month duration grew to about 50 months; the 5-month excavation waterlogging was the main driver, compounded by monsoons, smog orders, the May 2023 unrest, PSL and procurement.',
+      'At the original finish date in October 2025 the project was 92.15% complete, reaching 98.74% by March 2026 with only MEP commissioning and close-out remaining.',
+      'Cost discipline held despite the delay: CPI ≈ 1.017, with PKR 2,262 million spent by March 2026 against the PKR 2,330.8 million budget.',
+      'The actual S-curve never crosses the planned one, but the gap narrows steadily once progress recovers from August 2023.',
+      'Four-section pours with cross-floor formwork transfer let all 26 floors be built with only four section-sets of formwork.',
+      'Schedule contingency and a robust risk register proved essential for a large urban project.',
+    ],
+    figures: [
+      { label: 'Activities', value: '300+' },
+      { label: 'Budget at completion', value: 'PKR 2.33 bn' },
+      { label: 'Cost performance (CPI)', value: '≈ 1.017' },
+    ],
+    schedule: {
+      title: 'Ajwa Tower Gantt chart · 12 sheets',
+      preview: '/projects/ajwa-tower-p6/gantt-preview.webp',
+      pages: Array.from({ length: 12 }, (_, i) => `/projects/ajwa-tower-p6/gantt-${String(i + 1).padStart(2, '0')}.webp`),
+      width: 2382,
+      height: 1684,
+      pdf: '/projects/ajwa-tower-p6/ajwa-tower-gantt.pdf',
+      caption: 'Primavera P6 Gantt chart: 300+ activities over 12 A3 sheets, actual progress against the baseline.',
+    },
+    images: [
+      { src: '/projects/ajwa-tower-p6/gantt-cover.webp', caption: 'Gantt chart excerpt: pre-construction, raft and basement activities' },
+      { src: '/projects/ajwa-tower-p6/s-curve-planned-vs-actual.webp', caption: 'S-curve: cumulative planned % vs actual % completion', wide: true },
+      { src: '/projects/ajwa-tower-p6/cumulative-cost.webp', caption: 'Cumulative baseline project cost', wide: true },
+      { src: '/projects/ajwa-tower-p6/monthly-cost.webp', caption: 'Monthly planned vs actual cost', wide: true },
+      { src: '/projects/ajwa-tower-p6/p6-cost-profile.webp', caption: 'Primavera P6 cost profile: budgeted vs actual, monthly and cumulative', wide: true },
     ],
   },
 ];
