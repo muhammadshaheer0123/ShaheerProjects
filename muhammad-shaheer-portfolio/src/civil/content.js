@@ -432,10 +432,10 @@ export const projects = [
     category: 'Project Planning',
     location: 'Gulberg, Lahore',
     year: '2026',
-    role: 'Cost-loaded scheduling & earned value monitoring (Primavera P6)',
+    role: 'Resource- and cost-loaded scheduling & earned value monitoring (Primavera P6)',
     drawing: 'frame',
     summary:
-      'Cost-loaded Primavera P6 schedule of 300+ activities for Ajwa Tower, a 4-basement, ground + 21-storey mixed-use tower in Gulberg, Lahore. Progress was tracked against the baseline with earned value over 50 reporting months, and a recovery schedule was built after real delays pushed completion 12 months late.',
+      'Resource-loaded and cost-loaded Primavera P6 schedule of 300+ activities for Ajwa Tower, a 4-basement, ground + 21-storey mixed-use tower in Gulberg, Lahore. Progress was tracked against the baseline with earned value over 50 reporting months, and a recovery schedule was built after real delays pushed completion 12 months late.',
     abstract: [
       'Built for the Construction Engineering & Management Lab (LG-3007) at FAST-NUCES, the schedule runs from design and approvals through structure, finishes and MEP commissioning. It uses a 6-day working week, a baseline from 18 August 2022 to 7 October 2025, and a budget at completion of PKR 2,330.8 million priced from researched Lahore market rates. A four-section sequential pour with cross-floor formwork transfer drives the structural cycle.',
       'Real-world delays of about 12 months, from excavation waterlogging, monsoons, smog-emergency orders, the 9 May 2023 unrest, PSL disruptions and material procurement, moved forecast completion to 12 October 2026. Earned value data exported from P6 activity usage spreadsheets was verified in an Excel monitoring workbook across all 50 reporting months. Team project with Muhammad Ramis Irfan and Syed Muhammad Shoaib.',
@@ -443,7 +443,7 @@ export const projects = [
     scope: [
       'Work breakdown structure from pre-construction and approvals to structure, finishes and MEP',
       '300+ activities with logic relationships on a 6-day working calendar',
-      'Baseline and cost-loaded schedule: BAC PKR 2,330.8 million from researched Lahore unit rates',
+      'Resource-loaded and cost-loaded baseline: resources assigned to every activity, BAC PKR 2,330.8 million from researched Lahore unit rates',
       'Four-section sequential pours with cross-floor formwork transfer over 26 floors',
       'Monthly progress updates with documented delay events',
       'Earned value monitoring (Schedule % vs Performance %, cost curves) verified in Excel',
